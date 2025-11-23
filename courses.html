@@ -54,6 +54,7 @@
     <div>
       <h3 class="text-2xl font-semibold mb-4">🎓 Your Courses</h3>
       <div class="grid md:grid-cols-2 gap-6">
+        <!-- Beginner Course - ENABLED -->
         <div class="bg-gray-800 p-6 rounded">
           <h4 class="text-xl">Beginner Crypto Trading</h4>
           <p class="my-2">5-video series: from zero to profitable trader.</p>
@@ -62,12 +63,12 @@
           </button>
         </div>
 
+        <!-- Advanced Course - DISABLED -->
         <div class="bg-gray-800 p-6 rounded">
           <h4 class="text-xl">Advanced Algo Signals</h4>
           <p class="my-2">8-video deep dive + live signal walkthroughs.</p>
-          <!-- ⚠️ Replace with real link or disable if not ready -->
-          <button onclick="buyCourse('advanced')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">
-            Buy for 169 USDC
+          <button class="mt-2 bg-gray-600 px-4 py-2 rounded cursor-not-allowed" disabled>
+            Coming Soon
           </button>
         </div>
       </div>
@@ -147,9 +148,9 @@
     };
   </script>
 
-  <!-- Course Content & Payment Logic -->
+  <!-- Course & Payment Logic (Beginner Only) -->
   <script>
-    // ✅ VIDEO IDs ONLY — NO FULL URLS!
+    // ✅ ONLY BEGINNER COURSE — ALL VIDEO IDS ARE VALID
     const COURSE_CONTENT = {
       beginner: {
         title: "Beginner Crypto Trading",
@@ -160,48 +161,42 @@
           { id: "wVTACrztLOA", title: "4. Live Trade Example" },
           { id: "ooqM1JNhGiw", title: "5. Q&A and Next Steps" }
         ]
-      },
-      advanced: {
-        title: "Advanced Algo Signals",
-        videos: [
-          { id: "YXarK0s2_qM", title: "1. Market Structure Mastery" },
-          { id: "Yr-LchCfaNA", title: "2. On-Chain Data Signals" },
-          { id: "YOUR_ADV_VIDEO_3", title: "3. Weekly Signal Breakdown" }
-          // Add more using only the 11-character ID
-        ]
       }
+      // Advanced course intentionally omitted
     };
 
-    // 🔗 YOUR COINBASE COMMERCE CHECKOUT LINKS
+    // 🔗 ONLY REAL CHECKOUT LINK FOR BEGINNER
     const CHECKOUT_LINKS = {
-      beginner: "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877",
-      advanced: "https://commerce.coinbase.com/checkout/YOUR_ADVANCED_CHECKOUT_ID" // ← Replace if ready
+      beginner: "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877"
     };
 
     function buyCourse(courseId) {
       const url = CHECKOUT_LINKS[courseId];
-      if (!url || url.includes("YOUR_")) {
+      if (!url) {
         alert("This course is not available for purchase yet.");
         return;
       }
       window.open(url, '_blank');
 
-      // ⚠️ DEMO ONLY: grant instant access
-      // In production: verify via Coinbase webhook → Firebase → then unlock
-      setTimeout(() => showCoursePlaylist(courseId), 3000);
+      // ⚠️ DEMO ONLY: grant instant access after 3 seconds
+      setTimeout(() => {
+        if (COURSE_CONTENT[courseId]) {
+          showCoursePlaylist(courseId);
+        } else {
+          console.warn("Course content not found:", courseId);
+        }
+      }, 3000);
     }
 
     function showCoursePlaylist(courseId) {
       const course = COURSE_CONTENT[courseId];
-      if (!course) return;
-
       document.getElementById('modal-title').textContent = course.title;
       const playlist = document.getElementById('video-playlist');
       playlist.innerHTML = '';
 
       course.videos.forEach(video => {
         const li = document.createElement('li');
-        li.className = "cursor-pointer hover:text-yellow-400";
+        li.className = "cursor-pointer hover:text-yellow-400 py-1";
         li.textContent = video.title;
         li.onclick = () => loadVideo(video.id);
         playlist.appendChild(li);
@@ -215,7 +210,6 @@
     }
 
     function loadVideo(videoId) {
-      // ✅ Constructs valid YouTube embed URL
       document.getElementById('course-video').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     }
 
