@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Courses | AzadTradeLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // 🚨 REPLACE WITH YOUR FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "your-project.firebaseapp.com",
+      projectId: "your-project",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    function toggleViews(user) {
+      if (user) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('user-email').textContent = user.email;
+      } else {
+        document.getElementById('login-section').classList.remove('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+      }
+    }
+
+    onAuthStateChanged(auth, toggleViews);
+
+    document.getElementById('login-btn').onclick = () => {
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-pass').value;
+      signInWithEmailAndPassword(auth, email, pass).catch(alert);
+    };
+
+    document.getElementById('signup-btn').onclick = () => {
+      const email = document.getElementById('signup-email').value;
+      const pass = document.getElementById('signup-pass').value;
+      createUserWithEmailAndPassword(auth, email, pass).catch(alert);
+    };
+
+    window.signOutUser = () => {
+      signOut(auth).catch(console.error);
+    };
+  </script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+  <!-- Navigation -->
+  <nav class="bg-gray-800 p-4 text-center">
+    <a href="index.html" class="text-white font-bold mx-4">Home</a>
+    <a href="courses.html" class="text-crypto-blue mx-4">Courses</a>
+  </nav>
+
+  <header class="p-6 text-center bg-indigo-900">
+    <h1 class="text-3xl font-bold">🎓 My Courses | AzadTradeLab</h1>
+    <p class="mt-2">Pay with USDC • Lifetime access • Weekly updates</p>
+  </header>
+
+  <!-- Login / Signup -->
+  <section id="login-section" class="p-8 max-w-md mx-auto">
+    <div class="bg-gray-800 p-6 rounded shadow">
+      <h2 class="text-xl mb-4">Log In</h2>
+      <input id="login-email" type="email" placeholder="Email" class="w-full p-2 mb-2 rounded bg-gray-700">
+      <input id="login-pass" type="password" placeholder="Password" class="w-full p-2 mb-4 rounded bg-gray-700">
+      <button id="login-btn" class="w-full bg-green-600 py-2 rounded">Log In</button>
+    </div>
+
+    <div class="mt-6 bg-gray-800 p-6 rounded shadow">
+      <h2 class="text-xl mb-4">Sign Up</h2>
+      <input id="signup-email" type="email" placeholder="Email" class="w-full p-2 mb-2 rounded bg-gray-700">
+      <input id="signup-pass" type="password" placeholder="Password" class="w-full p-2 mb-4 rounded bg-gray-700">
+      <button id="signup-btn" class="w-full bg-blue-600 py-2 rounded">Create Account</button>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashboard" class="hidden p-8 max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2>Welcome, <span id="user-email"></span>!</h2>
+      <button onclick="signOutUser()" class="bg-red-600 px-4 py-1 rounded">Log Out</button>
+    </div>
+
+    <div class="mb-10">
+      <h3 class="text-2xl font-semibold mb-4">📈 Latest Trading Signals</h3>
+      <div class="space-y-4">
+        <div class="p-4 bg-gray-800 rounded">BTC/USDT: BUY above $62,000 (Updated: Nov 20)</div>
+        <div class="p-4 bg-gray-800 rounded">ETH/USDC: SELL near $3,500 resistance</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-2xl font-semibold mb-4">🎓 Your Courses</h3>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-gray-800 p-6 rounded">
+          <h4 class="text-xl">Beginner Crypto Trading</h4>
+          <p class="my-2">Learn candlesticks, risk management, and entry/exit strategies.</p>
+          <button onclick="buyCourse('beginner')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">Buy for 50 USDC</button>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded">
+          <h4 class="text-xl">Advanced Algo Signals</h4>
+          <p class="my-2">Weekly live signals + portfolio tracking (includes private Discord).</p>
+          <button onclick="buyCourse('advanced')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">Buy for 200 USDC</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Course Viewer Modal -->
+  <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
+    <div class="bg-gray-800 p-6 w-full max-w-3xl rounded relative">
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-400">✕</button>
+      <h3 id="modal-title" class="text-2xl mb-4">Course Content</h3>
+      <div class="aspect-video bg-black rounded overflow-hidden">
+        <iframe id="course-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <p class="mt-4">Course materials update weekly. Check back often!</p>
+    </div>
+  </div>
+
+  <script>
+    function buyCourse(courseId) {
+      let amount = courseId === 'beginner' ? '50' : '200';
+      const checkoutUrl = `https://commerce.coinbase.com/checkout/YOUR-CHECKOUT-CODE?amount=${amount}&currency=USDC`;
+      window.open(checkoutUrl, '_blank');
+      
+      setTimeout(() => {
+        const urls = {
+          beginner: 'https://www.youtube.com/embed/YOUR_UNLISTED_VIDEO_ID_1',
+          advanced: 'https://www.youtube.com/embed/YOUR_UNLISTED_VIDEO_ID_2'
+        };
+        document.getElementById('course-video').src = urls[courseId] || '';
+        document.getElementById('modal-title').textContent = 
+          courseId === 'beginner' ? 'Beginner Crypto Trading' : 'Advanced Algo Signals';
+        document.getElementById('course-modal').classList.remove('hidden');
+      }, 3000);
+    }
+
+    function closeModal() {
+      document.getElementById('course-modal').classList.add('hidden');
+      document.getElementById('course-video').src = '';
+    }
+  </script>
+</body>
+</html>

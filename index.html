@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AzadTradeLab | Live Crypto Trading Alerts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            crypto: {
+              green: '#10B981',
+              red: '#EF4444',
+              blue: '#3B82F6',
+              dark: '#0F172A'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .signal-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .signal-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+
+  <!-- Navigation -->
+  <nav class="bg-gray-800 p-4 text-center">
+    <a href="index.html" class="text-white font-bold mx-4">Home</a>
+    <a href="courses.html" class="text-crypto-blue mx-4">Courses</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-crypto-blue to-indigo-800 py-6 px-4 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold">🚀 AzadTradeLab</h1>
+    <p class="mt-2 text-indigo-200 max-w-2xl mx-auto">
+      Real-time crypto trading signals • Verified results • Pay with USDC for full courses
+    </p>
+    <div class="mt-4">
+      <a href="#signals" class="inline-block bg-white text-crypto-blue font-bold py-2 px-6 rounded-full mr-3">Live Signals</a>
+      <a href="#proof" class="inline-block bg-crypto-green text-gray-900 font-bold py-2 px-6 rounded-full">Trade Proof</a>
+    </div>
+  </header>
+
+  <!-- Hero Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800">
+    <div class="text-center p-3">
+      <div class="text-2xl font-bold text-crypto-green">+84%</div>
+      <div class="text-sm text-gray-400">Last 30 Days</div>
+    </div>
+    <div class="text-center p-3">
+      <div class="text-2xl font-bold">142</div>
+      <div class="text-sm text-gray-400">Signals Sent</div>
+    </div>
+    <div class="text-center p-3">
+      <div class="text-2xl font-bold">78%</div>
+      <div class="text-sm text-gray-400">Win Rate</div>
+    </div>
+    <div class="text-center p-3">
+      <div class="text-2xl font-bold">24/7</div>
+      <div class="text-sm text-gray-400">Market Coverage</div>
+    </div>
+  </div>
+
+  <!-- Live Signals Section -->
+  <section id="signals" class="p-6 max-w-4xl mx-auto">
+    <div class="flex items-center mb-6">
+      <h2 class="text-2xl font-bold flex items-center">
+        <i class="fas fa-bolt text-yellow-400 mr-2"></i> Live Trading Signals
+      </h2>
+      <span class="ml-3 bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded">Updated Hourly</span>
+    </div>
+
+    <div class="space-y-5">
+      <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 border-crypto-green">
+        <div class="flex flex-wrap justify-between items-start">
+          <div>
+            <span class="bg-crypto-green text-gray-900 text-xs font-bold px-2 py-1 rounded">BUY</span>
+            <span class="ml-2 text-xl font-bold">BTC/USDT</span>
+          </div>
+          <span class="text-gray-400 text-sm">Just now</span>
+        </div>
+        <p class="mt-2 text-gray-300">Entry: $61,250 | Target: $64,000 | Stop: $60,000</p>
+        <div class="mt-3 flex items-center text-sm">
+          <span class="bg-gray-700 px-2 py-1 rounded mr-2">15m Chart</span>
+          <span class="bg-gray-700 px-2 py-1 rounded">RSI Bullish Divergence</span>
+        </div>
+      </div>
+
+      <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 border-crypto-red">
+        <div class="flex flex-wrap justify-between items-start">
+          <div>
+            <span class="bg-crypto-red text-gray-900 text-xs font-bold px-2 py-1 rounded">SELL</span>
+            <span class="ml-2 text-xl font-bold">SOL/USDC</span>
+          </div>
+          <span class="text-gray-400 text-sm">2 hours ago</span>
+        </div>
+        <p class="mt-2 text-gray-300">Entry: $182.50 | Target: $170.00 | Stop: $190.00</p>
+        <div class="mt-3 flex items-center text-sm">
+          <span class="bg-gray-700 px-2 py-1 rounded mr-2">1h Chart</span>
+          <span class="bg-gray-700 px-2 py-1 rounded">Bearish Engulfing</span>
+        </div>
+      </div>
+
+      <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 border-crypto-green">
+        <div class="flex flex-wrap justify-between items-start">
+          <div>
+            <span class="bg-crypto-green text-gray-900 text-xs font-bold px-2 py-1 rounded">BUY</span>
+            <span class="ml-2 text-xl font-bold">ETH/USDC</span>
+          </div>
+          <span class="text-gray-400 text-sm">5 hours ago</span>
+        </div>
+        <p class="mt-2 text-gray-300">Entry: $3,420 | Target: $3,650 | Stop: $3,350</p>
+        <div class="mt-3 flex items-center text-sm">
+          <span class="bg-gray-700 px-2 py-1 rounded mr-2">4h Chart</span>
+          <span class="bg-gray-700 px-2 py-1 rounded">Break of Resistance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8">
+      <button onclick="showAllSignals()" class="border border-crypto-blue text-crypto-blue px-5 py-2 rounded hover:bg-crypto-blue hover:text-white transition">
+        View All Historical Signals
+      </button>
+    </div>
+  </section>
+
+  <!-- Successful Trades Proof -->
+  <section id="proof" class="p-6 max-w-4xl mx-auto mt-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center">
+      <i class="fas fa-chart-line text-crypto-green mr-2"></i> Verified Successful Trades
+    </h2>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="font-bold text-lg">BTC Long (Oct 28, 2025)</h3>
+            <p class="text-green-400 mt-1">+12.4% in 36 hours</p>
+          </div>
+          <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
+        </div>
+        <p class="mt-3 text-gray-300 text-sm">
+          Entered at $58,200 during breakout above 200 EMA. Exited near $65,400 at major resistance zone.
+        </p>
+        <div class="mt-3 flex text-xs text-gray-400">
+          <span>Entry: $58,200</span> • <span class="ml-2">Exit: $65,410</span>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="font-bold text-lg">ETH Short (Nov 5, 2025)</h3>
+            <p class="text-green-400 mt-1">+9.7% in 18 hours</p>
+          </div>
+          <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
+        </div>
+        <p class="mt-3 text-gray-300 text-sm">
+          Shorted at $3,620 after double top formation. Covered at $3,270 ahead of support bounce.
+        </p>
+        <div class="mt-3 flex text-xs text-gray-400">
+          <span>Entry: $3,620</span> • <span class="ml-2">Exit: $3,270</span>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900 md:col-span-2">
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="font-bold text-lg">SOL Scalp (Nov 15, 2025)</h3>
+            <p class="text-green-400 mt-1">+6.2% in 4 hours</p>
+          </div>
+          <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
+        </div>
+        <p class="mt-3 text-gray-300 text-sm">
+          Quick scalp on 15m chart using volume spike + RSI reversal. Ideal for intraday traders.
+        </p>
+        <div class="mt-3 flex text-xs text-gray-400">
+          <span>Entry: $174.50</span> • <span class="ml-2">Exit: $185.30</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="courses.html" class="bg-crypto-green hover:bg-green-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg inline-block transition">
+        Unlock Full Course & Live Alerts → Pay with USDC
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
+    <p>© 2025 AzadTradeLab. Not financial advice. Trading involves risk.</p>
+    <p class="mt-2">All courses payable in USDC (ERC-20, Polygon, or Base)</p>
+  </footer>
+
+  <script>
+    function showAllSignals() {
+      alert("In a full version, this would open a signals archive page.");
+    }
+  </script>
+</body>
+</html>
