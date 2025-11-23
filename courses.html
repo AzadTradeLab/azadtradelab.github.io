@@ -65,6 +65,7 @@
         <div class="bg-gray-800 p-6 rounded">
           <h4 class="text-xl">Advanced Algo Signals</h4>
           <p class="my-2">8-video deep dive + live signal walkthroughs.</p>
+          <!-- ⚠️ Replace with real link or disable if not ready -->
           <button onclick="buyCourse('advanced')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">
             Buy for 169 USDC
           </button>
@@ -73,7 +74,7 @@
     </div>
   </section>
 
-  <!-- Multi-Video Course Player -->
+  <!-- Multi-Video Course Player Modal -->
   <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
     <div class="bg-gray-800 w-full max-w-6xl max-h-[90vh] rounded relative flex flex-col md:flex-row">
       <div class="w-full md:w-3/4">
@@ -94,7 +95,7 @@
     </div>
   </div>
 
-  <!-- Firebase SDK (CDN) -->
+  <!-- Firebase SDK (CDN - Modular) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -146,47 +147,47 @@
     };
   </script>
 
-  <!-- Course & Payment Logic -->
+  <!-- Course Content & Payment Logic -->
   <script>
-  const COURSE_CONTENT = {
-    beginner: {
-      title: "Beginner Crypto Trading",
-      videos: [
-        { id: "UIn0hvgHKc0", title: "1. Introduction to Crypto" },
-        { id: "cABEowBTfLA", title: "2. Reading Charts Like a Pro" },
-        { id: "h5qjXKdMxxE", title: "3. Risk Management Rules" },
-        { id: "wVTACrztLOA", title: "4. Live Trade Example" },
-        { id: "ooqM1JNhGiw", title: "5. Q&A and Next Steps" }
-      ]
-    },
-    advanced: {
-      title: "Advanced Algo Signals",
-      videos: [
-        { id: "YXarK0s2_qM", title: "1. Market Structure Mastery" },
-        { id: "Yr-LchCfaNA", title: "2. On-Chain Data Signals" },
-        { id: "YOUR_ADV_VIDEO_3", title: "3. Weekly Signal Breakdown" }
-        // Add more as needed (use only the 11-char ID)
-      ]
-    }
-  };
-</script>
+    // ✅ VIDEO IDs ONLY — NO FULL URLS!
+    const COURSE_CONTENT = {
+      beginner: {
+        title: "Beginner Crypto Trading",
+        videos: [
+          { id: "UIn0hvgHKc0", title: "1. Introduction to Crypto" },
+          { id: "cABEowBTfLA", title: "2. Reading Charts Like a Pro" },
+          { id: "h5qjXKdMxxE", title: "3. Risk Management Rules" },
+          { id: "wVTACrztLOA", title: "4. Live Trade Example" },
+          { id: "ooqM1JNhGiw", title: "5. Q&A and Next Steps" }
+        ]
+      },
+      advanced: {
+        title: "Advanced Algo Signals",
+        videos: [
+          { id: "YXarK0s2_qM", title: "1. Market Structure Mastery" },
+          { id: "Yr-LchCfaNA", title: "2. On-Chain Data Signals" },
+          { id: "YOUR_ADV_VIDEO_3", title: "3. Weekly Signal Breakdown" }
+          // Add more using only the 11-character ID
+        ]
+      }
+    };
 
-    // 🔗 YOUR COINBASE COMMERCE LINKS
+    // 🔗 YOUR COINBASE COMMERCE CHECKOUT LINKS
     const CHECKOUT_LINKS = {
-      beginner: "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877", // ✅ YOUR LINK
-      advanced: "https://commerce.coinbase.com/checkout/YOUR_ADVANCED_CHECKOUT_ID" // ← Replace if you have one
+      beginner: "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877",
+      advanced: "https://commerce.coinbase.com/checkout/YOUR_ADVANCED_CHECKOUT_ID" // ← Replace if ready
     };
 
     function buyCourse(courseId) {
       const url = CHECKOUT_LINKS[courseId];
-      if (!url) {
+      if (!url || url.includes("YOUR_")) {
         alert("This course is not available for purchase yet.");
         return;
       }
       window.open(url, '_blank');
 
       // ⚠️ DEMO ONLY: grant instant access
-      // In production: verify via webhook before showing videos
+      // In production: verify via Coinbase webhook → Firebase → then unlock
       setTimeout(() => showCoursePlaylist(courseId), 3000);
     }
 
@@ -214,6 +215,7 @@
     }
 
     function loadVideo(videoId) {
+      // ✅ Constructs valid YouTube embed URL
       document.getElementById('course-video').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     }
 
