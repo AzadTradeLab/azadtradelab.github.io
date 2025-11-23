@@ -5,50 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Courses | AzadTradeLab</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-    // 🚨 REPLACE WITH YOUR FIREBASE CONFIG
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "your-project.firebaseapp.com",
-      projectId: "your-project",
-      appId: "YOUR_APP_ID"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    function toggleViews(user) {
-      if (user) {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-        document.getElementById('user-email').textContent = user.email;
-      } else {
-        document.getElementById('login-section').classList.remove('hidden');
-        document.getElementById('dashboard').classList.add('hidden');
-      }
-    }
-
-    onAuthStateChanged(auth, toggleViews);
-
-    document.getElementById('login-btn').onclick = () => {
-      const email = document.getElementById('login-email').value;
-      const pass = document.getElementById('login-pass').value;
-      signInWithEmailAndPassword(auth, email, pass).catch(alert);
-    };
-
-    document.getElementById('signup-btn').onclick = () => {
-      const email = document.getElementById('signup-email').value;
-      const pass = document.getElementById('signup-pass').value;
-      createUserWithEmailAndPassword(auth, email, pass).catch(alert);
-    };
-
-    window.signOutUser = () => {
-      signOut(auth).catch(console.error);
-    };
-  </script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
 
@@ -59,7 +15,7 @@
   </nav>
 
   <header class="p-6 text-center bg-indigo-900">
-    <h1 class="text-3xl font-bold">🎓 My Courses | AzadTradeLab</h1>
+    <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
     <p class="mt-2">Pay with USDC • Lifetime access • Weekly updates</p>
   </header>
 
@@ -84,7 +40,7 @@
   <section id="dashboard" class="hidden p-8 max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-6">
       <h2>Welcome, <span id="user-email"></span>!</h2>
-      <button onclick="signOutUser()" class="bg-red-600 px-4 py-1 rounded">Log Out</button>
+      <button id="logout-btn" class="bg-red-600 px-4 py-1 rounded">Log Out</button>
     </div>
 
     <div class="mb-10">
@@ -125,21 +81,100 @@
     </div>
   </div>
 
+  <!-- Firebase + Auth Logic -->
+  <script type="module">
+    // 🔥 Load Firebase SDK from CDN (modular)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // ✅ Your Firebase config (from Firebase Console)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
+      authDomain: "azadtradelab-cources.firebaseapp.com",
+      projectId: "azadtradelab-cources",
+      storageBucket: "azadtradelab-cources.firebasestorage.app",
+      messagingSenderId: "864971831518",
+      appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
+      // ⚠️ Removed measurementId — not needed for Auth
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Toggle UI based on login state
+    function toggleViews(user) {
+      const loginSection = document.getElementById('login-section');
+      const dashboard = document.getElementById('dashboard');
+      const userEmail = document.getElementById('user-email');
+
+      if (user) {
+        loginSection.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        userEmail.textContent = user.email;
+      } else {
+        loginSection.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+      }
+    }
+
+    // Monitor auth state
+    onAuthStateChanged(auth, toggleViews);
+
+    // Login handler
+    document.getElementById('login-btn').onclick = () => {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-pass').value;
+      signInWithEmailAndPassword(auth, email, password)
+        .catch(err => alert("Login failed: " + err.message));
+    };
+
+    // Signup handler
+    document.getElementById('signup-btn').onclick = () => {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-pass').value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .catch(err => alert("Signup failed: " + err.message));
+    };
+
+    // Logout handler
+    document.getElementById('logout-btn').onclick = () => {
+      signOut(auth).catch(console.error);
+    };
+  </script>
+
+  <!-- Payment & Video Logic -->
   <script>
     function buyCourse(courseId) {
-      let amount = courseId === 'beginner' ? '50' : '200';
-      const checkoutUrl = `https://commerce.coinbase.com/checkout/YOUR-CHECKOUT-CODE?amount=${amount}&currency=USDC`;
-      window.open(checkoutUrl, '_blank');
-      
+      // 🔗 Replace these with your actual Coinbase Commerce checkout URLs
+      const checkoutLinks = {
+        beginner: "https://commerce.coinbase.com/checkout/YOUR-BEGINNER-CHECKOUT-ID",   // ← Replace
+        advanced: "https://commerce.coinbase.com/checkout/YOUR-ADVANCED-CHECKOUT-ID"   // ← Replace
+      };
+
+      if (!checkoutLinks[courseId]) {
+        alert("Course not available yet.");
+        return;
+      }
+
+      // Open payment in new tab
+      window.open(checkoutLinks[courseId], '_blank');
+
+      // ⚠️ DEMO ONLY: Grant immediate video access (not secure in production)
+      // In real app: verify payment via webhook before showing video
       setTimeout(() => {
-        const urls = {
-          beginner: 'https://www.youtube.com/embed/YOUR_UNLISTED_VIDEO_ID_1',
-          advanced: 'https://www.youtube.com/embed/YOUR_UNLISTED_VIDEO_ID_2'
+        const videoIds = {
+          beginner: "YOUR_BEGINNER_VIDEO_ID",    // ← Replace with unlisted YouTube ID
+          advanced: "YOUR_ADVANCED_VIDEO_ID"     // ← Replace
         };
-        document.getElementById('course-video').src = urls[courseId] || '';
-        document.getElementById('modal-title').textContent = 
-          courseId === 'beginner' ? 'Beginner Crypto Trading' : 'Advanced Algo Signals';
-        document.getElementById('course-modal').classList.remove('hidden');
+
+        const videoId = videoIds[courseId];
+        if (videoId) {
+          document.getElementById('course-video').src = `https://www.youtube.com/embed/${videoId}`;
+          document.getElementById('modal-title').textContent = 
+            courseId === 'beginner' ? 'Beginner Crypto Trading' : 'Advanced Algo Signals';
+          document.getElementById('course-modal').classList.remove('hidden');
+        }
       }, 3000);
     }
 
