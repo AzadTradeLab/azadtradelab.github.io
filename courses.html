@@ -46,7 +46,7 @@
     <div class="mb-10">
       <h3 class="text-2xl font-semibold mb-4">📈 Latest Trading Signals</h3>
       <div class="space-y-4">
-        <div class="p-4 bg-gray-800 rounded">BTC/USDT: BUY above $62,000 (Updated: Nov 20)</div>
+        <div class="p-4 bg-gray-800 rounded">BTC/USDT: BUY above $62,000</div>
         <div class="p-4 bg-gray-800 rounded">ETH/USDC: SELL near $3,500 resistance</div>
       </div>
     </div>
@@ -57,22 +57,25 @@
         <div class="bg-gray-800 p-6 rounded">
           <h4 class="text-xl">Beginner Crypto Trading</h4>
           <p class="my-2">5-video series: from zero to profitable trader.</p>
-          <button onclick="buyCourse('beginner')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">Buy for 50 USDC</button>
+          <button onclick="buyCourse('beginner')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">
+            Buy for 50 USDC
+          </button>
         </div>
 
         <div class="bg-gray-800 p-6 rounded">
           <h4 class="text-xl">Advanced Algo Signals</h4>
           <p class="my-2">8-video deep dive + live signal walkthroughs.</p>
-          <button onclick="buyCourse('advanced')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">Buy for 200 USDC</button>
+          <button onclick="buyCourse('advanced')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">
+            Buy for 200 USDC
+          </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Multi-Video Course Player Modal -->
+  <!-- Multi-Video Course Player -->
   <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
     <div class="bg-gray-800 w-full max-w-6xl max-h-[90vh] rounded relative flex flex-col md:flex-row">
-      <!-- Video Player -->
       <div class="w-full md:w-3/4">
         <div class="p-4 border-b border-gray-700">
           <h3 id="modal-title" class="text-xl font-bold">Course Content</h3>
@@ -82,19 +85,16 @@
         </div>
       </div>
 
-      <!-- Playlist Sidebar -->
       <div class="w-full md:w-1/4 p-4 overflow-y-auto max-h-[70vh]">
         <h4 class="font-bold mb-3 text-crypto-blue">Lessons</h4>
-        <ul id="video-playlist" class="space-y-2">
-          <!-- Videos will be listed here dynamically -->
-        </ul>
+        <ul id="video-playlist" class="space-y-2"></ul>
       </div>
 
       <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-400 bg-gray-900 w-8 h-8 rounded-full">✕</button>
     </div>
   </div>
 
-  <!-- Firebase + Auth Logic -->
+  <!-- Firebase SDK (CDN) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -112,17 +112,16 @@
     const auth = getAuth(app);
 
     function toggleViews(user) {
-      const loginSection = document.getElementById('login-section');
-      const dashboard = document.getElementById('dashboard');
-      const userEmail = document.getElementById('user-email');
-
+      const login = document.getElementById('login-section');
+      const dash = document.getElementById('dashboard');
+      const email = document.getElementById('user-email');
       if (user) {
-        loginSection.classList.add('hidden');
-        dashboard.classList.remove('hidden');
-        userEmail.textContent = user.email;
+        login.classList.add('hidden');
+        dash.classList.remove('hidden');
+        email.textContent = user.email;
       } else {
-        loginSection.classList.remove('hidden');
-        dashboard.classList.add('hidden');
+        login.classList.remove('hidden');
+        dash.classList.add('hidden');
       }
     }
 
@@ -130,15 +129,15 @@
 
     document.getElementById('login-btn').onclick = () => {
       const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-pass').value;
-      signInWithEmailAndPassword(auth, email, password)
+      const pass = document.getElementById('login-pass').value;
+      signInWithEmailAndPassword(auth, email, pass)
         .catch(err => alert("Login failed: " + err.message));
     };
 
     document.getElementById('signup-btn').onclick = () => {
       const email = document.getElementById('signup-email').value;
-      const password = document.getElementById('signup-pass').value;
-      createUserWithEmailAndPassword(auth, email, password)
+      const pass = document.getElementById('signup-pass').value;
+      createUserWithEmailAndPassword(auth, email, pass)
         .catch(err => alert("Signup failed: " + err.message));
     };
 
@@ -147,49 +146,47 @@
     };
   </script>
 
-  <!-- Course & Video Management -->
+  <!-- Course & Payment Logic -->
   <script>
-    // ✅ DEFINE YOUR VIDEO PLAYLISTS HERE
+    // 🔹 DEFINE YOUR COURSES & VIDEOS HERE
     const COURSE_CONTENT = {
       beginner: {
         title: "Beginner Crypto Trading",
         videos: [
-          { id: "VIDEO_ID_1", title: "1. Introduction to Crypto Markets" },
-          { id: "VIDEO_ID_2", title: "2. Reading Candlestick Charts" },
-          { id: "VIDEO_ID_3", title: "3. Risk Management Rules" },
-          { id: "VIDEO_ID_4", title: "4. Entry & Exit Strategies" },
-          { id: "VIDEO_ID_5", title: "5. Live Trade Walkthrough" }
+          { id: "YOUR_VIDEO_ID_1", title: "1. Introduction to Crypto" },
+          { id: "YOUR_VIDEO_ID_2", title: "2. Reading Charts Like a Pro" },
+          { id: "YOUR_VIDEO_ID_3", title: "3. Risk Management Rules" },
+          { id: "YOUR_VIDEO_ID_4", title: "4. Live Trade Example" },
+          { id: "YOUR_VIDEO_ID_5", title: "5. Q&A and Next Steps" }
         ]
       },
       advanced: {
         title: "Advanced Algo Signals",
         videos: [
-          { id: "ADV_VIDEO_1", title: "1. Market Structure Deep Dive" },
-          { id: "ADV_VIDEO_2", title: "2. On-Chain Analysis" },
-          { id: "ADV_VIDEO_3", title: "3. Building Your Watchlist" },
-          { id: "ADV_VIDEO_4", title: "4. Weekly Signal Breakdown (Oct 2025)" },
-          { id: "ADV_VIDEO_5", title: "5. Position Sizing Models" },
-          { id: "ADV_VIDEO_6", title: "6. Using TradingView Alerts" },
-          { id: "ADV_VIDEO_7", title: "7. Live Portfolio Review" },
-          { id: "ADV_VIDEO_8", title: "8. Q&A + Common Mistakes" }
+          { id: "YOUR_ADV_VIDEO_1", title: "1. Market Structure Mastery" },
+          { id: "YOUR_ADV_VIDEO_2", title: "2. On-Chain Data Signals" },
+          { id: "YOUR_ADV_VIDEO_3", title: "3. Weekly Signal Breakdown" }
+          // Add more as needed
         ]
       }
     };
 
-    // 🔗 Replace with your actual Coinbase links
+    // 🔗 YOUR COINBASE COMMERCE LINKS
     const CHECKOUT_LINKS = {
-      beginner: "https://commerce.coinbase.com/checkout/YOUR-BEGINNER-CHECKOUT-ID",
-      advanced: "https://commerce.coinbase.com/checkout/YOUR-ADVANCED-CHECKOUT-ID"
+      beginner: "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877", // ✅ YOUR LINK
+      advanced: "https://commerce.coinbase.com/checkout/YOUR_ADVANCED_CHECKOUT_ID" // ← Replace if you have one
     };
 
     function buyCourse(courseId) {
-      if (!CHECKOUT_LINKS[courseId]) {
-        alert("Course not available.");
+      const url = CHECKOUT_LINKS[courseId];
+      if (!url) {
+        alert("This course is not available for purchase yet.");
         return;
       }
-      window.open(CHECKOUT_LINKS[courseId], '_blank');
+      window.open(url, '_blank');
 
-      // ⚠️ DEMO: Grant instant access (replace with webhook verification in production)
+      // ⚠️ DEMO ONLY: grant instant access
+      // In production: verify via webhook before showing videos
       setTimeout(() => showCoursePlaylist(courseId), 3000);
     }
 
@@ -197,22 +194,18 @@
       const course = COURSE_CONTENT[courseId];
       if (!course) return;
 
-      // Update title
       document.getElementById('modal-title').textContent = course.title;
-
-      // Build playlist
-      const playlistEl = document.getElementById('video-playlist');
-      playlistEl.innerHTML = '';
+      const playlist = document.getElementById('video-playlist');
+      playlist.innerHTML = '';
 
       course.videos.forEach(video => {
         const li = document.createElement('li');
         li.className = "cursor-pointer hover:text-yellow-400";
         li.textContent = video.title;
         li.onclick = () => loadVideo(video.id);
-        playlistEl.appendChild(li);
+        playlist.appendChild(li);
       });
 
-      // Load first video automatically
       if (course.videos.length > 0) {
         loadVideo(course.videos[0].id);
       }
