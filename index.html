@@ -30,6 +30,14 @@
       transform: translateY(-4px);
       box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
     }
+    .partner-logo {
+      height: 40px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .partner-logo:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
@@ -46,24 +54,53 @@
     <p class="mt-2 text-indigo-200 max-w-2xl mx-auto">
       Real-time crypto trading signals • Verified results • Pay with USDC for full courses
     </p>
-    <div class="mt-4">
-      <a href="#signals" class="inline-block bg-white text-crypto-blue font-bold py-2 px-6 rounded-full mr-3">Live Signals</a>
+    <div class="mt-4 flex flex-wrap justify-center gap-3">
+      <a href="#signals" class="inline-block bg-white text-crypto-blue font-bold py-2 px-6 rounded-full">Live Signals</a>
       <a href="#proof" class="inline-block bg-crypto-green text-gray-900 font-bold py-2 px-6 rounded-full">Trade Proof</a>
     </div>
   </header>
 
-  <!-- Hero Stats -->
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800">
+  <!-- Live Prices Banner -->
+  <div class="bg-gray-800 py-3 flex justify-center space-x-8 text-sm">
+    <div id="btc-price" class="font-mono flex items-center">
+      <i class="fab fa-bitcoin text-yellow-500 mr-2"></i>
+      Loading...
+    </div>
+    <div id="eth-price" class="font-mono flex items-center">
+      <i class="fab fa-ethereum text-crypto-blue mr-2"></i>
+      Loading...
+    </div>
+  </div>
+
+  <!-- Intro Video -->
+  <section class="p-6 max-w-4xl mx-auto mt-8">
+    <h2 class="text-2xl font-bold text-center mb-4">Welcome to AzadTradeLab</h2>
+    <div class="aspect-video bg-black rounded-xl overflow-hidden">
+      <!-- 🔁 REPLACE WITH YOUR YOUTUBE VIDEO ID -->
+      <iframe
+        class="w-full h-full"
+        src="https://www.youtube.com/embed/UIn0hvgHKc0?autoplay=0&rel=0"
+        title="AzadTradeLab Introduction"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+
+  <!-- Hero Stats (NOW FROM GOOGLE SHEET) -->
+  <div id="hero-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800">
+    <!-- Default loading state -->
     <div class="text-center p-3">
-      <div class="text-2xl font-bold text-crypto-green">+84%</div>
+      <div class="text-2xl font-bold text-crypto-green">—</div>
       <div class="text-sm text-gray-400">Last 30 Days</div>
     </div>
     <div class="text-center p-3">
-      <div class="text-2xl font-bold">142</div>
+      <div class="text-2xl font-bold">—</div>
       <div class="text-sm text-gray-400">Signals Sent</div>
     </div>
     <div class="text-center p-3">
-      <div class="text-2xl font-bold">78%</div>
+      <div class="text-2xl font-bold">—%</div>
       <div class="text-sm text-gray-400">Win Rate</div>
     </div>
     <div class="text-center p-3">
@@ -73,7 +110,7 @@
   </div>
 
   <!-- Live Signals Section -->
-  <section id="signals" class="p-6 max-w-4xl mx-auto">
+  <section id="signals" class="p-6 max-w-4xl mx-auto mt-10">
     <div class="flex items-center mb-6">
       <h2 class="text-2xl font-bold flex items-center">
         <i class="fas fa-bolt text-yellow-400 mr-2"></i> Live Trading Signals
@@ -81,51 +118,8 @@
       <span class="ml-3 bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded">Updated Hourly</span>
     </div>
 
-    <div class="space-y-5">
-      <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 border-crypto-green">
-        <div class="flex flex-wrap justify-between items-start">
-          <div>
-            <span class="bg-crypto-green text-gray-900 text-xs font-bold px-2 py-1 rounded">BUY</span>
-            <span class="ml-2 text-xl font-bold">BTC/USDT</span>
-          </div>
-          <span class="text-gray-400 text-sm">Just now</span>
-        </div>
-        <p class="mt-2 text-gray-300">Entry: $61,250 | Target: $64,000 | Stop: $60,000</p>
-        <div class="mt-3 flex items-center text-sm">
-          <span class="bg-gray-700 px-2 py-1 rounded mr-2">15m Chart</span>
-          <span class="bg-gray-700 px-2 py-1 rounded">RSI Bullish Divergence</span>
-        </div>
-      </div>
-
-      <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 border-crypto-red">
-        <div class="flex flex-wrap justify-between items-start">
-          <div>
-            <span class="bg-crypto-red text-gray-900 text-xs font-bold px-2 py-1 rounded">SELL</span>
-            <span class="ml-2 text-xl font-bold">SOL/USDC</span>
-          </div>
-          <span class="text-gray-400 text-sm">2 hours ago</span>
-        </div>
-        <p class="mt-2 text-gray-300">Entry: $182.50 | Target: $170.00 | Stop: $190.00</p>
-        <div class="mt-3 flex items-center text-sm">
-          <span class="bg-gray-700 px-2 py-1 rounded mr-2">1h Chart</span>
-          <span class="bg-gray-700 px-2 py-1 rounded">Bearish Engulfing</span>
-        </div>
-      </div>
-
-      <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 border-crypto-green">
-        <div class="flex flex-wrap justify-between items-start">
-          <div>
-            <span class="bg-crypto-green text-gray-900 text-xs font-bold px-2 py-1 rounded">BUY</span>
-            <span class="ml-2 text-xl font-bold">ETH/USDC</span>
-          </div>
-          <span class="text-gray-400 text-sm">5 hours ago</span>
-        </div>
-        <p class="mt-2 text-gray-300">Entry: $3,420 | Target: $3,650 | Stop: $3,350</p>
-        <div class="mt-3 flex items-center text-sm">
-          <span class="bg-gray-700 px-2 py-1 rounded mr-2">4h Chart</span>
-          <span class="bg-gray-700 px-2 py-1 rounded">Break of Resistance</span>
-        </div>
-      </div>
+    <div id="signals-container" class="space-y-5">
+      <p class="text-gray-400">Loading live signals...</p>
     </div>
 
     <div class="text-center mt-8">
@@ -141,59 +135,30 @@
       <i class="fas fa-chart-line text-crypto-green mr-2"></i> Verified Successful Trades
     </h2>
 
-    <div class="grid md:grid-cols-2 gap-6">
-      <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="font-bold text-lg">BTC Long (Oct 28, 2025)</h3>
-            <p class="text-green-400 mt-1">+12.4% in 36 hours</p>
-          </div>
-          <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
-        </div>
-        <p class="mt-3 text-gray-300 text-sm">
-          Entered at $58,200 during breakout above 200 EMA. Exited near $65,400 at major resistance zone.
-        </p>
-        <div class="mt-3 flex text-xs text-gray-400">
-          <span>Entry: $58,200</span> • <span class="ml-2">Exit: $65,410</span>
-        </div>
-      </div>
-
-      <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="font-bold text-lg">ETH Short (Nov 5, 2025)</h3>
-            <p class="text-green-400 mt-1">+9.7% in 18 hours</p>
-          </div>
-          <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
-        </div>
-        <p class="mt-3 text-gray-300 text-sm">
-          Shorted at $3,620 after double top formation. Covered at $3,270 ahead of support bounce.
-        </p>
-        <div class="mt-3 flex text-xs text-gray-400">
-          <span>Entry: $3,620</span> • <span class="ml-2">Exit: $3,270</span>
-        </div>
-      </div>
-
-      <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900 md:col-span-2">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="font-bold text-lg">SOL Scalp (Nov 15, 2025)</h3>
-            <p class="text-green-400 mt-1">+6.2% in 4 hours</p>
-          </div>
-          <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
-        </div>
-        <p class="mt-3 text-gray-300 text-sm">
-          Quick scalp on 15m chart using volume spike + RSI reversal. Ideal for intraday traders.
-        </p>
-        <div class="mt-3 flex text-xs text-gray-400">
-          <span>Entry: $174.50</span> • <span class="ml-2">Exit: $185.30</span>
-        </div>
-      </div>
+    <div id="trades-container" class="grid md:grid-cols-2 gap-6">
+      <p class="text-gray-400 col-span-full">Loading verified trades...</p>
     </div>
 
-    <div class="text-center mt-8">
+    <div class="text-center mt-10">
       <a href="courses.html" class="bg-crypto-green hover:bg-green-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg inline-block transition">
         Unlock Full Course & Live Alerts → Pay with USDC
+      </a>
+    </div>
+  </section>
+
+  <!-- Integrated With Section -->
+  <section class="p-6 max-w-4xl mx-auto mt-16 text-center">
+    <h3 class="text-xl font-semibold mb-4 text-gray-300">Integrated With Trusted Platforms</h3>
+    <p class="text-gray-500 mb-6">We use and integrate with leading industry tools to deliver transparent, real-time insights.</p>
+    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+      <a href="https://www.tradingview.com/" target="_blank" rel="noopener">
+        <img src="https://imgur.com/VTio5bo" alt="TradingView" class="partner-logo h-10">
+      </a>
+      <a href="https://www.coinbase.com/commerce" target="_blank" rel="noopener">
+        <img src="https://commons.wikimedia.org/wiki/File:Coinbase.svg" alt="Coinbase Commerce" class="partner-logo">
+      </a>
+      <a href="https://coinmarketcap.com/" target="_blank" rel="noopener">
+        <img src="https://imgur.com/VTio5bo" alt="CoinMarketCap" class="partner-logo h-8">
       </a>
     </div>
   </section>
@@ -205,6 +170,134 @@
   </footer>
 
   <script>
+    // === CONFIG: REPLACE THESE WITH YOUR SHEETDB URLS ===
+    const STATS_SHEET_URL = 'https://sheetdb.io/api/v1/YOUR_STATS_SHEET_ID';      // ← Hero Stats
+    const SIGNALS_SHEET_URL = 'https://sheetdb.io/api/v1/YOUR_SIGNALS_SHEET_ID';  // ← Live Signals
+    const TRADES_SHEET_URL = 'https://sheetdb.io/api/v1/YOUR_TRADES_SHEET_ID';    // ← Verified Trades
+
+    // === FETCH LIVE CRYPTO PRICES ===
+    async function fetchPrices() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd');
+        const data = await res.json();
+        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-2"></i> BTC: $${data.bitcoin.usd.toLocaleString()}`;
+        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-2"></i> ETH: $${data.ethereum.usd.toLocaleString()}`;
+      } catch (e) {
+        document.getElementById('btc-price').innerText = 'BTC: —';
+        document.getElementById('eth-price').innerText = 'ETH: —';
+      }
+    }
+
+    // === FETCH HERO STATS ===
+    async function fetchStats() {
+      try {
+        const res = await fetch(STATS_SHEET_URL);
+        const statsList = await res.json();
+        if (!Array.isArray(statsList) || statsList.length === 0) return;
+
+        const stats = statsList[0]; // Use first (latest) row
+        const statsHtml = `
+          <div class="text-center p-3">
+            <div class="text-2xl font-bold text-crypto-green">${stats.last_30_days_return || '+84%'}</div>
+            <div class="text-sm text-gray-400">Last 30 Days</div>
+          </div>
+          <div class="text-center p-3">
+            <div class="text-2xl font-bold">${stats.signals_sent || '142'}</div>
+            <div class="text-sm text-gray-400">Signals Sent</div>
+          </div>
+          <div class="text-center p-3">
+            <div class="text-2xl font-bold">${stats.win_rate || '78%'}</div>
+            <div class="text-sm text-gray-400">Win Rate</div>
+          </div>
+          <div class="text-center p-3">
+            <div class="text-2xl font-bold">24/7</div>
+            <div class="text-sm text-gray-400">Market Coverage</div>
+          </div>
+        `;
+        document.getElementById('hero-stats').innerHTML = statsHtml;
+      } catch (e) {
+        console.warn('Failed to load stats:', e);
+        // Keep fallback content
+      }
+    }
+
+    // === FETCH SIGNALS ===
+    async function fetchSignals() {
+      try {
+        const res = await fetch(SIGNALS_SHEET_URL);
+        const signals = await res.json();
+        const container = document.getElementById('signals-container');
+        if (!Array.isArray(signals) || signals.length === 0) {
+          container.innerHTML = '<p class="text-gray-500">No signals available.</p>';
+          return;
+        }
+        container.innerHTML = signals.slice(0, 3).map(sig => {
+          const isBuy = sig.action?.toUpperCase() === 'BUY';
+          const borderColor = isBuy ? 'border-crypto-green' : 'border-crypto-red';
+          const bgAction = isBuy ? 'bg-crypto-green' : 'bg-crypto-red';
+          return `
+            <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 ${borderColor}">
+              <div class="flex flex-wrap justify-between items-start">
+                <div>
+                  <span class="${bgAction} text-gray-900 text-xs font-bold px-2 py-1 rounded">${sig.action || '—'}</span>
+                  <span class="ml-2 text-xl font-bold">${sig.pair || '—'}</span>
+                </div>
+                <span class="text-gray-400 text-sm">${sig.time_ago || '—'}</span>
+              </div>
+              <p class="mt-2 text-gray-300">Entry: ${sig.entry || '—'} | Target: ${sig.target || '—'} | Stop: ${sig.stop || '—'}</p>
+              <div class="mt-3 flex flex-wrap gap-2 text-sm">
+                ${sig.timeframe ? `<span class="bg-gray-700 px-2 py-1 rounded">${sig.timeframe}</span>` : ''}
+                ${sig.strategy ? `<span class="bg-gray-700 px-2 py-1 rounded">${sig.strategy}</span>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>';
+      }
+    }
+
+    // === FETCH VERIFIED TRADES ===
+    async function fetchTrades() {
+      try {
+        const res = await fetch(TRADES_SHEET_URL);
+        const trades = await res.json();
+        const container = document.getElementById('trades-container');
+        if (!Array.isArray(trades) || trades.length === 0) {
+          container.innerHTML = '<p class="text-gray-500 col-span-full">No verified trades available.</p>';
+          return;
+        }
+        container.innerHTML = trades.slice(0, 3).map(trade => `
+          <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-lg">${trade.title || '—'}</h3>
+                <p class="text-green-400 mt-1">${trade.return || '—'}</p>
+              </div>
+              <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
+            </div>
+            <p class="mt-3 text-gray-300 text-sm">${trade.description || ''}</p>
+            <div class="mt-3 flex text-xs text-gray-400">
+              <span>Entry: ${trade.entry || '—'}</span> • <span class="ml-2">Exit: ${trade.exit || '—'}</span>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trade history.</p>';
+      }
+    }
+
+    // === INIT ALL DATA ===
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchPrices();
+      fetchStats();      // ← NEW: fetch hero stats
+      fetchSignals();
+      fetchTrades();
+      
+      // Optional: auto-refresh prices every 60s
+      setInterval(fetchPrices, 60000);
+    });
+
     function showAllSignals() {
       alert("In a full version, this would open a signals archive page.");
     }
