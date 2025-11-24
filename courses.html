@@ -92,130 +92,142 @@
 
   <!-- Firebase SDKs (CDN) -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
-      authDomain: "azadtradelab-cources.firebaseapp.com",
-      projectId: "azadtradelab-cources",
-      storageBucket: "azadtradelab-cources.firebasestorage.app",
-      messagingSenderId: "864971831518",
-      appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
+    authDomain: "azadtradelab-cources.firebaseapp.com",
+    projectId: "azadtradelab-cources",
+    storageBucket: "azadtradelab-cources.firebasestorage.app",
+    messagingSenderId: "864971831518",
+    appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    const loginSec = document.getElementById('login-section');
-    const dash = document.getElementById('dashboard');
-    const payReq = document.getElementById('payment-required');
-    const emailEl = document.getElementById('user-email');
+  const loginSec = document.getElementById('login-section');
+  const dash = document.getElementById('dashboard');
+  const payReq = document.getElementById('payment-required');
+  const emailEl = document.getElementById('user-email');
 
-    function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+  function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 
-    async function isPaid(uid) {
+  // ✅ FIXED: Graceful Firestore handling
+  async function isPaid(uid) {
+    try {
       const docSnap = await getDoc(doc(db, "users", uid));
       return docSnap.exists() && docSnap.data().isPaid === true;
+    } catch (error) {
+      console.warn("⚠️ Firestore error (check if enabled + rules):", error.message);
+      return false; // Assume not paid if can't verify
+    }
+  }
+
+  async function handleAuth(user) {
+    if (!user) {
+      loginSec.classList.remove('hidden');
+      dash.classList.add('hidden');
+      payReq.classList.add('hidden');
+      return;
     }
 
-    async function handleAuth(user) {
-      if (!user) {
-        loginSec.classList.remove('hidden');
-        dash.classList.add('hidden');
-        payReq.classList.add('hidden');
-        return;
-      }
+    const paid = await isPaid(user.uid);
+    emailEl.textContent = user.email;
 
-      const paid = await isPaid(user.uid);
-      emailEl.textContent = user.email;
-
-      if (paid) {
-        loginSec.classList.add('hidden');
-        payReq.classList.add('hidden');
-        dash.classList.remove('hidden');
-      } else {
-        loginSec.classList.add('hidden');
-        dash.classList.add('hidden');
-        payReq.classList.remove('hidden');
-      }
+    if (paid) {
+      loginSec.classList.add('hidden');
+      payReq.classList.add('hidden');
+      dash.classList.remove('hidden');
+    } else {
+      loginSec.classList.add('hidden');
+      dash.classList.add('hidden');
+      payReq.classList.remove('hidden');
     }
+  }
 
-    onAuthStateChanged(auth, handleAuth);
+  onAuthStateChanged(auth, handleAuth);
 
-    // Login
-    document.getElementById('login-btn').addEventListener('click', () => {
-      const e = document.getElementById('login-email').value.trim();
-      const p = document.getElementById('login-pass').value;
-      if (!e || !isValidEmail(e)) return alert("Valid email required");
-      if (!p) return alert("Password required");
-      signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login failed: " + err.message));
+  // Login
+  document.getElementById('login-btn').addEventListener('click', () => {
+    const e = document.getElementById('login-email').value.trim();
+    const p = document.getElementById('login-pass').value;
+    if (!e || !isValidEmail(e)) return alert("Valid email required");
+    if (!p) return alert("Password required");
+    signInWithEmailAndPassword(auth, e, p).catch(err => {
+      console.error("Login error:", err);
+      alert("Login failed: " + err.message);
     });
+  });
 
-    // Signup
-    document.getElementById('signup-btn').addEventListener('click', () => {
-      const e = document.getElementById('signup-email').value.trim();
-      const p = document.getElementById('signup-pass').value;
-      if (!e || !isValidEmail(e)) return alert("Valid email required");
-      if (!p || p.length < 6) return alert("Password must be ≥6 characters");
-      createUserWithEmailAndPassword(auth, e, p).catch(err => alert("Signup failed: " + err.message));
+  // Signup
+  document.getElementById('signup-btn').addEventListener('click', () => {
+    const e = document.getElementById('signup-email').value.trim();
+    const p = document.getElementById('signup-pass').value;
+    if (!e || !isValidEmail(e)) return alert("Valid email required");
+    if (!p || p.length < 6) return alert("Password must be ≥6 characters");
+    createUserWithEmailAndPassword(auth, e, p).catch(err => {
+      console.error("Signup error:", err);
+      alert("Signup failed: " + err.message);
     });
+  });
 
-    // Logout
-    document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+  // Logout
+  document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-    // === Course Logic ===
-    const COURSE = {
-      beginner: {
-        title: "Beginner Crypto Trading",
-        videos: [
-          { id: "UIn0hvgHKc0", title: "1. Introduction to Crypto" },
-          { id: "cABEowBTfLA", title: "2. Reading Charts Like a Pro" },
-          { id: "h5qjXKdMxxE", title: "3. Risk Management Rules" },
-          { id: "wVTACrztLOA", title: "4. Live Trade Example" },
-          { id: "ooqM1JNhGiw", title: "5. Q&A and Next Steps" }
-        ]
-      }
-    };
+  // === Course Logic ===
+  const COURSE = {
+    beginner: {
+      title: "Beginner Crypto Trading",
+      videos: [
+        { id: "UIn0hvgHKc0", title: "1. Introduction to Crypto" },
+        { id: "cABEowBTfLA", title: "2. Reading Charts Like a Pro" },
+        { id: "h5qjXKdMxxE", title: "3. Risk Management Rules" },
+        { id: "wVTACrztLOA", title: "4. Live Trade Example" },
+        { id: "ooqM1JNhGiw", title: "5. Q&A and Next Steps" }
+      ]
+    }
+  };
 
-    const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
+  const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
 
-    document.getElementById('buy-beginner-btn').addEventListener('click', () => {
-      const user = auth.currentUser;
-      if (!user) return alert("Please log in first.")
-      const url = new URL(CHECKOUT_URL);
-      url.searchParams.set("metadata[email]", user.email);
-      window.location.href = url.toString();
+  document.getElementById('buy-beginner-btn').addEventListener('click', () => {
+    const user = auth.currentUser;
+    if (!user) return alert("Please log in first.");
+    const url = new URL(CHECKOUT_URL);
+    url.searchParams.set("metadata[email]", user.email);
+    window.location.href = url.toString();
+  });
+
+  window.showCoursePlaylist = async (id) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    if (!(await isPaid(user.uid))) return alert("Payment required.");
+    const c = COURSE[id];
+    if (!c) return;
+    document.getElementById('modal-title').textContent = c.title;
+    const list = document.getElementById('video-playlist');
+    list.innerHTML = '';
+    c.videos.forEach(v => {
+      const li = document.createElement('li');
+      li.className = "cursor-pointer hover:text-yellow-400 py-1";
+      li.textContent = v.title;
+      li.onclick = () => document.getElementById('course-video').src = `https://www.youtube.com/embed/${v.id}?autoplay=1`;
+      list.appendChild(li);
     });
+    if (c.videos.length > 0) {
+      document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
+    }
+    document.getElementById('course-modal').classList.remove('hidden');
+  };
 
-    window.showCoursePlaylist = async (id) => {
-      const user = auth.currentUser;
-      if (!user) return;
-      if (!(await isPaid(user.uid))) return alert("Payment required.");
-      const c = COURSE[id];
-      if (!c) return;
-      document.getElementById('modal-title').textContent = c.title;
-      const list = document.getElementById('video-playlist');
-      list.innerHTML = '';
-      c.videos.forEach(v => {
-        const li = document.createElement('li');
-        li.className = "cursor-pointer hover:text-yellow-400 py-1";
-        li.textContent = v.title;
-        li.onclick = () => document.getElementById('course-video').src = `https://www.youtube.com/embed/${v.id}?autoplay=1`;
-        list.appendChild(li);
-      });
-      if (c.videos.length > 0) {
-        document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
-      }
-      document.getElementById('course-modal').classList.remove('hidden');
-    };
-
-    window.closeModal = () => {
-      document.getElementById('course-modal').classList.add('hidden');
-      document.getElementById('course-video').src = '';
-    };
-  </script>
+  window.closeModal = () => {
+    document.getElementById('course-modal').classList.add('hidden');
+    document.getElementById('course-video').src = '';
+  };
+</script>
 </body>
 </html>
