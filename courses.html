@@ -184,7 +184,7 @@
 
     document.getElementById('buy-beginner-btn').addEventListener('click', () => {
       const user = auth.currentUser;
-      if (!user) return alert("Please log in first.");
+      if (!user) return alert("Please log in first.")
       const url = new URL(CHECKOUT_URL);
       url.searchParams.set("metadata[email]", user.email);
       window.location.href = url.toString();
