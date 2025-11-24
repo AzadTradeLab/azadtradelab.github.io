@@ -3,325 +3,275 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AzadTradeLab | Live Crypto Trading Alerts</title>
+  <title>My Courses | AzadTradeLab</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            crypto: {
-              green: '#10B981',
-              red: '#EF4444',
-              blue: '#3B82F6',
-              dark: '#0F172A'
-            }
-          }
-        }
-      }
-    }
-  </script>
   <style>
-    .signal-card {
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .signal-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
-    }
-    .partner-logo {
-      height: 40px;
-      opacity: 0.8;
-      transition: opacity 0.2s;
-    }
-    .partner-logo:hover {
-      opacity: 1;
-    }
+    .crypto-blue { @apply text-blue-400; }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
+<body class="bg-gray-900 text-white min-h-screen">
 
   <!-- Navigation -->
   <nav class="bg-gray-800 p-4 text-center">
     <a href="index.html" class="text-white font-bold mx-4">Home</a>
-    <a href="courses.html" class="text-crypto-blue mx-4">Courses</a>
+    <a href="courses.html" class="crypto-blue mx-4">Courses</a>
   </nav>
 
-  <!-- Header -->
-  <header class="bg-gradient-to-r from-crypto-blue to-indigo-800 py-6 px-4 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold">🚀 AzadTradeLab</h1>
-    <p class="mt-2 text-indigo-200 max-w-2xl mx-auto">
-      Real-time crypto trading signals • Verified results • Pay with USDC for full courses
-    </p>
-    <div class="mt-4 flex flex-wrap justify-center gap-3">
-      <a href="#signals" class="inline-block bg-white text-crypto-blue font-bold py-2 px-6 rounded-full">Live Signals</a>
-      <a href="#proof" class="inline-block bg-crypto-green text-gray-900 font-bold py-2 px-6 rounded-full">Trade Proof</a>
-    </div>
+  <header class="p-6 text-center bg-indigo-900">
+    <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
+    <p class="mt-2">Pay with USDC • Lifetime access • Full video series</p>
   </header>
 
-  <!-- Live Prices Banner -->
-  <div class="bg-gray-800 py-3 px-4 flex flex-wrap justify-center gap-6 text-sm">
-    <div id="btc-price" class="font-mono flex items-center flex-wrap justify-center gap-1">
-      <i class="fab fa-bitcoin text-yellow-500"></i> Loading...
+  <!-- Login / Signup -->
+  <section id="login-section" class="p-8 max-w-md mx-auto">
+    <div class="bg-gray-800 p-6 rounded shadow">
+      <h2 class="text-xl mb-4">Log In</h2>
+      <input id="login-email" type="email" placeholder="Email" class="w-full p-2 mb-2 rounded bg-gray-700" autocomplete="email" required>
+      <input id="login-pass" type="password" placeholder="Password" class="w-full p-2 mb-4 rounded bg-gray-700" autocomplete="current-password" required>
+      <button id="login-btn" class="w-full bg-green-600 py-2 rounded">Log In</button>
     </div>
-    <div id="eth-price" class="font-mono flex items-center flex-wrap justify-center gap-1">
-      <i class="fab fa-ethereum text-crypto-blue"></i> Loading...
+
+    <div class="mt-6 bg-gray-800 p-6 rounded shadow">
+      <h2 class="text-xl mb-4">Sign Up</h2>
+      <input id="signup-email" type="email" placeholder="Email" class="w-full p-2 mb-2 rounded bg-gray-700" autocomplete="email" required>
+      <input id="signup-pass" type="password" placeholder="Password (6+ characters)" class="w-full p-2 mb-4 rounded bg-gray-700" autocomplete="new-password" required>
+      <button id="signup-btn" class="w-full bg-blue-600 py-2 rounded">Create Account</button>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashboard" class="hidden p-8 max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2>Welcome, <span id="user-email"></span>!</h2>
+      <button id="logout-btn" class="bg-red-600 px-4 py-1 rounded">Log Out</button>
+    </div>
+
+    <div class="mb-10">
+      <h3 class="text-2xl font-semibold mb-4">📈 Latest Trading Signals</h3>
+      <div class="space-y-4">
+        <div class="p-4 bg-gray-800 rounded">BTC/USDT: BUY above $62,000</div>
+        <div class="p-4 bg-gray-800 rounded">ETH/USDC: SELL near $3,500 resistance</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-2xl font-semibold mb-4">🎓 Your Courses</h3>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-gray-800 p-6 rounded">
+          <h4 class="text-xl">Beginner Crypto Trading</h4>
+          <p class="my-2">5-video series: from zero to profitable trader.</p>
+          <button onclick="buyCourse('beginner')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">
+            Buy for 69 USDC
+          </button>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded">
+          <h4 class="text-xl">Advanced Algo Signals</h4>
+          <p class="my-2">8-video deep dive + live signal walkthroughs.</p>
+          <button class="mt-2 bg-gray-600 px-4 py-2 rounded cursor-not-allowed" disabled>
+            Coming Soon
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Multi-Video Course Player Modal -->
+  <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-gray-800 w-full max-w-6xl max-h-[90vh] rounded relative flex flex-col md:flex-row">
+      <div class="w-full md:w-3/4">
+        <div class="p-4 border-b border-gray-700">
+          <h3 id="modal-title" class="text-xl font-bold">Course Content</h3>
+        </div>
+        <div class="aspect-video bg-black">
+          <iframe id="course-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="w-full md:w-1/4 p-4 overflow-y-auto max-h-[70vh]">
+        <h4 class="font-bold mb-3 text-blue-400">Lessons</h4>
+        <ul id="video-playlist" class="space-y-2"></ul>
+      </div>
+
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-400 bg-gray-900 w-8 h-8 rounded-full">✕</button>
     </div>
   </div>
 
-  <!-- Intro Video -->
-  <section class="p-6 max-w-4xl mx-auto mt-8">
-    <h2 class="text-2xl font-bold text-center mb-4">Welcome to AzadTradeLab</h2>
-    <div class="aspect-video bg-black rounded-xl overflow-hidden">
-      <iframe
-        class="w-full h-full"
-        src="https://www.youtube.com/embed/UIn0hvgHKc0?autoplay=0&rel=0"
-        title="AzadTradeLab Introduction"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-    </div>
-  </section>
+  <!-- Firebase + Auth Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  <!-- Hero Stats (FROM GOOGLE SHEET) -->
-  <div id="hero-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800">
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold text-crypto-green">—</div>
-      <div class="text-sm text-gray-400">Last 30 Days</div>
-    </div>
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold">—</div>
-      <div class="text-sm text-gray-400">Signals Sent</div>
-    </div>
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold">—%</div>
-      <div class="text-sm text-gray-400">Win Rate</div>
-    </div>
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold">24/7</div>
-      <div class="text-sm text-gray-400">Market Coverage</div>
-    </div>
-  </div>
+    // ✅ Your Firebase config (from project settings)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
+      authDomain: "azadtradelab-cources.firebaseapp.com",
+      projectId: "azadtradelab-cources",
+      storageBucket: "azadtradelab-cources.firebasestorage.app",
+      messagingSenderId: "864971831518",
+      appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
+    };
 
-  <!-- Live Signals Section -->
-  <section id="signals" class="p-6 max-w-4xl mx-auto mt-10">
-    <div class="flex items-center mb-6">
-      <h2 class="text-2xl font-bold flex items-center">
-        <i class="fas fa-bolt text-yellow-400 mr-2"></i> Live Trading Signals
-      </h2>
-      <span class="ml-3 bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded">Updated Hourly</span>
-    </div>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    <div id="signals-container" class="space-y-5">
-      <p class="text-gray-400">Loading live signals...</p>
-    </div>
-
-    <div class="text-center mt-8">
-      <button onclick="showAllSignals()" class="border border-crypto-blue text-crypto-blue px-5 py-2 rounded hover:bg-crypto-blue hover:text-white transition">
-        View All Historical Signals
-      </button>
-    </div>
-  </section>
-
-  <!-- Verified Successful Trades -->
-  <section id="proof" class="p-6 max-w-4xl mx-auto mt-12">
-    <h2 class="text-2xl font-bold mb-6 flex items-center">
-      <i class="fas fa-chart-line text-crypto-green mr-2"></i> Verified Successful Trades
-    </h2>
-
-    <div id="trades-container" class="grid md:grid-cols-2 gap-6">
-      <p class="text-gray-400 col-span-full">Loading verified trades...</p>
-    </div>
-
-    <div class="text-center mt-10">
-      <a href="courses.html" class="bg-crypto-green hover:bg-green-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg inline-block transition">
-        Unlock Full Course & Live Alerts → Pay with USDC
-      </a>
-    </div>
-  </section>
-
-  <!-- Integrated With Section -->
-  <section class="p-6 max-w-4xl mx-auto mt-16 text-center">
-    <h3 class="text-xl font-semibold mb-4 text-gray-300">Integrated With Trusted Platforms</h3>
-    <p class="text-gray-500 mb-6">We use and integrate with leading industry tools to deliver transparent, real-time insights.</p>
-    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-      <a href="https://www.tradingview.com/" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/TradingView_logo.svg" alt="TradingView" class="partner-logo h-10">
-      </a>
-      <a href="https://www.coinbase.com/commerce" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Coinbase_Commerce_logo.svg" alt="Coinbase Commerce" class="partner-logo">
-      </a>
-      <a href="https://coinmarketcap.com/" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/CoinMarketCap_Logo.png" alt="CoinMarketCap" class="partner-logo h-8">
-      </a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
-    <p>© 2025 AzadTradeLab. Not financial advice. Trading involves risk.</p>
-    <p class="mt-2">All courses payable in USDC (ERC-20, Polygon, or Base)</p>
-  </footer>
-
-  <script>
-    // === SHEETDB API ENDPOINTS ===
-    const STATS_SHEET_URL = 'https://sheetdb.io/api/v1/zehc0qlbongx3';      // Hero Stats
-    const SIGNALS_SHEET_URL = 'https://sheetdb.io/api/v1/nvpllp07vjjtt';    // Live Signals
-    const TRADES_SHEET_URL = 'https://sheetdb.io/api/v1/vu72czk3dcbol';     // Verified Trades
-
-    // === FETCH LIVE CRYPTO PRICES WITH 24H CHANGE ===
-    async function fetchPrices() {
-      try {
-        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        
-        const data = await res.json();
-        const btc = data.bitcoin;
-        const eth = data.ethereum;
-
-        // Format prices
-        const btcPrice = `$${Number(btc.usd).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-        const ethPrice = `$${Number(eth.usd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        // 24h change
-        const btcChange = btc.usd_24h_change;
-        const ethChange = eth.usd_24h_change;
-        const btcChangeClass = btcChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-        const ethChangeClass = ethChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-        const btcChangeText = `(${btcChange >= 0 ? '+' : ''}${btcChange.toFixed(2)}%)`;
-        const ethChangeText = `(${ethChange >= 0 ? '+' : ''}${ethChange.toFixed(2)}%)`;
-
-        document.getElementById('btc-price').innerHTML = `
-          <i class="fab fa-bitcoin text-yellow-500 mr-1"></i>
-          BTC: ${btcPrice} <span class="${btcChangeClass} text-xs">${btcChangeText}</span>
-        `;
-        document.getElementById('eth-price').innerHTML = `
-          <i class="fab fa-ethereum text-crypto-blue mr-1"></i>
-          ETH: ${ethPrice} <span class="${ethChangeClass} text-xs">${ethChangeText}</span>
-        `;
-      } catch (e) {
-        console.warn("⚠️ Failed to fetch prices:", e);
-        document.getElementById('btc-price').innerHTML = '<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: —';
-        document.getElementById('eth-price').innerHTML = '<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: —';
-      }
-    }
-
-    // === FETCH HERO STATS ===
-    async function fetchStats() {
-      try {
-        const res = await fetch(STATS_SHEET_URL);
-        const statsList = await res.json();
-        if (!Array.isArray(statsList) || statsList.length === 0) return;
-        const s = statsList[0];
-        document.getElementById('hero-stats').innerHTML = `
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold text-crypto-green">${s.last_30_days_return || '+84%'}</div>
-            <div class="text-sm text-gray-400">Last 30 Days</div>
-          </div>
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold">${s.signals_sent || '142'}</div>
-            <div class="text-sm text-gray-400">Signals Sent</div>
-          </div>
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold">${s.win_rate || '78%'}</div>
-            <div class="text-sm text-gray-400">Win Rate</div>
-          </div>
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold">24/7</div>
-            <div class="text-sm text-gray-400">Market Coverage</div>
-          </div>
-        `;
-      } catch (e) {
-        console.warn('Failed to load stats:', e);
-      }
-    }
-
-    // === FETCH SIGNALS ===
-    async function fetchSignals() {
-      try {
-        const res = await fetch(SIGNALS_SHEET_URL);
-        const signals = await res.json();
-        const container = document.getElementById('signals-container');
-        if (!Array.isArray(signals) || signals.length === 0) {
-          container.innerHTML = '<p class="text-gray-500">No signals available.</p>';
-          return;
-        }
-        container.innerHTML = signals.slice(0, 3).map(sig => {
-          const isBuy = sig.action?.toUpperCase() === 'BUY';
-          const borderColor = isBuy ? 'border-crypto-green' : 'border-crypto-red';
-          const bgAction = isBuy ? 'bg-crypto-green' : 'bg-crypto-red';
-          return `
-            <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 ${borderColor}">
-              <div class="flex flex-wrap justify-between items-start">
-                <div>
-                  <span class="${bgAction} text-gray-900 text-xs font-bold px-2 py-1 rounded">${sig.action || '—'}</span>
-                  <span class="ml-2 text-xl font-bold">${sig.pair || '—'}</span>
-                </div>
-                <span class="text-gray-400 text-sm">${sig.time_ago || '—'}</span>
-              </div>
-              <p class="mt-2 text-gray-300">Entry: ${sig.entry || '—'} | Target: ${sig.target || '—'} | Stop: ${sig.stop || '—'}</p>
-              <div class="mt-3 flex flex-wrap gap-2 text-sm">
-                ${sig.timeframe ? `<span class="bg-gray-700 px-2 py-1 rounded">${sig.timeframe}</span>` : ''}
-                ${sig.strategy ? `<span class="bg-gray-700 px-2 py-1 rounded">${sig.strategy}</span>` : ''}
-              </div>
-            </div>
-          `;
-        }).join('');
-      } catch (e) {
-        document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>';
-        console.error('Signals error:', e);
-      }
-    }
-
-    // === FETCH TRADES ===
-    async function fetchTrades() {
-      try {
-        const res = await fetch(TRADES_SHEET_URL);
-        const trades = await res.json();
-        const container = document.getElementById('trades-container');
-        if (!Array.isArray(trades) || trades.length === 0) {
-          container.innerHTML = '<p class="text-gray-500 col-span-full">No verified trades available.</p>';
-          return;
-        }
-        container.innerHTML = trades.slice(0, 3).map(trade => `
-          <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
-            <div class="flex justify-between items-start">
-              <div>
-                <h3 class="font-bold text-lg">${trade.title || '—'}</h3>
-                <p class="text-green-400 mt-1">${trade.return || '—'}</p>
-              </div>
-              <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
-            </div>
-            <p class="mt-3 text-gray-300 text-sm">${trade.description || ''}</p>
-            <div class="mt-3 flex text-xs text-gray-400">
-              <span>Entry: ${trade.entry || '—'}</span> • <span class="ml-2">Exit: ${trade.exit || '—'}</span>
-            </div>
-          </div>
-        `).join('');
-      } catch (e) {
-        document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>';
-        console.error('Trades error:', e);
-      }
-    }
-
-    // === INITIALIZE ===
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchPrices();
-      fetchStats();
-      fetchSignals();
-      fetchTrades();
-
-      // Auto-refresh prices every 60 seconds
-      setInterval(fetchPrices, 60000);
+    // Toggle login/dashboard based on auth state
+    function toggleViews(user) {
+      const loginSection = document.getElementById('login-section');
+      const dashboard = document.getElementById('dashboard');
+      const emailSpan = document.getElementById('user-email');
       
-      // Optional: refresh data every 2 minutes (uncomment if needed)
-      // setInterval(() => { fetchStats(); fetchSignals(); fetchTrades(); }, 120000);
+      if (user) {
+        loginSection.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        emailSpan.textContent = user.email;
+      } else {
+        loginSection.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+      }
+    }
+
+    onAuthStateChanged(auth, toggleViews);
+
+    // Helper: validate email format
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Login handler
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const emailInput = document.getElementById('login-email');
+      const passInput = document.getElementById('login-pass');
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+
+      if (!email) {
+        alert("Please enter your email.");
+        emailInput.focus();
+        return;
+      }
+      if (!isValidEmail(email)) {
+        alert("Please enter a valid email address (e.g., you@example.com).");
+        emailInput.focus();
+        return;
+      }
+      if (!password) {
+        alert("Please enter your password.");
+        passInput.focus();
+        return;
+      }
+
+      signInWithEmailAndPassword(auth, email, password)
+        .catch(err => {
+          console.error("Login error:", err);
+          alert("Login failed: " + (err.message || "Please check your credentials."));
+        });
     });
 
-    function showAllSignals() {
-      alert("Full historical signals coming soon!");
+    // Signup handler
+    document.getElementById('signup-btn').addEventListener('click', () => {
+      const emailInput = document.getElementById('signup-email');
+      const passInput = document.getElementById('signup-pass');
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+
+      if (!email) {
+        alert("Please enter your email.");
+        emailInput.focus();
+        return;
+      }
+      if (!isValidEmail(email)) {
+        alert("Please enter a valid email address (e.g., you@example.com).");
+        emailInput.focus();
+        return;
+      }
+      if (!password) {
+        alert("Please enter a password.");
+        passInput.focus();
+        return;
+      }
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        passInput.focus();
+        return;
+      }
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .catch(err => {
+          console.error("Signup error:", err);
+          alert("Signup failed: " + (err.message || "Please try again."));
+        });
+    });
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).catch(console.error);
+    });
+  </script>
+
+  <!-- Course & Payment Logic -->
+  <script>
+    const COURSE_CONTENT = {
+      beginner: {
+        title: "Beginner Crypto Trading",
+        videos: [
+          { id: "UIn0hvgHKc0", title: "1. Introduction to Crypto" },
+          { id: "cABEowBTfLA", title: "2. Reading Charts Like a Pro" },
+          { id: "h5qjXKdMxxE", title: "3. Risk Management Rules" },
+          { id: "wVTACrztLOA", title: "4. Live Trade Example" },
+          { id: "ooqM1JNhGiw", title: "5. Q&A and Next Steps" }
+        ]
+      }
+    };
+
+    const CHECKOUT_LINKS = {
+      beginner: "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877"
+    };
+
+    function buyCourse(courseId) {
+      const url = CHECKOUT_LINKS[courseId];
+      if (!url) {
+        alert("This course is not available for purchase yet.");
+        return;
+      }
+      window.open(url, '_blank');
+
+      // ⚠️ DEMO ONLY: grant access after 3 sec (in real app, use webhook)
+      setTimeout(() => {
+        if (COURSE_CONTENT[courseId]) {
+          showCoursePlaylist(courseId);
+        }
+      }, 3000);
+    }
+
+    function showCoursePlaylist(courseId) {
+      const course = COURSE_CONTENT[courseId];
+      document.getElementById('modal-title').textContent = course.title;
+      const playlist = document.getElementById('video-playlist');
+      playlist.innerHTML = '';
+
+      course.videos.forEach(video => {
+        const li = document.createElement('li');
+        li.className = "cursor-pointer hover:text-yellow-400 py-1";
+        li.textContent = video.title;
+        li.onclick = () => loadVideo(video.id);
+        playlist.appendChild(li);
+      });
+
+      if (course.videos.length > 0) {
+        loadVideo(course.videos[0].id);
+      }
+
+      document.getElementById('course-modal').classList.remove('hidden');
+    }
+
+    function loadVideo(videoId) {
+      document.getElementById('course-video').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+
+    function closeModal() {
+      document.getElementById('course-modal').classList.add('hidden');
+      document.getElementById('course-video').src = '';
     }
   </script>
 </body>
