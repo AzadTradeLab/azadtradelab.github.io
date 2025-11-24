@@ -76,7 +76,6 @@
   <section class="p-6 max-w-4xl mx-auto mt-8">
     <h2 class="text-2xl font-bold text-center mb-4">Welcome to AzadTradeLab</h2>
     <div class="aspect-video bg-black rounded-xl overflow-hidden">
-      <!-- 🔁 REPLACE WITH YOUR YOUTUBE VIDEO ID -->
       <iframe
         class="w-full h-full"
         src="https://www.youtube.com/embed/UIn0hvgHKc0?autoplay=0&rel=0"
@@ -88,9 +87,8 @@
     </div>
   </section>
 
-  <!-- Hero Stats (NOW FROM GOOGLE SHEET) -->
+  <!-- Hero Stats (FROM GOOGLE SHEET) -->
   <div id="hero-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800">
-    <!-- Default loading state -->
     <div class="text-center p-3">
       <div class="text-2xl font-bold text-crypto-green">—</div>
       <div class="text-sm text-gray-400">Last 30 Days</div>
@@ -129,7 +127,7 @@
     </div>
   </section>
 
-  <!-- Successful Trades Proof -->
+  <!-- Verified Successful Trades -->
   <section id="proof" class="p-6 max-w-4xl mx-auto mt-12">
     <h2 class="text-2xl font-bold mb-6 flex items-center">
       <i class="fas fa-chart-line text-crypto-green mr-2"></i> Verified Successful Trades
@@ -152,13 +150,13 @@
     <p class="text-gray-500 mb-6">We use and integrate with leading industry tools to deliver transparent, real-time insights.</p>
     <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
       <a href="https://www.tradingview.com/" target="_blank" rel="noopener">
-        <img src="https://imgur.com/VTio5bo" alt="TradingView" class="partner-logo h-10">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/TradingView_logo.svg" alt="TradingView" class="partner-logo h-10">
       </a>
       <a href="https://www.coinbase.com/commerce" target="_blank" rel="noopener">
-        <img src="https://commons.wikimedia.org/wiki/File:Coinbase.svg" alt="Coinbase Commerce" class="partner-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Coinbase_Commerce_logo.svg" alt="Coinbase Commerce" class="partner-logo">
       </a>
       <a href="https://coinmarketcap.com/" target="_blank" rel="noopener">
-        <img src="https://imgur.com/VTio5bo" alt="CoinMarketCap" class="partner-logo h-8">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/CoinMarketCap_Logo.png" alt="CoinMarketCap" class="partner-logo h-8">
       </a>
     </div>
   </section>
@@ -170,10 +168,10 @@
   </footer>
 
   <script>
-    // === CONFIG: REPLACE THESE WITH YOUR SHEETDB URLS ===
-    const STATS_SHEET_URL = 'https://sheetdb.io/api/v1/zehc0qlbongx3';      // ← Hero Stats
-    const SIGNALS_SHEET_URL = 'https://sheetdb.io/api/v1/YOUR_SIGNALS_SHEET_ID';  // ← Live Signals
-    const TRADES_SHEET_URL = 'https://sheetdb.io/api/v1/vu72czk3dcbol';    // ← Verified Trades
+    // === SHEETDB API ENDPOINTS (ALL CONNECTED) ===
+    const STATS_SHEET_URL = 'https://sheetdb.io/api/v1/zehc0qlbongx3';      // Hero Stats
+    const SIGNALS_SHEET_URL = 'https://sheetdb.io/api/v1/nvpllp07vjjtt';    // Live Signals ✅
+    const TRADES_SHEET_URL = 'https://sheetdb.io/api/v1/vu72czk3dcbol';     // Verified Trades
 
     // === FETCH LIVE CRYPTO PRICES ===
     async function fetchPrices() {
@@ -195,8 +193,8 @@
         const statsList = await res.json();
         if (!Array.isArray(statsList) || statsList.length === 0) return;
 
-        const stats = statsList[0]; // Use first (latest) row
-        const statsHtml = `
+        const stats = statsList[0];
+        document.getElementById('hero-stats').innerHTML = `
           <div class="text-center p-3">
             <div class="text-2xl font-bold text-crypto-green">${stats.last_30_days_return || '+84%'}</div>
             <div class="text-sm text-gray-400">Last 30 Days</div>
@@ -214,14 +212,12 @@
             <div class="text-sm text-gray-400">Market Coverage</div>
           </div>
         `;
-        document.getElementById('hero-stats').innerHTML = statsHtml;
       } catch (e) {
         console.warn('Failed to load stats:', e);
-        // Keep fallback content
       }
     }
 
-    // === FETCH SIGNALS ===
+    // === FETCH LIVE SIGNALS ===
     async function fetchSignals() {
       try {
         const res = await fetch(SIGNALS_SHEET_URL);
@@ -287,15 +283,18 @@
       }
     }
 
-    // === INIT ALL DATA ===
+    // === INITIALIZE ALL DATA ===
     document.addEventListener('DOMContentLoaded', () => {
       fetchPrices();
-      fetchStats();      // ← NEW: fetch hero stats
+      fetchStats();
       fetchSignals();
       fetchTrades();
-      
-      // Optional: auto-refresh prices every 60s
+
+      // Auto-refresh prices every 60 seconds
       setInterval(fetchPrices, 60000);
+      
+      // Optional: auto-refresh signals/stats every 2 minutes
+      // setInterval(() => { fetchStats(); fetchSignals(); fetchTrades(); }, 120000);
     });
 
     function showAllSignals() {
