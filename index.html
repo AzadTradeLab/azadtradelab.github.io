@@ -14,8 +14,7 @@
             crypto: {
               green: '#10B981',
               red: '#EF4444',
-              blue: '#3B82F6',
-              dark: '#0F172A'
+              blue: '#3B82F6'
             }
           }
         }
@@ -23,21 +22,10 @@
     }
   </script>
   <style>
-    .signal-card {
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .signal-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
-    }
-    .partner-logo {
-      height: 40px;
-      opacity: 0.8;
-      transition: opacity 0.2s;
-    }
-    .partner-logo:hover {
-      opacity: 1;
-    }
+    .signal-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .signal-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
+    .partner-logo { height: 40px; opacity: 0.8; transition: opacity 0.2s; }
+    .partner-logo:hover { opacity: 1; }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
@@ -60,12 +48,12 @@
     </div>
   </header>
 
-  <!-- Live Prices Banner -->
+  <!-- Live Prices -->
   <div class="bg-gray-800 py-3 px-4 flex flex-wrap justify-center gap-6 text-sm">
-    <div id="btc-price" class="font-mono flex items-center flex-wrap justify-center gap-1">
+    <div id="btc-price" class="font-mono flex items-center gap-1">
       <i class="fab fa-bitcoin text-yellow-500"></i> Loading...
     </div>
-    <div id="eth-price" class="font-mono flex items-center flex-wrap justify-center gap-1">
+    <div id="eth-price" class="font-mono flex items-center gap-1">
       <i class="fab fa-ethereum text-crypto-blue"></i> Loading...
     </div>
   </div>
@@ -76,7 +64,7 @@
     <div class="aspect-video bg-black rounded-xl overflow-hidden">
       <iframe
         class="w-full h-full"
-        src="https://www.youtube.com/embed/UIn0hvgHKc0?autoplay=0&rel=0"
+        src="https://www.youtube.com/embed/UIn0hvgHKc0"
         title="AzadTradeLab Introduction"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -85,7 +73,7 @@
     </div>
   </section>
 
-  <!-- Hero Stats (FROM GOOGLE SHEET) -->
+  <!-- Hero Stats -->
   <div id="hero-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800">
     <div class="text-center p-3">
       <div class="text-2xl font-bold text-crypto-green">—</div>
@@ -105,7 +93,7 @@
     </div>
   </div>
 
-  <!-- Live Signals Section -->
+  <!-- Live Signals -->
   <section id="signals" class="p-6 max-w-4xl mx-auto mt-10">
     <div class="flex items-center mb-6">
       <h2 class="text-2xl font-bold flex items-center">
@@ -113,28 +101,24 @@
       </h2>
       <span class="ml-3 bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded">Updated Hourly</span>
     </div>
-
     <div id="signals-container" class="space-y-5">
       <p class="text-gray-400">Loading live signals...</p>
     </div>
-
     <div class="text-center mt-8">
-      <button onclick="showAllSignals()" class="border border-crypto-blue text-crypto-blue px-5 py-2 rounded hover:bg-crypto-blue hover:text-white transition">
+      <button onclick="alert('Full signal history coming soon!')" class="border border-crypto-blue text-crypto-blue px-5 py-2 rounded hover:bg-crypto-blue hover:text-white transition">
         View All Historical Signals
       </button>
     </div>
   </section>
 
-  <!-- Verified Successful Trades -->
+  <!-- Verified Trades -->
   <section id="proof" class="p-6 max-w-4xl mx-auto mt-12">
     <h2 class="text-2xl font-bold mb-6 flex items-center">
       <i class="fas fa-chart-line text-crypto-green mr-2"></i> Verified Successful Trades
     </h2>
-
     <div id="trades-container" class="grid md:grid-cols-2 gap-6">
       <p class="text-gray-400 col-span-full">Loading verified trades...</p>
     </div>
-
     <div class="text-center mt-10">
       <a href="courses.html" class="bg-crypto-green hover:bg-green-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg inline-block transition">
         Unlock Full Course & Live Alerts → Pay with USDC
@@ -142,11 +126,11 @@
     </div>
   </section>
 
-  <!-- Integrated With Section -->
+  <!-- Partners -->
   <section class="p-6 max-w-4xl mx-auto mt-16 text-center">
     <h3 class="text-xl font-semibold mb-4 text-gray-300">Integrated With Trusted Platforms</h3>
-    <p class="text-gray-500 mb-6">We use and integrate with leading industry tools to deliver transparent, real-time insights.</p>
-    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+    <p class="text-gray-500 mb-6">We use leading tools to deliver transparent, real-time insights.</p>
+    <div class="flex flex-wrap justify-center items-center gap-8">
       <a href="https://www.tradingview.com/" target="_blank" rel="noopener">
         <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/TradingView_logo.svg" alt="TradingView" class="partner-logo h-10">
       </a>
@@ -166,163 +150,87 @@
   </footer>
 
   <script>
-    // === SHEETDB API ENDPOINTS ===
-    const STATS_SHEET_URL = 'https://sheetdb.io/api/v1/zehc0qlbongx3';      // Hero Stats
-    const SIGNALS_SHEET_URL = 'https://sheetdb.io/api/v1/nvpllp07vjjtt';    // Live Signals
-    const TRADES_SHEET_URL = 'https://sheetdb.io/api/v1/vu72czk3dcbol';     // Verified Trades
+    // === SheetDB URLs (replace with your actual SheetDB endpoints) ===
+    const STATS_URL = 'https://sheetdb.io/api/v1/zehc0qlbongx3';
+    const SIGNALS_URL = 'https://sheetdb.io/api/v1/nvpllp07vjjtt';
+    const TRADES_URL = 'https://sheetdb.io/api/v1/vu72czk3dcbol';
 
-    // === FETCH LIVE CRYPTO PRICES WITH 24H CHANGE ===
+    // Fetch live prices
     async function fetchPrices() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        
-        const data = await res.json();
-        const btc = data.bitcoin;
-        const eth = data.ethereum;
-
-        // Format prices
-        const btcPrice = `$${Number(btc.usd).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-        const ethPrice = `$${Number(eth.usd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        // 24h change
-        const btcChange = btc.usd_24h_change;
-        const ethChange = eth.usd_24h_change;
-        const btcChangeClass = btcChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-        const ethChangeClass = ethChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-        const btcChangeText = `(${btcChange >= 0 ? '+' : ''}${btcChange.toFixed(2)}%)`;
-        const ethChangeText = `(${ethChange >= 0 ? '+' : ''}${ethChange.toFixed(2)}%)`;
-
-        document.getElementById('btc-price').innerHTML = `
-          <i class="fab fa-bitcoin text-yellow-500 mr-1"></i>
-          BTC: ${btcPrice} <span class="${btcChangeClass} text-xs">${btcChangeText}</span>
-        `;
-        document.getElementById('eth-price').innerHTML = `
-          <i class="fab fa-ethereum text-crypto-blue mr-1"></i>
-          ETH: ${ethPrice} <span class="${ethChangeClass} text-xs">${ethChangeText}</span>
-        `;
-      } catch (e) {
-        console.warn("⚠️ Failed to fetch prices:", e);
-        document.getElementById('btc-price').innerHTML = '<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: —';
-        document.getElementById('eth-price').innerHTML = '<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: —';
-      }
+        const { bitcoin: btc, ethereum: eth } = await res.json();
+        const format = (val) => `$${Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: val < 1000 ? 2 : 0 })}`;
+        const change = (p) => `(${p >= 0 ? '+' : ''}${p.toFixed(2)}%)`;
+        const cls = (p) => p >= 0 ? 'text-crypto-green' : 'text-crypto-red';
+        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: ${format(btc.usd)} <span class="${cls(btc.usd_24h_change)} text-xs">${change(btc.usd_24h_change)}</span>`;
+        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: ${format(eth.usd)} <span class="${cls(eth.usd_24h_change)} text-xs">${change(eth.usd_24h_change)}</span>`;
+      } catch (e) { console.warn("Price fetch failed"); }
     }
 
-    // === FETCH HERO STATS ===
-    async function fetchStats() {
+    // Fetch all data
+    async function fetchData() {
+      // Stats
       try {
-        const res = await fetch(STATS_SHEET_URL);
-        const statsList = await res.json();
-        if (!Array.isArray(statsList) || statsList.length === 0) return;
-        const s = statsList[0];
-        document.getElementById('hero-stats').innerHTML = `
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold text-crypto-green">${s.last_30_days_return || '+84%'}</div>
-            <div class="text-sm text-gray-400">Last 30 Days</div>
-          </div>
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold">${s.signals_sent || '142'}</div>
-            <div class="text-sm text-gray-400">Signals Sent</div>
-          </div>
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold">${s.win_rate || '78%'}</div>
-            <div class="text-sm text-gray-400">Win Rate</div>
-          </div>
-          <div class="text-center p-3">
-            <div class="text-2xl font-bold">24/7</div>
-            <div class="text-sm text-gray-400">Market Coverage</div>
-          </div>
-        `;
-      } catch (e) {
-        console.warn('Failed to load stats:', e);
-      }
-    }
-
-    // === FETCH SIGNALS ===
-    async function fetchSignals() {
-      try {
-        const res = await fetch(SIGNALS_SHEET_URL);
-        const signals = await res.json();
-        const container = document.getElementById('signals-container');
-        if (!Array.isArray(signals) || signals.length === 0) {
-          container.innerHTML = '<p class="text-gray-500">No signals available.</p>';
-          return;
+        const stats = await (await fetch(STATS_URL)).json();
+        if (stats[0]) {
+          const s = stats[0];
+          document.getElementById('hero-stats').innerHTML = `
+            <div class="text-center p-3"><div class="text-2xl font-bold text-crypto-green">${s.last_30_days_return || '+84%'}</div><div class="text-sm text-gray-400">Last 30 Days</div></div>
+            <div class="text-center p-3"><div class="text-2xl font-bold">${s.signals_sent || '142'}</div><div class="text-sm text-gray-400">Signals Sent</div></div>
+            <div class="text-center p-3"><div class="text-2xl font-bold">${s.win_rate || '78%'}</div><div class="text-sm text-gray-400">Win Rate</div></div>
+            <div class="text-center p-3"><div class="text-2xl font-bold">24/7</div><div class="text-sm text-gray-400">Market Coverage</div></div>
+          `;
         }
-        container.innerHTML = signals.slice(0, 3).map(sig => {
-          const isBuy = sig.action?.toUpperCase() === 'BUY';
-          const borderColor = isBuy ? 'border-crypto-green' : 'border-crypto-red';
-          const bgAction = isBuy ? 'bg-crypto-green' : 'bg-crypto-red';
+      } catch (e) { console.warn("Stats fetch failed"); }
+
+      // Signals
+      try {
+        const signals = await (await fetch(SIGNALS_URL)).json();
+        const html = signals.slice(0, 3).map(s => {
+          const buy = s.action?.toUpperCase() === 'BUY';
           return `
-            <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 ${borderColor}">
+            <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 ${buy ? 'border-crypto-green' : 'border-crypto-red'}">
               <div class="flex flex-wrap justify-between items-start">
-                <div>
-                  <span class="${bgAction} text-gray-900 text-xs font-bold px-2 py-1 rounded">${sig.action || '—'}</span>
-                  <span class="ml-2 text-xl font-bold">${sig.pair || '—'}</span>
-                </div>
-                <span class="text-gray-400 text-sm">${sig.time_ago || '—'}</span>
+                <div><span class="${buy ? 'bg-crypto-green' : 'bg-crypto-red'} text-gray-900 text-xs font-bold px-2 py-1 rounded">${s.action || '—'}</span> <span class="ml-2 text-xl font-bold">${s.pair || '—'}</span></div>
+                <span class="text-gray-400 text-sm">${s.time_ago || '—'}</span>
               </div>
-              <p class="mt-2 text-gray-300">Entry: ${sig.entry || '—'} | Target: ${sig.target || '—'} | Stop: ${sig.stop || '—'}</p>
+              <p class="mt-2 text-gray-300">Entry: ${s.entry || '—'} | Target: ${s.target || '—'} | Stop: ${s.stop || '—'}</p>
               <div class="mt-3 flex flex-wrap gap-2 text-sm">
-                ${sig.timeframe ? `<span class="bg-gray-700 px-2 py-1 rounded">${sig.timeframe}</span>` : ''}
-                ${sig.strategy ? `<span class="bg-gray-700 px-2 py-1 rounded">${sig.strategy}</span>` : ''}
+                ${s.timeframe ? `<span class="bg-gray-700 px-2 py-1 rounded">${s.timeframe}</span>` : ''}
+                ${s.strategy ? `<span class="bg-gray-700 px-2 py-1 rounded">${s.strategy}</span>` : ''}
               </div>
             </div>
           `;
         }).join('');
-      } catch (e) {
-        document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>';
-        console.error('Signals error:', e);
-      }
-    }
+        document.getElementById('signals-container').innerHTML = html || '<p class="text-gray-500">No signals.</p>';
+      } catch (e) { document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>'; }
 
-    // === FETCH TRADES ===
-    async function fetchTrades() {
+      // Trades
       try {
-        const res = await fetch(TRADES_SHEET_URL);
-        const trades = await res.json();
-        const container = document.getElementById('trades-container');
-        if (!Array.isArray(trades) || trades.length === 0) {
-          container.innerHTML = '<p class="text-gray-500 col-span-full">No verified trades available.</p>';
-          return;
-        }
-        container.innerHTML = trades.slice(0, 3).map(trade => `
+        const trades = await (await fetch(TRADES_URL)).json();
+        const html = trades.slice(0, 3).map(t => `
           <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
             <div class="flex justify-between items-start">
-              <div>
-                <h3 class="font-bold text-lg">${trade.title || '—'}</h3>
-                <p class="text-green-400 mt-1">${trade.return || '—'}</p>
-              </div>
+              <div><h3 class="font-bold text-lg">${t.title || '—'}</h3><p class="text-green-400 mt-1">${t.return || '—'}</p></div>
               <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
             </div>
-            <p class="mt-3 text-gray-300 text-sm">${trade.description || ''}</p>
+            <p class="mt-3 text-gray-300 text-sm">${t.description || ''}</p>
             <div class="mt-3 flex text-xs text-gray-400">
-              <span>Entry: ${trade.entry || '—'}</span> • <span class="ml-2">Exit: ${trade.exit || '—'}</span>
+              <span>Entry: ${t.entry || '—'}</span> • <span class="ml-2">Exit: ${t.exit || '—'}</span>
             </div>
           </div>
         `).join('');
-      } catch (e) {
-        document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>';
-        console.error('Trades error:', e);
-      }
+        document.getElementById('trades-container').innerHTML = html || '<p class="text-gray-500 col-span-full">No trades.</p>';
+      } catch (e) { document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>'; }
     }
 
-    // === INITIALIZE ===
+    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       fetchPrices();
-      fetchStats();
-      fetchSignals();
-      fetchTrades();
-
-      // Auto-refresh prices every 60 seconds
+      fetchData();
       setInterval(fetchPrices, 60000);
-      
-      // Optional: refresh data every 2 minutes (uncomment if needed)
-      // setInterval(() => { fetchStats(); fetchSignals(); fetchTrades(); }, 120000);
     });
-
-    function showAllSignals() {
-      alert("Full historical signals coming soon!");
-    }
   </script>
 </body>
 </html>
