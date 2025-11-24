@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Courses | AzadTradeLab</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .crypto-blue { @apply text-blue-400; }
-  </style>
+  <style>.crypto-blue { @apply text-blue-400; }</style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
 
@@ -30,22 +28,20 @@
       <input id="login-pass" type="password" placeholder="Password" class="w-full p-2 mb-4 rounded bg-gray-700" autocomplete="current-password" required>
       <button id="login-btn" class="w-full bg-green-600 py-2 rounded">Log In</button>
     </div>
-
     <div class="mt-6 bg-gray-800 p-6 rounded shadow">
       <h2 class="text-xl mb-4">Sign Up</h2>
       <input id="signup-email" type="email" placeholder="Email" class="w-full p-2 mb-2 rounded bg-gray-700" autocomplete="email" required>
-      <input id="signup-pass" type="password" placeholder="Password (6+ characters)" class="w-full p-2 mb-4 rounded bg-gray-700" autocomplete="new-password" required>
+      <input id="signup-pass" type="password" placeholder="Password (6+ chars)" class="w-full p-2 mb-4 rounded bg-gray-700" autocomplete="new-password" required>
       <button id="signup-btn" class="w-full bg-blue-600 py-2 rounded">Create Account</button>
     </div>
   </section>
 
-  <!-- Dashboard -->
+  <!-- Dashboard (paid users only) -->
   <section id="dashboard" class="hidden p-8 max-w-6xl mx-auto">
     <div class="flex justify-between items-center mb-6">
       <h2>Welcome, <span id="user-email"></span>!</h2>
       <button id="logout-btn" class="bg-red-600 px-4 py-1 rounded">Log Out</button>
     </div>
-
     <div class="mb-10">
       <h3 class="text-2xl font-semibold mb-4">📈 Latest Trading Signals</h3>
       <div class="space-y-4">
@@ -53,56 +49,53 @@
         <div class="p-4 bg-gray-800 rounded">ETH/USDC: SELL near $3,500 resistance</div>
       </div>
     </div>
-
     <div>
       <h3 class="text-2xl font-semibold mb-4">🎓 Your Courses</h3>
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-gray-800 p-6 rounded">
           <h4 class="text-xl">Beginner Crypto Trading</h4>
           <p class="my-2">5-video series: from zero to profitable trader.</p>
-          <button onclick="buyCourse('beginner')" class="mt-2 bg-yellow-600 px-4 py-2 rounded">
-            Buy for 69 USDC
-          </button>
+          <button id="buy-beginner-btn" class="mt-2 bg-yellow-600 px-4 py-2 rounded">Buy for 69 USDC</button>
         </div>
-
         <div class="bg-gray-800 p-6 rounded">
           <h4 class="text-xl">Advanced Algo Signals</h4>
           <p class="my-2">8-video deep dive + live signal walkthroughs.</p>
-          <button class="mt-2 bg-gray-600 px-4 py-2 rounded cursor-not-allowed" disabled>
-            Coming Soon
-          </button>
+          <button class="mt-2 bg-gray-600 px-4 py-2 rounded cursor-not-allowed" disabled>Coming Soon</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Multi-Video Course Player Modal -->
+  <!-- Payment Required -->
+  <section id="payment-required" class="hidden p-8 max-w-md mx-auto text-center">
+    <div class="bg-gray-800 p-6 rounded shadow">
+      <h2 class="text-xl mb-4 text-yellow-400">🔒 Payment Required</h2>
+      <p class="mb-4">You’re logged in, but haven’t purchased a course yet.</p>
+      <button onclick="window.location.href='courses.html'" class="bg-yellow-600 px-4 py-2 rounded">Go to Courses</button>
+    </div>
+  </section>
+
+  <!-- Video Modal -->
   <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
     <div class="bg-gray-800 w-full max-w-6xl max-h-[90vh] rounded relative flex flex-col md:flex-row">
       <div class="w-full md:w-3/4">
-        <div class="p-4 border-b border-gray-700">
-          <h3 id="modal-title" class="text-xl font-bold">Course Content</h3>
-        </div>
-        <div class="aspect-video bg-black">
-          <iframe id="course-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <div class="p-4 border-b border-gray-700"><h3 id="modal-title" class="text-xl font-bold">Course Content</h3></div>
+        <div class="aspect-video bg-black"><iframe id="course-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe></div>
       </div>
-
       <div class="w-full md:w-1/4 p-4 overflow-y-auto max-h-[70vh]">
         <h4 class="font-bold mb-3 text-blue-400">Lessons</h4>
         <ul id="video-playlist" class="space-y-2"></ul>
       </div>
-
       <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-400 bg-gray-900 w-8 h-8 rounded-full">✕</button>
     </div>
   </div>
 
-  <!-- Firebase + Auth Logic -->
+  <!-- Firebase SDKs (CDN) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ✅ Your Firebase config (from project settings)
     const firebaseConfig = {
       apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
       authDomain: "azadtradelab-cources.firebaseapp.com",
@@ -114,104 +107,67 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    // Toggle login/dashboard based on auth state
-    function toggleViews(user) {
-      const loginSection = document.getElementById('login-section');
-      const dashboard = document.getElementById('dashboard');
-      const emailSpan = document.getElementById('user-email');
-      
-      if (user) {
-        loginSection.classList.add('hidden');
-        dashboard.classList.remove('hidden');
-        emailSpan.textContent = user.email;
+    const loginSec = document.getElementById('login-section');
+    const dash = document.getElementById('dashboard');
+    const payReq = document.getElementById('payment-required');
+    const emailEl = document.getElementById('user-email');
+
+    function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+    async function isPaid(uid) {
+      const docSnap = await getDoc(doc(db, "users", uid));
+      return docSnap.exists() && docSnap.data().isPaid === true;
+    }
+
+    async function handleAuth(user) {
+      if (!user) {
+        loginSec.classList.remove('hidden');
+        dash.classList.add('hidden');
+        payReq.classList.add('hidden');
+        return;
+      }
+
+      const paid = await isPaid(user.uid);
+      emailEl.textContent = user.email;
+
+      if (paid) {
+        loginSec.classList.add('hidden');
+        payReq.classList.add('hidden');
+        dash.classList.remove('hidden');
       } else {
-        loginSection.classList.remove('hidden');
-        dashboard.classList.add('hidden');
+        loginSec.classList.add('hidden');
+        dash.classList.add('hidden');
+        payReq.classList.remove('hidden');
       }
     }
 
-    onAuthStateChanged(auth, toggleViews);
+    onAuthStateChanged(auth, handleAuth);
 
-    // Helper: validate email format
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    // Login handler
+    // Login
     document.getElementById('login-btn').addEventListener('click', () => {
-      const emailInput = document.getElementById('login-email');
-      const passInput = document.getElementById('login-pass');
-      const email = emailInput.value.trim();
-      const password = passInput.value;
-
-      if (!email) {
-        alert("Please enter your email.");
-        emailInput.focus();
-        return;
-      }
-      if (!isValidEmail(email)) {
-        alert("Please enter a valid email address (e.g., you@example.com).");
-        emailInput.focus();
-        return;
-      }
-      if (!password) {
-        alert("Please enter your password.");
-        passInput.focus();
-        return;
-      }
-
-      signInWithEmailAndPassword(auth, email, password)
-        .catch(err => {
-          console.error("Login error:", err);
-          alert("Login failed: " + (err.message || "Please check your credentials."));
-        });
+      const e = document.getElementById('login-email').value.trim();
+      const p = document.getElementById('login-pass').value;
+      if (!e || !isValidEmail(e)) return alert("Valid email required");
+      if (!p) return alert("Password required");
+      signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login failed: " + err.message));
     });
 
-    // Signup handler
+    // Signup
     document.getElementById('signup-btn').addEventListener('click', () => {
-      const emailInput = document.getElementById('signup-email');
-      const passInput = document.getElementById('signup-pass');
-      const email = emailInput.value.trim();
-      const password = passInput.value;
-
-      if (!email) {
-        alert("Please enter your email.");
-        emailInput.focus();
-        return;
-      }
-      if (!isValidEmail(email)) {
-        alert("Please enter a valid email address (e.g., you@example.com).");
-        emailInput.focus();
-        return;
-      }
-      if (!password) {
-        alert("Please enter a password.");
-        passInput.focus();
-        return;
-      }
-      if (password.length < 6) {
-        alert("Password must be at least 6 characters long.");
-        passInput.focus();
-        return;
-      }
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .catch(err => {
-          console.error("Signup error:", err);
-          alert("Signup failed: " + (err.message || "Please try again."));
-        });
+      const e = document.getElementById('signup-email').value.trim();
+      const p = document.getElementById('signup-pass').value;
+      if (!e || !isValidEmail(e)) return alert("Valid email required");
+      if (!p || p.length < 6) return alert("Password must be ≥6 characters");
+      createUserWithEmailAndPassword(auth, e, p).catch(err => alert("Signup failed: " + err.message));
     });
 
     // Logout
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      signOut(auth).catch(console.error);
-    });
-  </script>
+    document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-  <!-- Course & Payment Logic -->
-  <script>
-    const COURSE_CONTENT = {
+    // === Course Logic ===
+    const COURSE = {
       beginner: {
         title: "Beginner Crypto Trading",
         videos: [
@@ -224,55 +180,42 @@
       }
     };
 
-    const CHECKOUT_LINKS = {
-      beginner: "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877"
-    };
+    const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
 
-    function buyCourse(courseId) {
-      const url = CHECKOUT_LINKS[courseId];
-      if (!url) {
-        alert("This course is not available for purchase yet.");
-        return;
-      }
-      window.open(url, '_blank');
+    document.getElementById('buy-beginner-btn').addEventListener('click', () => {
+      const user = auth.currentUser;
+      if (!user) return alert("Please log in first.");
+      const url = new URL(CHECKOUT_URL);
+      url.searchParams.set("metadata[email]", user.email);
+      window.location.href = url.toString();
+    });
 
-      // ⚠️ DEMO ONLY: grant access after 3 sec (in real app, use webhook)
-      setTimeout(() => {
-        if (COURSE_CONTENT[courseId]) {
-          showCoursePlaylist(courseId);
-        }
-      }, 3000);
-    }
-
-    function showCoursePlaylist(courseId) {
-      const course = COURSE_CONTENT[courseId];
-      document.getElementById('modal-title').textContent = course.title;
-      const playlist = document.getElementById('video-playlist');
-      playlist.innerHTML = '';
-
-      course.videos.forEach(video => {
+    window.showCoursePlaylist = async (id) => {
+      const user = auth.currentUser;
+      if (!user) return;
+      if (!(await isPaid(user.uid))) return alert("Payment required.");
+      const c = COURSE[id];
+      if (!c) return;
+      document.getElementById('modal-title').textContent = c.title;
+      const list = document.getElementById('video-playlist');
+      list.innerHTML = '';
+      c.videos.forEach(v => {
         const li = document.createElement('li');
         li.className = "cursor-pointer hover:text-yellow-400 py-1";
-        li.textContent = video.title;
-        li.onclick = () => loadVideo(video.id);
-        playlist.appendChild(li);
+        li.textContent = v.title;
+        li.onclick = () => document.getElementById('course-video').src = `https://www.youtube.com/embed/${v.id}?autoplay=1`;
+        list.appendChild(li);
       });
-
-      if (course.videos.length > 0) {
-        loadVideo(course.videos[0].id);
+      if (c.videos.length > 0) {
+        document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
       }
-
       document.getElementById('course-modal').classList.remove('hidden');
-    }
+    };
 
-    function loadVideo(videoId) {
-      document.getElementById('course-video').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-    }
-
-    function closeModal() {
+    window.closeModal = () => {
       document.getElementById('course-modal').classList.add('hidden');
       document.getElementById('course-video').src = '';
-    }
+    };
   </script>
 </body>
 </html>
