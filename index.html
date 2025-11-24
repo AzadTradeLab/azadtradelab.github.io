@@ -61,14 +61,12 @@
   </header>
 
   <!-- Live Prices Banner -->
-  <div class="bg-gray-800 py-3 flex justify-center space-x-8 text-sm">
-    <div id="btc-price" class="font-mono flex items-center">
-      <i class="fab fa-bitcoin text-yellow-500 mr-2"></i>
-      Loading...
+  <div class="bg-gray-800 py-3 px-4 flex flex-wrap justify-center gap-6 text-sm">
+    <div id="btc-price" class="font-mono flex items-center flex-wrap justify-center gap-1">
+      <i class="fab fa-bitcoin text-yellow-500"></i> Loading...
     </div>
-    <div id="eth-price" class="font-mono flex items-center">
-      <i class="fab fa-ethereum text-crypto-blue mr-2"></i>
-      Loading...
+    <div id="eth-price" class="font-mono flex items-center flex-wrap justify-center gap-1">
+      <i class="fab fa-ethereum text-crypto-blue"></i> Loading...
     </div>
   </div>
 
@@ -168,52 +166,47 @@
   </footer>
 
   <script>
-    // === SHEETDB API ENDPOINTS (ALL CONNECTED) ===
+    // === SHEETDB API ENDPOINTS ===
     const STATS_SHEET_URL = 'https://sheetdb.io/api/v1/zehc0qlbongx3';      // Hero Stats
-    const SIGNALS_SHEET_URL = 'https://sheetdb.io/api/v1/nvpllp07vjjtt';    // Live Signals ✅
+    const SIGNALS_SHEET_URL = 'https://sheetdb.io/api/v1/nvpllp07vjjtt';    // Live Signals
     const TRADES_SHEET_URL = 'https://sheetdb.io/api/v1/vu72czk3dcbol';     // Verified Trades
 
-  <script>
-// === FETCH LIVE CRYPTO PRICES (WITH 24H CHANGE) ===
-async function fetchPrices() {
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    
-    const data = await res.json();
+    // === FETCH LIVE CRYPTO PRICES WITH 24H CHANGE ===
+    async function fetchPrices() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+        const btc = data.bitcoin;
+        const eth = data.ethereum;
 
-    const btc = data.bitcoin;
-    const eth = data.ethereum;
+        // Format prices
+        const btcPrice = `$${Number(btc.usd).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+        const ethPrice = `$${Number(eth.usd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-    // Format prices with commas and 2 decimals (ETH may need decimals, BTC often shown as whole)
-    const btcPrice = `$${Number(btc.usd).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-    const ethPrice = `$${Number(eth.usd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        // 24h change
+        const btcChange = btc.usd_24h_change;
+        const ethChange = eth.usd_24h_change;
+        const btcChangeClass = btcChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
+        const ethChangeClass = ethChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
+        const btcChangeText = `(${btcChange >= 0 ? '+' : ''}${btcChange.toFixed(2)}%)`;
+        const ethChangeText = `(${ethChange >= 0 ? '+' : ''}${ethChange.toFixed(2)}%)`;
 
-    // Show 24h change with color
-    const btcChange = btc.usd_24h_change;
-    const ethChange = eth.usd_24h_change;
-
-    const btcChangeClass = btcChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-    const ethChangeClass = ethChange >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-
-    const btcChangeText = `(${btcChange >= 0 ? '+' : ''}${btcChange.toFixed(2)}%)`;
-    const ethChangeText = `(${ethChange >= 0 ? '+' : ''}${ethChange.toFixed(2)}%)`;
-
-    document.getElementById('btc-price').innerHTML = `
-      <i class="fab fa-bitcoin text-yellow-500 mr-2"></i>
-      BTC: ${btcPrice} <span class="${btcChangeClass} text-sm">${btcChangeText}</span>
-    `;
-    document.getElementById('eth-price').innerHTML = `
-      <i class="fab fa-ethereum text-crypto-blue mr-2"></i>
-      ETH: ${ethPrice} <span class="${ethChangeClass} text-sm">${ethChangeText}</span>
-    `;
-  } catch (e) {
-    console.warn("⚠️ Failed to fetch live prices:", e);
-    document.getElementById('btc-price').innerHTML = '<i class="fab fa-bitcoin text-yellow-500 mr-2"></i> BTC: —';
-    document.getElementById('eth-price').innerHTML = '<i class="fab fa-ethereum text-crypto-blue mr-2"></i> ETH: —';
-  }
-}
-</script>
+        document.getElementById('btc-price').innerHTML = `
+          <i class="fab fa-bitcoin text-yellow-500 mr-1"></i>
+          BTC: ${btcPrice} <span class="${btcChangeClass} text-xs">${btcChangeText}</span>
+        `;
+        document.getElementById('eth-price').innerHTML = `
+          <i class="fab fa-ethereum text-crypto-blue mr-1"></i>
+          ETH: ${ethPrice} <span class="${ethChangeClass} text-xs">${ethChangeText}</span>
+        `;
+      } catch (e) {
+        console.warn("⚠️ Failed to fetch prices:", e);
+        document.getElementById('btc-price').innerHTML = '<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: —';
+        document.getElementById('eth-price').innerHTML = '<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: —';
+      }
+    }
 
     // === FETCH HERO STATS ===
     async function fetchStats() {
@@ -221,19 +214,18 @@ async function fetchPrices() {
         const res = await fetch(STATS_SHEET_URL);
         const statsList = await res.json();
         if (!Array.isArray(statsList) || statsList.length === 0) return;
-
-        const stats = statsList[0];
+        const s = statsList[0];
         document.getElementById('hero-stats').innerHTML = `
           <div class="text-center p-3">
-            <div class="text-2xl font-bold text-crypto-green">${stats.last_30_days_return || '+84%'}</div>
+            <div class="text-2xl font-bold text-crypto-green">${s.last_30_days_return || '+84%'}</div>
             <div class="text-sm text-gray-400">Last 30 Days</div>
           </div>
           <div class="text-center p-3">
-            <div class="text-2xl font-bold">${stats.signals_sent || '142'}</div>
+            <div class="text-2xl font-bold">${s.signals_sent || '142'}</div>
             <div class="text-sm text-gray-400">Signals Sent</div>
           </div>
           <div class="text-center p-3">
-            <div class="text-2xl font-bold">${stats.win_rate || '78%'}</div>
+            <div class="text-2xl font-bold">${s.win_rate || '78%'}</div>
             <div class="text-sm text-gray-400">Win Rate</div>
           </div>
           <div class="text-center p-3">
@@ -246,7 +238,7 @@ async function fetchPrices() {
       }
     }
 
-    // === FETCH LIVE SIGNALS ===
+    // === FETCH SIGNALS ===
     async function fetchSignals() {
       try {
         const res = await fetch(SIGNALS_SHEET_URL);
@@ -279,10 +271,11 @@ async function fetchPrices() {
         }).join('');
       } catch (e) {
         document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>';
+        console.error('Signals error:', e);
       }
     }
 
-    // === FETCH VERIFIED TRADES ===
+    // === FETCH TRADES ===
     async function fetchTrades() {
       try {
         const res = await fetch(TRADES_SHEET_URL);
@@ -308,11 +301,12 @@ async function fetchPrices() {
           </div>
         `).join('');
       } catch (e) {
-        document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trade history.</p>';
+        document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>';
+        console.error('Trades error:', e);
       }
     }
 
-    // === INITIALIZE ALL DATA ===
+    // === INITIALIZE ===
     document.addEventListener('DOMContentLoaded', () => {
       fetchPrices();
       fetchStats();
@@ -322,12 +316,12 @@ async function fetchPrices() {
       // Auto-refresh prices every 60 seconds
       setInterval(fetchPrices, 60000);
       
-      // Optional: auto-refresh signals/stats every 2 minutes
+      // Optional: refresh data every 2 minutes (uncomment if needed)
       // setInterval(() => { fetchStats(); fetchSignals(); fetchTrades(); }, 120000);
     });
 
     function showAllSignals() {
-      alert("In a full version, this would open a signals archive page.");
+      alert("Full historical signals coming soon!");
     }
   </script>
 </body>
