@@ -150,10 +150,12 @@
   </footer>
 
   <script>
-    // === SheetDB URLs (replace with your actual SheetDB endpoints) ===
-    const STATS_URL = 'https://sheetdb.io/api/v1/zehc0qlbongx3/Stats';
-    const SIGNALS_URL = 'https://sheetdb.io/api/v1/nvpllp07vjjtt/Signals';
-    const TRADES_URL = 'https://sheetdb.io/api/v1/vu72czk3dcbol/Trades';
+    // ✅ USE ONE BASE ID + TAB NAME
+    const BASE_ID = "nvpllp07vjjtt"; // ← REPLACE WITH YOUR REAL SHEETDB ID!
+
+    const STATS_URL = `https://sheetdb.io/api/v1/${BASE_ID}/Stats`;
+    const SIGNALS_URL = `https://sheetdb.io/api/v1/${BASE_ID}/Signals`;
+    const TRADES_URL = `https://sheetdb.io/api/v1/${BASE_ID}/Trades`;
 
     // Fetch live prices
     async function fetchPrices() {
@@ -182,7 +184,10 @@
             <div class="text-center p-3"><div class="text-2xl font-bold">24/7</div><div class="text-sm text-gray-400">Market Coverage</div></div>
           `;
         }
-      } catch (e) { console.warn("Stats fetch failed"); }
+      } catch (e) { 
+        console.error("Stats fetch failed:", e);
+        document.getElementById('hero-stats').innerHTML = '<p class="text-red-400">Failed to load stats.</p>';
+      }
 
       // Signals
       try {
@@ -204,7 +209,10 @@
           `;
         }).join('');
         document.getElementById('signals-container').innerHTML = html || '<p class="text-gray-500">No signals.</p>';
-      } catch (e) { document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>'; }
+      } catch (e) { 
+        console.error("Signals fetch failed:", e);
+        document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>';
+      }
 
       // Trades
       try {
@@ -222,7 +230,10 @@
           </div>
         `).join('');
         document.getElementById('trades-container').innerHTML = html || '<p class="text-gray-500 col-span-full">No trades.</p>';
-      } catch (e) { document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>'; }
+      } catch (e) { 
+        console.error("Trades fetch failed:", e);
+        document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>';
+      }
     }
 
     // Initialize
