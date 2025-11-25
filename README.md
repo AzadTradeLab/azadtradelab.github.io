@@ -1,2 +1,2 @@
-# azadtradelab.github.io
+# azadtradelab.com
 AzadTradeLab - Crypto Signals &amp; Courses
