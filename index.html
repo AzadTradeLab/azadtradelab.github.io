@@ -22,20 +22,31 @@
     }
   </script>
   <style>
-    .signal-card { transition: transform 0.2s, box-shadow 0.2s; }
-    .signal-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
-    .partner-logo { height: 40px; opacity: 0.8; transition: opacity 0.2s; }
-    .partner-logo:hover { opacity: 1; }
+    .signal-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .signal-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+    }
+    .partner-logo {
+      height: 40px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .partner-logo:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
 
-  <!-- In all pages: index.html, courses.html, buy-usdc.html -->
-<nav class="bg-gray-800 p-4 text-center">
-  <a href="index.html" class="text-white font-bold mx-3">Home</a>
-  <a href="courses.html" class="text-crypto-blue mx-3">Courses</a>
-  <a href="buy-usdc.html" class="text-yellow-400 mx-3">Buy USDC</a>
-</nav>
+  <!-- Navigation -->
+  <nav class="bg-gray-800 p-4 text-center">
+    <a href="index.html" class="text-white font-bold mx-3">Home</a>
+    <a href="courses.html" class="text-crypto-blue mx-3">Courses</a>
+    <a href="buy-usdc.html" class="text-yellow-400 mx-3">Buy USDC</a>
+  </nav>
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-crypto-blue to-indigo-800 py-6 px-4 text-center">
@@ -143,22 +154,22 @@
       </a>
     </div>
   </section>
-  
-  <!-- Buy USDC Section -->
-<section class="p-6 max-w-4xl mx-auto mt-16 bg-gray-800 rounded-xl border border-crypto-blue">
-  <div class="text-center">
-    <h2 class="text-2xl font-bold text-crypto-blue mb-4">🏦 Buy USDC with Credit Card</h2>
-    <p class="text-gray-300 mb-6">
-      Don’t have USDC? Buy it instantly with your bank account or card — no wallet needed!
-    </p>
-    <button id="coinbase-pay-button" class="bg-crypto-blue hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition">
-      Buy USDC Now →
-    </button>
-    <p class="text-gray-500 text-sm mt-4">
-      Powered by Coinbase. Supports Visa, Mastercard, Apple Pay, Google Pay, and bank transfer.
-    </p>
-  </div>
-</section>
+
+  <!-- Buy USDC CTA (Link to dedicated page) -->
+  <section class="p-6 max-w-4xl mx-auto mt-16 bg-gray-800 rounded-xl border border-yellow-600">
+    <div class="text-center">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4">💡 Don’t Have USDC?</h2>
+      <p class="text-gray-300 mb-6">
+        Buy USDC instantly with your credit card, bank transfer, Apple Pay, or Google Pay.
+      </p>
+      <a href="buy-usdc.html" class="inline-block bg-yellow-600 hover:bg-yellow-700 text-gray-900 font-bold py-3 px-8 rounded-full text-lg transition">
+        Buy USDC Now →
+      </a>
+      <p class="text-gray-500 text-sm mt-4">
+        Powered by Coinbase. No wallet setup required for beginners.
+      </p>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
@@ -166,17 +177,15 @@
     <p class="mt-2">All courses payable in USDC (ERC-20, Polygon, or Base)</p>
   </footer>
 
-  <!-- ✅ FIXED DATA FETCHING SCRIPT -->
+  <!-- Data Fetching Script -->
   <script>
-    // === Your SheetDB API Endpoints (must be public) ===
+    // SheetDB URLs (replace with your actual endpoints)
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
     const SIGNALS_URL = 'https://sheetdb.io/api/v1/tqs2minkp9fly';
     const TRADES_URL = 'https://sheetdb.io/api/v1/85zdg9w2vf68k';
 
-    // Helper: delay to avoid rate limits
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-    // Safe fetch with retries
     async function safeFetch(url, retries = 2) {
       for (let i = 0; i <= retries; i++) {
         try {
@@ -191,38 +200,23 @@
       throw new Error("All fetch attempts failed");
     }
 
-    // Fetch stats
     async function fetchStats() {
       try {
         const data = await safeFetch(STATS_URL);
         if (Array.isArray(data) && data.length > 0) {
           const s = data[0];
           document.getElementById('hero-stats').innerHTML = `
-            <div class="text-center p-3">
-              <div class="text-2xl font-bold text-crypto-green">${s.last_30_days_return || '+84%'}</div>
-              <div class="text-sm text-gray-400">Last 30 Days</div>
-            </div>
-            <div class="text-center p-3">
-              <div class="text-2xl font-bold">${s.signals_sent || '142'}</div>
-              <div class="text-sm text-gray-400">Signals Sent</div>
-            </div>
-            <div class="text-center p-3">
-              <div class="text-2xl font-bold">${s.win_rate || '78%'}</div>
-              <div class="text-sm text-gray-400">Win Rate</div>
-            </div>
-            <div class="text-center p-3">
-              <div class="text-2xl font-bold">24/7</div>
-              <div class="text-sm text-gray-400">Market Coverage</div>
-            </div>
+            <div class="text-center p-3"><div class="text-2xl font-bold text-crypto-green">${s.last_30_days_return || '+84%'}</div><div class="text-sm text-gray-400">Last 30 Days</div></div>
+            <div class="text-center p-3"><div class="text-2xl font-bold">${s.signals_sent || '142'}</div><div class="text-sm text-gray-400">Signals Sent</div></div>
+            <div class="text-center p-3"><div class="text-2xl font-bold">${s.win_rate || '78%'}</div><div class="text-sm text-gray-400">Win Rate</div></div>
+            <div class="text-center p-3"><div class="text-2xl font-bold">24/7</div><div class="text-sm text-gray-400">Market Coverage</div></div>
           `;
         }
       } catch (e) {
-        console.error("Failed to load stats:", e);
-        // Keep fallback UI (already shown by default)
+        console.error("Stats failed:", e);
       }
     }
 
-    // Fetch signals
     async function fetchSignals() {
       try {
         const data = await safeFetch(SIGNALS_URL);
@@ -252,12 +246,11 @@
           container.innerHTML = '<p class="text-gray-500">No signals available.</p>';
         }
       } catch (e) {
-        console.error("Failed to load signals:", e);
+        console.error("Signals failed:", e);
         document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>';
       }
     }
 
-    // Fetch trades
     async function fetchTrades() {
       try {
         const data = await safeFetch(TRADES_URL);
@@ -283,33 +276,25 @@
           container.innerHTML = '<p class="text-gray-500 col-span-full">No verified trades.</p>';
         }
       } catch (e) {
-        console.error("Failed to load trades:", e);
+        console.error("Trades failed:", e);
         document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>';
       }
     }
 
-    // Fetch live prices (unchanged)
     async function fetchPrices() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
         const { bitcoin: btc, ethereum: eth } = await res.json();
-        const formatPrice = (val) => `$${Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: val < 1000 ? 2 : 0 })}`;
-        const formatChange = (p) => `(${p >= 0 ? '+' : ''}${p.toFixed(2)}%)`;
-        const changeClass = (p) => p >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-        document.getElementById('btc-price').innerHTML = `
-          <i class="fab fa-bitcoin text-yellow-500 mr-1"></i>
-          BTC: ${formatPrice(btc.usd)} <span class="${changeClass(btc.usd_24h_change)} text-xs">${formatChange(btc.usd_24h_change)}</span>
-        `;
-        document.getElementById('eth-price').innerHTML = `
-          <i class="fab fa-ethereum text-crypto-blue mr-1"></i>
-          ETH: ${formatPrice(eth.usd)} <span class="${changeClass(eth.usd_24h_change)} text-xs">${formatChange(eth.usd_24h_change)}</span>
-        `;
+        const fmt = (v) => `$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: v < 1000 ? 2 : 0 })}`;
+        const chg = (p) => `(${p >= 0 ? '+' : ''}${p.toFixed(2)}%)`;
+        const cls = (p) => p >= 0 ? 'text-crypto-green' : 'text-crypto-red';
+        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: ${fmt(btc.usd)} <span class="${cls(btc.usd_24h_change)} text-xs">${chg(btc.usd_24h_change)}</span>`;
+        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: ${fmt(eth.usd)} <span class="${cls(eth.usd_24h_change)} text-xs">${chg(eth.usd_24h_change)}</span>`;
       } catch (e) {
         console.warn("Price fetch failed");
       }
     }
 
-    // 🔁 Fetch all data SEQUENTIALLY to avoid SheetDB rate limits
     async function loadAllData() {
       await fetchStats();
       await delay(700);
@@ -318,26 +303,11 @@
       await fetchTrades();
     }
 
-    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
       fetchPrices();
       loadAllData();
-      setInterval(fetchPrices, 60000); // Refresh prices every 60s
+      setInterval(fetchPrices, 60000);
     });
   </script>
-  
-  <!-- Replace the "Buy USDC" section with this -->
-<section class="p-6 max-w-4xl mx-auto mt-12 text-center">
-  <div class="bg-gray-800 p-6 rounded-xl border border-yellow-600">
-    <h2 class="text-2xl font-bold text-yellow-400 mb-3">💡 New to Crypto?</h2>
-    <p class="text-gray-300 mb-4">
-      Don’t have USDC? You can buy it instantly with a credit card or bank transfer.
-    </p>
-    <a href="buy-usdc.html" class="inline-block bg-yellow-600 hover:bg-yellow-700 text-gray-900 font-bold py-2 px-6 rounded-full">
-      Learn How to Buy USDC →
-    </a>
-  </div>
-</section>
-  
 </body>
 </html>
