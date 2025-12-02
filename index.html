@@ -30,11 +30,12 @@
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
 
-  <!-- Navigation -->
-  <nav class="bg-gray-800 p-4 text-center">
-    <a href="index.html" class="text-white font-bold mx-4">Home</a>
-    <a href="courses.html" class="text-crypto-blue mx-4">Courses</a>
-  </nav>
+  <!-- In all pages: index.html, courses.html, buy-usdc.html -->
+<nav class="bg-gray-800 p-4 text-center">
+  <a href="index.html" class="text-white font-bold mx-3">Home</a>
+  <a href="courses.html" class="text-crypto-blue mx-3">Courses</a>
+  <a href="buy-usdc.html" class="text-yellow-400 mx-3">Buy USDC</a>
+</nav>
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-crypto-blue to-indigo-800 py-6 px-4 text-center">
@@ -325,24 +326,18 @@
     });
   </script>
   
-  <!-- Coinbase Pay SDK -->
-<script src="https://pay.coinbase.com/sdk/v1/coinbase-sdk.js"></script>
-<script>
-  document.getElementById('coinbase-pay-button').addEventListener('click', () => {
-    // Initialize Coinbase Pay
-    const pay = new window.CoinbasePay({
-      appId: 'your-app-id', // Optional (for analytics)
-      destinationWalletAddress: '', // Optional: leave empty so user chooses
-      presetCryptoAmount: 70,
-      presetCryptoCurrency: 'USDC',
-      fiatCurrency: 'USD',
-      displayPreview: true
-    });
-
-    // Open the widget
-    pay.launch();
-  });
-</script>
+  <!-- Replace the "Buy USDC" section with this -->
+<section class="p-6 max-w-4xl mx-auto mt-12 text-center">
+  <div class="bg-gray-800 p-6 rounded-xl border border-yellow-600">
+    <h2 class="text-2xl font-bold text-yellow-400 mb-3">💡 New to Crypto?</h2>
+    <p class="text-gray-300 mb-4">
+      Don’t have USDC? You can buy it instantly with a credit card or bank transfer.
+    </p>
+    <a href="buy-usdc.html" class="inline-block bg-yellow-600 hover:bg-yellow-700 text-gray-900 font-bold py-2 px-6 rounded-full">
+      Learn How to Buy USDC →
+    </a>
+  </div>
+</section>
   
 </body>
 </html>
