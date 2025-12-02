@@ -3,109 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Buy USDC | AzadTradeLab</title>
+  <title>Buy USDC with Fiat | AzadTradeLab</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .step-card { border-left: 4px solid #3B82F6; }
     .crypto-blue { @apply text-blue-400; }
-    .crypto-yellow { @apply text-yellow-400; }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
+<body class="bg-gray-900 text-white min-h-screen">
 
   <!-- Navigation -->
   <nav class="bg-gray-800 p-4 text-center">
     <a href="index.html" class="text-white font-bold mx-3">Home</a>
-    <a href="courses.html" class="crypto-blue mx-3">Courses</a>
-    <a href="buy-usdc.html" class="crypto-yellow mx-3 font-bold">Buy USDC</a>
+    <a href="courses.html" class="text-crypto-blue mx-3">Courses</a>
+    <a href="buy-usdc.html" class="text-yellow-400 font-bold mx-3">Buy USDC</a>
   </nav>
 
-  <header class="bg-gradient-to-r from-crypto-blue to-indigo-800 py-6 px-4 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold">🏦 Buy USDC with Fiat</h1>
+  <header class="bg-gradient-to-r from-blue-700 to-indigo-900 py-8 text-center">
+    <h1 class="text-3xl font-bold">💳 Buy USDC Instantly</h1>
     <p class="mt-2 text-indigo-200 max-w-2xl mx-auto">
-      Credit card, bank transfer, Apple Pay, or Google Pay → USDC in minutes.
+      Use your credit card, debit card, bank transfer, Apple Pay, or Google Pay to buy USDC.
     </p>
   </header>
 
-  <!-- How It Works -->
-  <section class="p-6 max-w-4xl mx-auto">
-    <h2 class="text-2xl font-bold text-center mb-8">How to Buy USDC</h2>
-    
-    <div class="space-y-6">
-      <div class="step-card bg-gray-800 p-5 rounded-r-lg">
-        <div class="flex items-start">
-          <div class="bg-crypto-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">1</div>
-          <div>
-            <h3 class="font-bold text-lg">Click “Buy USDC” below</h3>
-            <p class="text-gray-300 mt-1">You’ll be redirected to Coinbase’s secure payment widget.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="step-card bg-gray-800 p-5 rounded-r-lg">
-        <div class="flex items-start">
-          <div class="bg-crypto-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">2</div>
-          <div>
-            <h3 class="font-bold text-lg">Enter amount (~$70 for Beginner Course)</h3>
-            <p class="text-gray-300 mt-1">USDC will be sent to your self-custody wallet (e.g., MetaMask, Coinbase Wallet).</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="step-card bg-gray-800 p-5 rounded-r-lg">
-        <div class="flex items-start">
-          <div class="bg-crypto-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">3</div>
-          <div>
-            <h3 class="font-bold text-lg">Pay with card, bank, or digital wallet</h3>
-            <p class="text-gray-300 mt-1">Visa, Mastercard, Apple Pay, Google Pay, and SEPA supported.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="step-card bg-gray-800 p-5 rounded-r-lg">
-        <div class="flex items-start">
-          <div class="bg-crypto-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">4</div>
-          <div>
-            <h3 class="font-bold text-lg">Go to Courses and Pay with USDC</h3>
-            <p class="text-gray-300 mt-1">Your USDC balance will appear in your wallet. Use it to buy courses instantly.</p>
-          </div>
-        </div>
-      </div>
+  <main class="p-6 max-w-3xl mx-auto mt-10">
+    <div class="bg-gray-800 p-6 rounded-xl border border-yellow-600">
+      <h2 class="text-xl font-bold text-yellow-400 mb-4">How It Works</h2>
+      <ol class="list-decimal pl-5 space-y-2 text-gray-300">
+        <li>Click “Buy USDC” below</li>
+        <li>Enter amount (e.g., $70 for Beginner Course)</li>
+        <li>Choose payment method (card, bank, etc.)</li>
+        <li>USDC is sent to your wallet (e.g., MetaMask, Coinbase Wallet)</li>
+        <li>Return to <a href="courses.html" class="text-crypto-blue">Courses</a> and pay with USDC</li>
+      </ol>
     </div>
 
-    <!-- Buy Button -->
+    <!-- BUY BUTTON -->
     <div class="text-center mt-10">
-      <button id="coinbase-pay-button" class="bg-crypto-blue hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition">
-        💳 Buy USDC Now →
+      <button id="coinbase-pay-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition">
+        🔵 Buy USDC Now via Coinbase
       </button>
       <p class="text-gray-500 text-sm mt-4">
-        Powered by Coinbase. No account needed. Funds go directly to your wallet.
+        Powered by Coinbase. No account required. Supports Visa, Mastercard, Apple Pay & more.
       </p>
     </div>
 
-    <!-- FAQ -->
-    <div class="mt-12 bg-gray-800 p-6 rounded-xl">
-      <h3 class="font-bold text-lg mb-4">❓ Frequently Asked</h3>
-      <ul class="space-y-2 text-gray-300">
-        <li>• <strong>Do I need a Coinbase account?</strong> No — but you need a wallet (like MetaMask).</li>
-        <li>• <strong>Which networks are supported?</strong> Ethereum, Polygon, Base, and more.</li>
-        <li>• <strong>How long does it take?</strong> 2–5 minutes for USDC to arrive.</li>
-        <li>• <strong>Can I buy directly for your course?</strong> Not yet — but Coinbase Commerce accepts USDC instantly.</li>
-      </ul>
+    <div class="mt-12 text-center text-gray-400 text-sm">
+      <p>🔒 Secure • ⚡ Instant • 🌍 Global</p>
     </div>
-  </section>
+  </main>
 
-  <!-- Footer -->
-  <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
+  <!-- FOOTER -->
+  <footer class="mt-16 py-6 text-center text-gray-500 text-sm border-t border-gray-800">
     <p>© 2025 AzadTradeLab. Not financial advice.</p>
   </footer>
 
-  <!-- Coinbase Pay SDK -->
+  <!-- 🔑 COINBASE PAY SDK -->
   <script src="https://pay.coinbase.com/sdk/v1/coinbase-sdk.js"></script>
   <script>
     document.getElementById('coinbase-pay-button').addEventListener('click', () => {
+      // Launch Coinbase Pay widget
       const pay = new window.CoinbasePay({
-        presetCryptoAmount: 75,
+        presetCryptoAmount: 75,          // USD value → gets ~69 USDC
         presetCryptoCurrency: 'USDC',
         fiatCurrency: 'USD',
         displayPreview: true
