@@ -142,6 +142,22 @@
       </a>
     </div>
   </section>
+  
+  <!-- Buy USDC Section -->
+<section class="p-6 max-w-4xl mx-auto mt-16 bg-gray-800 rounded-xl border border-crypto-blue">
+  <div class="text-center">
+    <h2 class="text-2xl font-bold text-crypto-blue mb-4">🏦 Buy USDC with Credit Card</h2>
+    <p class="text-gray-300 mb-6">
+      Don’t have USDC? Buy it instantly with your bank account or card — no wallet needed!
+    </p>
+    <button id="coinbase-pay-button" class="bg-crypto-blue hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition">
+      Buy USDC Now →
+    </button>
+    <p class="text-gray-500 text-sm mt-4">
+      Powered by Coinbase. Supports Visa, Mastercard, Apple Pay, Google Pay, and bank transfer.
+    </p>
+  </div>
+</section>
 
   <!-- Footer -->
   <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
@@ -308,5 +324,25 @@
       setInterval(fetchPrices, 60000); // Refresh prices every 60s
     });
   </script>
+  
+  <!-- Coinbase Pay SDK -->
+<script src="https://pay.coinbase.com/sdk/v1/coinbase-sdk.js"></script>
+<script>
+  document.getElementById('coinbase-pay-button').addEventListener('click', () => {
+    // Initialize Coinbase Pay
+    const pay = new window.CoinbasePay({
+      appId: 'your-app-id', // Optional (for analytics)
+      destinationWalletAddress: '', // Optional: leave empty so user chooses
+      presetCryptoAmount: 70,
+      presetCryptoCurrency: 'USDC',
+      fiatCurrency: 'USD',
+      displayPreview: true
+    });
+
+    // Open the widget
+    pay.launch();
+  });
+</script>
+  
 </body>
 </html>
