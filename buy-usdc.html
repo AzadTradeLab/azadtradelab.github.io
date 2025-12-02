@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .crypto-blue { @apply text-blue-400; }
+    .crypto-yellow { @apply text-yellow-400; }
   </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
@@ -14,8 +15,8 @@
   <!-- Navigation -->
   <nav class="bg-gray-800 p-4 text-center">
     <a href="index.html" class="text-white font-bold mx-3">Home</a>
-    <a href="courses.html" class="text-crypto-blue mx-3">Courses</a>
-    <a href="buy-usdc.html" class="text-yellow-400 font-bold mx-3">Buy USDC</a>
+    <a href="courses.html" class="crypto-blue mx-3">Courses</a>
+    <a href="buy-usdc.html" class="crypto-yellow font-bold mx-3">Buy USDC</a>
   </nav>
 
   <header class="bg-gradient-to-r from-blue-700 to-indigo-900 py-8 text-center">
@@ -33,7 +34,7 @@
         <li>Enter amount (e.g., $70 for Beginner Course)</li>
         <li>Choose payment method (card, bank, etc.)</li>
         <li>USDC is sent to your wallet (e.g., MetaMask, Coinbase Wallet)</li>
-        <li>Return to <a href="courses.html" class="text-crypto-blue">Courses</a> and pay with USDC</li>
+        <li>Return to <a href="courses.html" class="crypto-blue">Courses</a> and pay with USDC</li>
       </ol>
     </div>
 
@@ -52,23 +53,32 @@
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="mt-16 py-6 text-center text-gray-500 text-sm border-t border-gray-800">
     <p>© 2025 AzadTradeLab. Not financial advice.</p>
   </footer>
 
-  <!-- 🔑 COINBASE PAY SDK -->
+  <!-- ✅ CORRECT Coinbase Pay SDK (no extra spaces!) -->
   <script src="https://pay.coinbase.com/sdk/v1/coinbase-sdk.js"></script>
   <script>
-    document.getElementById('coinbase-pay-button').addEventListener('click', () => {
-      // Launch Coinbase Pay widget
-      const pay = new window.CoinbasePay({
-        presetCryptoAmount: 75,          // USD value → gets ~69 USDC
-        presetCryptoCurrency: 'USDC',
-        fiatCurrency: 'USD',
-        displayPreview: true
+    // Ensure DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const button = document.getElementById('coinbase-pay-button');
+      if (!button) return;
+
+      button.addEventListener('click', () => {
+        try {
+          const pay = new window.CoinbasePay({
+            presetCryptoAmount: 75,
+            presetCryptoCurrency: 'USDC',
+            fiatCurrency: 'USD',
+            displayPreview: true
+          });
+          pay.launch();
+        } catch (error) {
+          console.error("Coinbase Pay error:", error);
+          alert("Failed to load payment widget. Please try again later.");
+        }
       });
-      pay.launch();
     });
   </script>
 </body>
