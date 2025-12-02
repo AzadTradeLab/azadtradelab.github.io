@@ -22,7 +22,7 @@
   <header class="bg-gradient-to-r from-blue-700 to-indigo-900 py-8 text-center">
     <h1 class="text-3xl font-bold">💳 Buy USDC Instantly</h1>
     <p class="mt-2 text-indigo-200 max-w-2xl mx-auto">
-      Use your credit card, debit card, bank transfer, Apple Pay, or Google Pay to buy USDC.
+      Use your credit card, Apple Pay, or bank transfer to buy USDC.
     </p>
   </header>
 
@@ -31,25 +31,25 @@
       <h2 class="text-xl font-bold text-yellow-400 mb-4">How It Works</h2>
       <ol class="list-decimal pl-5 space-y-2 text-gray-300">
         <li>Click “Buy USDC” below</li>
-        <li>Enter amount (e.g., $70 for Beginner Course)</li>
-        <li>Choose payment method (card, bank, etc.)</li>
-        <li>USDC is sent to your wallet (e.g., MetaMask, Coinbase Wallet)</li>
-        <li>Return to <a href="courses.html" class="crypto-blue">Courses</a> and pay with USDC</li>
+        <li>Select payment method (card, Apple Pay, etc.)</li>
+        <li>Enter amount (~$70 for Beginner Course)</li>
+        <li>USDC is sent to your wallet (e.g., MetaMask)</li>
+        <li>Go to <a href="courses.html" class="text-crypto-blue">Courses</a> and pay with USDC</li>
       </ol>
     </div>
 
     <!-- BUY BUTTON -->
     <div class="text-center mt-10">
-      <button id="coinbase-pay-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition">
-        🔵 Buy USDC Now via Coinbase
+      <button id="moonpay-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition">
+        🌙 Buy USDC via MoonPay
       </button>
       <p class="text-gray-500 text-sm mt-4">
-        Powered by Coinbase. No account required. Supports Visa, Mastercard, Apple Pay & more.
+        Supports Visa, Mastercard, Apple Pay, Google Pay, and bank transfer.
       </p>
     </div>
 
     <div class="mt-12 text-center text-gray-400 text-sm">
-      <p>🔒 Secure • ⚡ Instant • 🌍 Global</p>
+      <p>🔒 Secure • ⚡ Instant • 🌍 100+ countries</p>
     </div>
   </main>
 
@@ -57,27 +57,29 @@
     <p>© 2025 AzadTradeLab. Not financial advice.</p>
   </footer>
 
-  <!-- ✅ CORRECT Coinbase Pay SDK (no extra spaces!) -->
-  <script src="https://pay.coinbase.com/sdk/v1/coinbase-sdk.js"></script>
+  <!-- MoonPay SDK -->
+  <script src="https://widget.moonpay.com/v3/moonpay.js"></script>
   <script>
-    // Ensure DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      const button = document.getElementById('coinbase-pay-button');
-      if (!button) return;
+    document.getElementById('moonpay-button').addEventListener('click', () => {
+      MoonPay.Widget.show({
+        // ✅ YOUR LIVE PUBLISHABLE KEY
+        apiKey: 'pk_live_9KsnfiHPbz3MA4gdvWWS3JI6MQjQ',
 
-      button.addEventListener('click', () => {
-        try {
-          const pay = new window.CoinbasePay({
-            presetCryptoAmount: 75,
-            presetCryptoCurrency: 'USDC',
-            fiatCurrency: 'USD',
-            displayPreview: true
-          });
-          pay.launch();
-        } catch (error) {
-          console.error("Coinbase Pay error:", error);
-          alert("Failed to load payment widget. Please try again later.");
-        }
+        // What user buys
+        currencyCode: 'usdc',
+
+        // Networks (USDC is on these chains)
+        networks: ['ethereum', 'polygon', 'base'],
+
+        // Pre-fill amount in USD
+        baseCurrencyCode: 'usd',
+        baseCurrencyAmount: 75,
+
+        // After purchase, return to your course page
+        redirectUrl: 'https://www.azadtradelab.com/courses.html',
+
+        // Optional: pre-fill email if logged in (not used here)
+        // customerEmailAddress: 'user@example.com'
       });
     });
   </script>
