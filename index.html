@@ -160,37 +160,53 @@
     <div class="container mx-auto px-4 max-w-6xl">
       <h2 class="text-3xl font-bold text-center mb-8 text-white">Featured Videos</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <!-- Video 1: Intro (already used above, but OK to repeat as featured) -->
+        <!-- Video 1: Short -->
         <div class="aspect-video bg-black rounded-xl overflow-hidden">
           <iframe
             class="w-full h-full"
-            src="https://www.youtube.com/shorts/V-V4jDk-dz0"
-            title="AzadTradeLab Intro"
+            src="https://www.youtube.com/embed/V-V4jDk-dz0"
+            title="Featured Short 1"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
           </iframe>
         </div>
 
-        <!-- Video 2: Replace with your second real video ID -->
+        <!-- Video 2: Short -->
         <div class="aspect-video bg-black rounded-xl overflow-hidden">
           <iframe
             class="w-full h-full"
-            src="https://www.youtube.com/shorts/MwjP1PYoYeM" <!-- ⚠️ REPLACE THIS ID -->
-            title="Trading Strategy Deep Dive"
+            src="https://www.youtube.com/embed/MwjP1PYoYeM"
+            title="Featured Short 2"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
           </iframe>
         </div>
       </div>
+
+      <!-- Embedded Full Playlist -->
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-center text-gray-200 mb-4">All Videos from Our Channel</h3>
+        <div class="aspect-video bg-black rounded-xl overflow-hidden">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/embed/videoseries?list=PLC3fVqMQmKGJKcrk3RZ5DMJPIhYeWg95l"
+            frameborder="0"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Optional: External Link -->
       <div class="text-center">
         <a
-          href="https://youtube.com/playlist?list=PLC3fVqMQmKGJKcrk3RZ5DMJPIhYeWg95l&si=0IftP6_XGSIETFUQ"
+          href="https://www.youtube.com/@AzadTradeLab"
           target="_blank"
-          class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-full transition shadow-lg"
+          rel="noopener"
+          class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-full text-sm transition"
         >
-          📺 Watch All Videos on YouTube
+          📺 View Full Channel on YouTube
         </a>
       </div>
     </div>
@@ -214,14 +230,28 @@
 
   <!-- Footer -->
   <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
+    <!-- Social Media Icons -->
+    <div class="flex justify-center gap-6 mb-6">
+      <a href="#" class="text-gray-400 hover:text-white transition text-2xl" aria-label="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="#" class="text-gray-400 hover:text-white transition text-2xl" aria-label="Facebook">
+        <i class="fab fa-facebook"></i>
+      </a>
+      <a href="#" class="text-gray-400 hover:text-white transition text-2xl" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="#" class="text-gray-400 hover:text-white transition text-2xl" aria-label="TikTok">
+        <i class="fab fa-tiktok"></i>
+      </a>
+    </div>
+
     <p>© 2025 AzadTradeLab. Not financial advice. Trading involves risk.</p>
     <p class="mt-2">All courses payable in USDC (ERC-20, Polygon, or Base)</p>
   </footer>
 
   <!-- Data Fetching Script -->
   <script>
-    // ... [your existing script unchanged] ...
-    // (Keep everything below 'Data Fetching Script' exactly as you had it)
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
     const SIGNALS_URL = 'https://sheetdb.io/api/v1/tqs2minkp9fly';
     const TRADES_URL = 'https://sheetdb.io/api/v1/85zdg9w2vf68k';
