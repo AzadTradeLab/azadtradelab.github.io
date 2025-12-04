@@ -147,7 +147,7 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/TradingView_logo.svg" alt="TradingView" class="partner-logo h-10">
       </a>
       <a href="https://www.coinbase.com/commerce" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Coinbase_Commerce_logo.svg" alt="Coinbase Commerce" class="partner-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Coinbase_Commerce_logo.svg" alt="Coinbase Commerce" class="partner-logo h-8">
       </a>
       <a href="https://coinmarketcap.com/" target="_blank" rel="noopener">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/CoinMarketCap_Logo.png" alt="CoinMarketCap" class="partner-logo h-8">
@@ -156,50 +156,47 @@
   </section>
 
   <!-- Featured Videos Section -->
-<section class="py-12 bg-gray-50">
-  <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="text-3xl font-bold text-center mb-8">Featured Videos</h2>
+  <section class="py-12 bg-gray-800/50">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <h2 class="text-3xl font-bold text-center mb-8 text-white">Featured Videos</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Video 1: Intro (already used above, but OK to repeat as featured) -->
+        <div class="aspect-video bg-black rounded-xl overflow-hidden">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/shorts/V-V4jDk-dz0"
+            title="AzadTradeLab Intro"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
 
-    <!-- Two Featured Videos in a Row (Responsive) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-      <!-- Video 1 -->
-      <div class="aspect-video">
-        <iframe
-          class="w-full h-full"
-          src="https://www.youtube.com/embed/YOUR_VIDEO_ID_1?rel=0"
-          title="Featured Video 1"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
+        <!-- Video 2: Replace with your second real video ID -->
+        <div class="aspect-video bg-black rounded-xl overflow-hidden">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/shorts/MwjP1PYoYeM" <!-- ⚠️ REPLACE THIS ID -->
+            title="Trading Strategy Deep Dive"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
       </div>
-
-      <!-- Video 2 -->
-      <div class="aspect-video">
-        <iframe
-          class="w-full h-full"
-          src="https://www.youtube.com/embed/YOUR_VIDEO_ID_2?rel=0"
-          title="Featured Video 2"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
+      <div class="text-center">
+        <a
+          href="https://youtube.com/playlist?list=PLC3fVqMQmKGJKcrk3RZ5DMJPIhYeWg95l&si=0IftP6_XGSIETFUQ"
+          target="_blank"
+          class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-full transition shadow-lg"
+        >
+          📺 Watch All Videos on YouTube
+        </a>
       </div>
     </div>
+  </section>
 
-    <!-- Show All Button -->
-    <div class="text-center">
-      <a
-        href="https://www.youtube.com/@AzadTradeLab" target="_blank"
-        class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-full transition"
-      >
-        📺 Watch All Videos on YouTube
-      </a>
-    </div>
-  </div>
-</section>
-
-  <!-- Buy USDC CTA (Link to dedicated page) -->
+  <!-- Buy USDC CTA -->
   <section class="p-6 max-w-4xl mx-auto mt-16 bg-gray-800 rounded-xl border border-yellow-600">
     <div class="text-center">
       <h2 class="text-2xl font-bold text-yellow-400 mb-4">💡 Don’t Have USDC?</h2>
@@ -223,7 +220,8 @@
 
   <!-- Data Fetching Script -->
   <script>
-    // SheetDB URLs (replace with your actual endpoints)
+    // ... [your existing script unchanged] ...
+    // (Keep everything below 'Data Fetching Script' exactly as you had it)
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
     const SIGNALS_URL = 'https://sheetdb.io/api/v1/tqs2minkp9fly';
     const TRADES_URL = 'https://sheetdb.io/api/v1/85zdg9w2vf68k';
