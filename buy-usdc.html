@@ -57,31 +57,43 @@
     <p>© 2025 AzadTradeLab. Not financial advice.</p>
   </footer>
 
-  <!-- MoonPay SDK -->
-  <script src="https://widget.moonpay.com/v3/moonpay.js"></script>
-  <script>
-    document.getElementById('moonpay-button').addEventListener('click', () => {
-      MoonPay.Widget.show({
-        // ✅ YOUR LIVE PUBLISHABLE KEY
-        apiKey: 'pk_live_9KsnfiHPbz3MA4gdvWWS3JI6MQjQ',
+ <!-- MOONPAY BUTTON -->
+<div class="text-center mt-6">
+  <button id="moonpay-button" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-8 rounded-full text-lg transition">
+    💳 Buy USDC via MoonPay (Test Mode)
+  </button>
+  <p class="text-gray-500 text-sm mt-3">
+    Sandbox mode: Use test card 4242 4242 4242 4242. USDC will be simulated.
+  </p>
+</div>
 
-        // What user buys
-        currencyCode: 'usdc',
+<!-- MOONPAY SDK -->
+<script type="module">
+  import { loadMoonPay } from 'https://cdn.moonpay.com/web-sdk/v2.0/moonpay-web-sdk.mjs';
 
-        // Networks (USDC is on these chains)
-        networks: ['ethereum', 'polygon', 'base'],
-
-        // Pre-fill amount in USD
-        baseCurrencyCode: 'usd',
-        baseCurrencyAmount: 75,
-
-        // After purchase, return to your course page
-        redirectUrl: 'https://www.azadtradelab.com/courses.html',
-
-        // Optional: pre-fill email if logged in (not used here)
-        // customerEmailAddress: 'user@example.com'
+  document.getElementById('moonpay-button').addEventListener('click', async () => {
+    try {
+      const moonPay = await loadMoonPay();
+      const moonPaySdk = moonPay({
+        flow: 'buy',
+        environment: 'sandbox', // Keep this until domain approved
+        variant: 'overlay',
+        params: {
+          apiKey: 'pk_test_o4nC0iE4qND1b0nHwqCXhqr0irxSYPDP', // ✅ Your sandbox key
+          theme: 'dark',
+          baseCurrencyCode: 'usd',
+          baseCurrencyAmount: '100', // Default USD amount
+          defaultCurrencyCode: 'usdc', // ⚠️ Critical: Use 'usdc', not 'eth'
+          // Optional: prefill user email if logged in via Firebase
+          // email: auth.currentUser?.email
+        }
       });
-    });
-  </script>
+      moonPaySdk.show();
+    } catch (err) {
+      console.error('MoonPay failed to load:', err);
+      alert('Failed to open MoonPay. Check console for details.');
+    }
+  });
+</script>
 </body>
 </html>
