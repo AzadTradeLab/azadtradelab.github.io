@@ -264,14 +264,28 @@
   <!-- Data Fetching Script -->
   <script>
     // Helper to format numbers to 4 decimal places where needed
-    function formatNumber(num) {
-      if (typeof num !== 'number' && isNaN(parseFloat(num))) return num;
+    
+   function formatNumber(num) {
+  // If it's already a properly formatted string like "0.1230", preserve it
+  if (typeof num === 'string') {
+    // If it's clearly a number string (possibly with trailing zeros)
+    if (/^-?\d*\.?\d+$/.test(num.trim())) {
       const parsed = parseFloat(num);
-      return parsed.toLocaleString('en-US', {
-        minimumFractionDigits: 4,
-        maximumFractionDigits: 4
-      });
+      if (!isNaN(parsed)) {
+        return parsed.toFixed(4);
+      }
     }
+    return num; // e.g. "—", "N/A", etc.
+  }
+
+  // If it's a number
+  if (typeof num === 'number' && !isNaN(num)) {
+    return num.toFixed(4);
+  }
+
+  // Fallback
+  return num;
+}
 
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
     const SIGNALS_URL = 'https://sheetdb.io/api/v1/tqs2minkp9fly';
