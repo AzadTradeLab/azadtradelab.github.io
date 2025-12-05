@@ -222,6 +222,7 @@
     </div>
   </div>
 </section>
+
   <!-- Buy USDC CTA -->
   <section class="p-6 max-w-4xl mx-auto mt-16 bg-gray-800 rounded-xl border border-yellow-600">
     <div class="text-center">
@@ -240,9 +241,7 @@
 
   <!-- Footer with Social Media -->
   <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
-    <!-- Social Media Icons -->
     <div class="flex justify-center gap-6 mb-6">
-      <!-- 🔗 Replace # with your actual social media links -->
       <a href="https://www.youtube.com/channel/UChYPfMCpdAfqQ0V7BJ8LATQ" class="text-gray-400 hover:text-white transition text-2xl" aria-label="YouTube">
         <i class="fab fa-youtube"></i>
       </a>
@@ -263,29 +262,22 @@
 
   <!-- Data Fetching Script -->
   <script>
-    
-    // Helper to format numbers to 4 decimal places where needed
-   function formatNumber(value) {
-  // Handle empty, null, or dash placeholders
-  if (value == null || value === '' || value === '—' || value === '-') {
-    return '—';
-  }
-
-  // Convert to string and trim
-  let str = String(value).trim();
-
-  // If it's a valid number (including strings like "0.123"), format to 4 decimals
-  if (/^-?\d*\.?\d+$/.test(str)) {
-    const num = parseFloat(str);
-    if (!isNaN(num)) {
-      return num.toFixed(4); // THIS forces 0.123 → "0.1230"
+    // ✅ FIXED: Force 4 decimal places for all numeric values
+    function formatNumber(value) {
+      if (value == null || value === '' || value === '—' || value === '-') {
+        return '—';
+      }
+      let str = String(value).trim();
+      if (/^-?\d*\.?\d+$/.test(str)) {
+        const num = parseFloat(str);
+        if (!isNaN(num)) {
+          return num.toFixed(4); // e.g., 0.123 → "0.1230"
+        }
+      }
+      return str;
     }
-  }
 
-  // If it's not a number (e.g., "Market", "N/A"), return as-is
-  return str;
-}
-
+    // Trim whitespace from URLs (critical for SheetDB)
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
     const SIGNALS_URL = 'https://sheetdb.io/api/v1/tqs2minkp9fly';
     const TRADES_URL = 'https://sheetdb.io/api/v1/85zdg9w2vf68k';
@@ -339,7 +331,7 @@
                   </div>
                   <span class="text-gray-400 text-sm">${item.time_ago || '—'}</span>
                 </div>
-                <p class="mt-2 text-gray-300">Entry: ${formatNumber(item.entry) || '—'} | Target: ${formatNumber(item.target) || '—'} | Stop: ${formatNumber(item.stop) || '—'}</p>
+                <p class="mt-2 text-gray-300">Entry: ${formatNumber(item.entry)} | Target: ${formatNumber(item.target)} | Stop: ${formatNumber(item.stop)}</p>
                 <div class="mt-3 flex flex-wrap gap-2 text-sm">
                   ${item.timeframe ? `<span class="bg-gray-700 px-2 py-1 rounded">${item.timeframe}</span>` : ''}
                   ${item.strategy ? `<span class="bg-gray-700 px-2 py-1 rounded">${item.strategy}</span>` : ''}
@@ -373,7 +365,7 @@
               </div>
               <p class="mt-3 text-gray-300 text-sm">${item.description || ''}</p>
               <div class="mt-3 flex text-xs text-gray-400">
-                <span>Entry: ${formatNumber(item.entry) || '—'}</span> • <span class="ml-2">Exit: ${formatNumber(item.exit) || '—'}</span>
+                <span>Entry: ${formatNumber(item.entry)}</span> • <span class="ml-2">Exit: ${formatNumber(item.exit)}</span>
               </div>
             </div>
           `).join('');
