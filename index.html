@@ -263,28 +263,27 @@
 
   <!-- Data Fetching Script -->
   <script>
-    // Helper to format numbers to 4 decimal places where needed
     
-   function formatNumber(num) {
-  // If it's already a properly formatted string like "0.1230", preserve it
-  if (typeof num === 'string') {
-    // If it's clearly a number string (possibly with trailing zeros)
-    if (/^-?\d*\.?\d+$/.test(num.trim())) {
-      const parsed = parseFloat(num);
-      if (!isNaN(parsed)) {
-        return parsed.toFixed(4);
-      }
+    // Helper to format numbers to 4 decimal places where needed
+   function formatNumber(value) {
+  // Handle empty, null, or dash placeholders
+  if (value == null || value === '' || value === '—' || value === '-') {
+    return '—';
+  }
+
+  // Convert to string and trim
+  let str = String(value).trim();
+
+  // If it's a valid number (including strings like "0.123"), format to 4 decimals
+  if (/^-?\d*\.?\d+$/.test(str)) {
+    const num = parseFloat(str);
+    if (!isNaN(num)) {
+      return num.toFixed(4); // THIS forces 0.123 → "0.1230"
     }
-    return num; // e.g. "—", "N/A", etc.
   }
 
-  // If it's a number
-  if (typeof num === 'number' && !isNaN(num)) {
-    return num.toFixed(4);
-  }
-
-  // Fallback
-  return num;
+  // If it's not a number (e.g., "Market", "N/A"), return as-is
+  return str;
 }
 
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
