@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AzadTradeLab | Live Crypto Trading Alerts</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="httpshttps://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script>
     tailwind.config = {
@@ -77,7 +77,6 @@
       <iframe
         class="w-full h-full"
         src="https://www.youtube.com/embed/B_CYsVtFrQs"
-    
         title="AzadTradeLab Introduction"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -223,6 +222,7 @@
     </div>
   </div>
 </section>
+
   <!-- Buy USDC CTA -->
   <section class="p-6 max-w-4xl mx-auto mt-16 bg-gray-800 rounded-xl border border-yellow-600">
     <div class="text-center">
@@ -244,7 +244,7 @@
     <!-- Social Media Icons -->
     <div class="flex justify-center gap-6 mb-6">
       <a href="#" class="text-gray-400 hover:text-white transition text-2xl" aria-label="YouTube">
-        <i class="fab fa-youtube"></i>
+        <i class="https://www.youtube.com/channel/UChYPfMCpdAfqQ0V7BJ8LATQ"></i>
       </a>
       <a href="#" class="text-gray-400 hover:text-white transition text-2xl" aria-label="Facebook">
         <i class="fab fa-facebook"></i>
@@ -263,7 +263,15 @@
 
   <!-- Data Fetching Script -->
   <script>
-    // Keep your existing script exactly as-is below this line
+    // ===== NEW: Format number to 4 decimal places if valid number =====
+    function formatToFourDecimals(value) {
+      if (value == null || value === '' || value === '—') return value;
+      const num = parseFloat(value);
+      if (isNaN(num)) return value; // Keep non-numeric values as-is
+      return num.toFixed(4);
+    }
+
+    // URLs
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
     const SIGNALS_URL = 'https://sheetdb.io/api/v1/tqs2minkp9fly';
     const TRADES_URL = 'https://sheetdb.io/api/v1/85zdg9w2vf68k';
@@ -317,7 +325,7 @@
                   </div>
                   <span class="text-gray-400 text-sm">${item.time_ago || '—'}</span>
                 </div>
-                <p class="mt-2 text-gray-300">Entry: ${item.entry || '—'} | Target: ${item.target || '—'} | Stop: ${item.stop || '—'}</p>
+                <p class="mt-2 text-gray-300">Entry: ${formatToFourDecimals(item.entry) || '—'} | Target: ${formatToFourDecimals(item.target) || '—'} | Stop: ${formatToFourDecimals(item.stop) || '—'}</p>
                 <div class="mt-3 flex flex-wrap gap-2 text-sm">
                   ${item.timeframe ? `<span class="bg-gray-700 px-2 py-1 rounded">${item.timeframe}</span>` : ''}
                   ${item.strategy ? `<span class="bg-gray-700 px-2 py-1 rounded">${item.strategy}</span>` : ''}
@@ -345,13 +353,13 @@
               <div class="flex justify-between items-start">
                 <div>
                   <h3 class="font-bold text-lg">${item.title || '—'}</h3>
-                  <p class="text-green-400 mt-1">${item.return || '—'}</p>
+                  <p class="text-green-400 mt-1">${formatToFourDecimals(item.return) || '—'}</p>
                 </div>
                 <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
               </div>
               <p class="mt-3 text-gray-300 text-sm">${item.description || ''}</p>
               <div class="mt-3 flex text-xs text-gray-400">
-                <span>Entry: ${item.entry || '—'}</span> • <span class="ml-2">Exit: ${item.exit || '—'}</span>
+                <span>Entry: ${formatToFourDecimals(item.entry) || '—'}</span> • <span class="ml-2">Exit: ${formatToFourDecimals(item.exit) || '—'}</span>
               </div>
             </div>
           `).join('');
