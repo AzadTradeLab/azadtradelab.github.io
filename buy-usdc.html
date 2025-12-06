@@ -3,97 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Buy USDC with Fiat | AzadTradeLab</title>
+  <title>Buy USDC | AzadTradeLab</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            crypto: {
+              green: '#10B981',
+              red: '#EF4444',
+              blue: '#3B82F6'
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    .crypto-blue { @apply text-blue-400; }
-    .crypto-yellow { @apply text-yellow-400; }
+    .partner-logo {
+      height: 40px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .partner-logo:hover {
+      opacity: 1;
+    }
   </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
+<body class="bg-gray-900 text-gray-100 font-sans">
 
   <!-- Navigation -->
   <nav class="bg-gray-800 p-4 text-center">
     <a href="index.html" class="text-white font-bold mx-3">Home</a>
-    <a href="courses.html" class="crypto-blue mx-3">Courses</a>
-    <a href="buy-usdc.html" class="crypto-yellow font-bold mx-3">Buy USDC</a>
+    <a href="courses.html" class="text-crypto-blue mx-3">Courses</a>
+    <a href="buy-usdc.html" class="text-yellow-400 mx-3">Buy USDC</a>
   </nav>
 
-  <header class="bg-gradient-to-r from-blue-700 to-indigo-900 py-8 text-center">
-    <h1 class="text-3xl font-bold">💳 Buy USDC Instantly</h1>
-    <p class="mt-2 text-indigo-200 max-w-2xl mx-auto">
-      Use your credit card, Apple Pay, or bank transfer to buy USDC.
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-yellow-600 to-yellow-800 py-6 px-4 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold">💳 Buy USDC Instantly</h1>
+    <p class="mt-2 text-yellow-100 max-w-2xl mx-auto">
+      Pay with credit/debit card, Apple Pay, or Google Pay. No wallet needed for beginners.
     </p>
   </header>
 
-  <main class="p-6 max-w-3xl mx-auto mt-10">
-    <div class="bg-gray-800 p-6 rounded-xl border border-yellow-600">
-      <h2 class="text-xl font-bold text-yellow-400 mb-4">How It Works</h2>
-      <ol class="list-decimal pl-5 space-y-2 text-gray-300">
-        <li>Click “Buy USDC” below</li>
-        <li>Select payment method (card, Apple Pay, etc.)</li>
-        <li>Enter amount (~$70 for Beginner Course)</li>
-        <li>USDC is sent to your wallet (e.g., MetaMask)</li>
-        <li>Go to <a href="courses.html" class="text-crypto-blue">Courses</a> and pay with USDC</li>
-      </ol>
-    </div>
+  <!-- Main CTA -->
+  <section class="p-6 max-w-4xl mx-auto mt-10 text-center">
+    <div class="bg-gray-800 rounded-xl p-8 border border-yellow-600 shadow-lg">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4">Ready to Enroll?</h2>
+      <p class="text-gray-300 mb-6">
+        Click below to securely buy USDC and enroll in AzadTradeLab courses.
+        <br><span class="text-yellow-400 font-medium">Powered by Coinbase Commerce</span>
+      </p>
 
-    <!-- BUY BUTTON -->
-    <div class="text-center mt-10">
-      <button id="moonpay-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition">
-        🌙 Buy USDC via MoonPay
-      </button>
-      <p class="text-gray-500 text-sm mt-4">
-        Supports Visa, Mastercard, Apple Pay, Google Pay, and bank transfer.
+      <!-- 🔗 YOUR COINBASE CHECKOUT LINK -->
+      <a
+        href="https://commerce.coinbase.com/checkout/3e558a89-31b6-400f-ba3b-92b0726d8049"
+        target="_blank"
+        rel="noopener"
+        class="inline-block bg-yellow-600 hover:bg-yellow-700 text-gray-900 font-bold py-4 px-10 rounded-full text-lg transition transform hover:scale-105"
+      >
+        <i class="fas fa-shopping-cart mr-2"></i> Buy USDC Now
+      </a>
+
+      <p class="mt-6 text-sm text-gray-500">
+        After payment, you’ll get immediate access to your course materials.
       </p>
     </div>
+  </section>
 
-    <div class="mt-12 text-center text-gray-400 text-sm">
-      <p>🔒 Secure • ⚡ Instant • 🌍 100+ countries</p>
+  <!-- How It Works -->
+  <section class="p-6 max-w-4xl mx-auto mt-12">
+    <h2 class="text-2xl font-bold text-center mb-6">How It Works</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-gray-800 p-5 rounded-lg text-center">
+        <div class="w-12 h-12 bg-crypto-blue rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-white font-bold">1</span>
+        </div>
+        <h3 class="font-bold">Click “Buy USDC”</h3>
+        <p class="text-gray-400 text-sm mt-2">You’ll be taken to our secure Coinbase checkout.</p>
+      </div>
+      <div class="bg-gray-800 p-5 rounded-lg text-center">
+        <div class="w-12 h-12 bg-crypto-green rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-white font-bold">2</span>
+        </div>
+        <h3 class="font-bold">Pay with Card or Crypto</h3>
+        <p class="text-gray-400 text-sm mt-2">Use credit/debit card, Apple Pay, Google Pay, or USDC.</p>
+      </div>
+      <div class="bg-gray-800 p-5 rounded-lg text-center">
+        <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-white font-bold">3</span>
+        </div>
+        <h3 class="font-bold">Get Instant Access</h3>
+        <p class="text-gray-400 text-sm mt-2">Course unlocks automatically after payment.</p>
+      </div>
     </div>
-  </main>
+  </section>
 
-  <footer class="mt-16 py-6 text-center text-gray-500 text-sm border-t border-gray-800">
-    <p>© 2025 AzadTradeLab. Not financial advice.</p>
+  <!-- Trust & Security -->
+  <section class="p-6 max-w-4xl mx-auto mt-12 bg-gray-800 rounded-xl">
+    <h3 class="text-xl font-semibold text-center mb-4 text-gray-200">Secure & Trusted</h3>
+    <p class="text-gray-400 text-center mb-6">
+      All payments are processed by <strong>Coinbase Commerce</strong> — a regulated, industry-leading crypto payment provider.
+    </p>
+    <div class="flex flex-wrap justify-center items-center gap-8">
+      <a href="https://www.coinbase.com/commerce" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Coinbase_Commerce_logo.svg" alt="Coinbase Commerce" class="partner-logo h-8">
+      </a>
+      <div class="text-gray-500 text-sm">Card payments powered by Coinbase</div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="p-6 max-w-4xl mx-auto mt-12">
+    <h2 class="text-2xl font-bold mb-4">FAQ</h2>
+    <div class="space-y-4">
+      <div>
+        <h4 class="font-bold text-yellow-400">Do I need a crypto wallet?</h4>
+        <p class="text-gray-400 text-sm">No! If you pay with card, Coinbase handles everything. You don’t need to install a wallet.</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-yellow-400">What payment methods are accepted?</h4>
+        <p class="text-gray-400 text-sm">Credit/debit cards, Apple Pay, Google Pay, and crypto (USDC, ETH, BTC, etc.).</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-yellow-400">Is this available in New York?</h4>
+        <p class="text-gray-400 text-sm">Yes! Coinbase Commerce supports card payments in all 50 US states, including NY.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
+    <p>© 2025 AzadTradeLab. Not financial advice. Trading involves risk.</p>
+    <p class="mt-2">All courses payable in USDC (ERC-20, Polygon, or Base)</p>
   </footer>
 
- <!-- MOONPAY BUTTON -->
-<div class="text-center mt-6">
-  <button id="moonpay-button" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-8 rounded-full text-lg transition">
-    💳 Buy USDC via MoonPay (Test Mode)
-  </button>
-  <p class="text-gray-500 text-sm mt-3">
-    Sandbox mode: Use test card 4242 4242 4242 4242. USDC will be simulated.
-  </p>
-</div>
-
-<!-- MOONPAY SDK -->
-<script type="module">
-  import { loadMoonPay } from 'https://cdn.moonpay.com/web-sdk/v2.0/moonpay-web-sdk.mjs';
-
-  document.getElementById('moonpay-button').addEventListener('click', async () => {
-    try {
-      const moonPay = await loadMoonPay();
-      const moonPaySdk = moonPay({
-        flow: 'buy',
-        environment: 'sandbox', // Keep this until domain approved
-        variant: 'overlay',
-        params: {
-          apiKey: 'pk_test_o4nC0iE4qND1b0nHwqCXhqr0irxSYPDP', // ✅ Your sandbox key
-          theme: 'dark',
-          baseCurrencyCode: 'usd',
-          baseCurrencyAmount: '100', // Default USD amount
-          defaultCurrencyCode: 'usdc', // ⚠️ Critical: Use 'usdc', not 'eth'
-          // Optional: prefill user email if logged in via Firebase
-          // email: auth.currentUser?.email
-        }
-      });
-      moonPaySdk.show();
-    } catch (err) {
-      console.error('MoonPay failed to load:', err);
-      alert('Failed to open MoonPay. Check console for details.');
-    }
-  });
-</script>
 </body>
 </html>
