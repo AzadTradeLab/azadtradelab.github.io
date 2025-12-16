@@ -239,15 +239,19 @@
     };
 
     // Free preview
-    document.getElementById('preview-btn').addEventListener('click', () => {
-      const user = auth.currentUser;
-      if (!user) return alert("Please log in first.");
-      const first = COURSE.beginner.videos[0];
-      document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
-      document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
-      document.getElementById('course-video').src = `https://www.youtube.com/embed/${074yFzqHwVs}?autoplay=1`;
-      document.getElementById('course-modal').classList.remove('hidden');
-    });
+document.getElementById('preview-btn').addEventListener('click', () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in first.");
+  
+  const first = COURSE.beginner.videos[0];
+  document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
+  document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
+  
+  // ✅ Fixed: Proper string URL (no template literal needed)
+  document.getElementById('course-video').src = "https://www.youtube.com/embed/074yFzqHwVs?autoplay=1";
+  
+  document.getElementById('course-modal').classList.remove('hidden');
+});
 
     // Full course (paid only)
     async function showFullCourse() {
