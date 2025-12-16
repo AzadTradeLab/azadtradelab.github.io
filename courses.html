@@ -200,12 +200,12 @@
       beginner: {
         title: "Beginner Crypto Trading",
         videos: [
-          { id: "UIn0hvgHKc0", title: "1. Mindset & Goal" },
+          { id: "074yFzqHwVs", title: "1. Introduction to Crypto" },
+          { id: "cABEowBTfLA", title: "2. Mindset & Goal" },
           { id: "cABEowBTfLA", title: "2. Reading Charts Like a Pro" },
           { id: "cABEowBTfLb", title: "3. Identify Zoning" },
           { id: "h5qjXKdMxxE", title: "4. Risk Management Rules" },
-          { id: "wVTACrztLOA", title: "5. Live Trade Example" },
-          { id: "ooqM1JNhGiw", title: "6. Q&A and Next Steps" }
+          { id: "wVTACrztLOA", title: "5. Live Trade Example" }
         ]
       }
     };
@@ -217,7 +217,7 @@
       document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
       document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
       // ✅ FIXED: Use a working video ID as a plain string
-      document.getElementById('course-video').src = "https://www.youtube.com/embed/UIn0hvgHKc0?autoplay=1";
+      document.getElementById('course-video').src = "https://www.youtube.com/embed/074yFzqHwVs?autoplay=1";
       document.getElementById('course-modal').classList.remove('hidden');
     });
     // Full course (paid only)
