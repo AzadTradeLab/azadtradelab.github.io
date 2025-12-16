@@ -22,19 +22,16 @@
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
-
   <!-- Navigation -->
   <nav class="bg-gray-800 p-4 text-center shadow-lg">
     <a href="index.html" class="text-white font-bold mx-4 hover:underline">Home</a>
     <a href="courses.html" class="crypto-blue mx-4 hover:underline">Courses</a>
     <a href="contact.html" class="text-crypto-green">Need help?</a>
   </nav>
-
   <header class="p-6 text-center bg-gradient-to-r from-indigo-800 to-purple-900">
     <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
     <p class="mt-2 text-indigo-200">Free preview available • Full access: 69 USDC</p>
   </header>
-
   <!-- Login / Signup Section -->
   <section id="login-section" class="p-6 max-w-md mx-auto">
     <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
@@ -46,7 +43,6 @@
         <span id="login-spinner" class="btn-spinner"></span>
       </button>
     </div>
-
     <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-lg">
       <h2 class="text-xl font-semibold mb-4 text-center">Create Account</h2>
       <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
@@ -57,7 +53,6 @@
       </button>
     </div>
   </section>
-
   <!-- Dashboard (for ALL logged-in users) -->
   <section id="dashboard" class="hidden p-6 max-w-4xl mx-auto">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -66,7 +61,6 @@
         Log Out
       </button>
     </div>
-
     <!-- Courses Grid -->
     <div class="grid md:grid-cols-1 gap-8">
       <div class="bg-gray-800 p-6 rounded-xl shadow">
@@ -81,7 +75,6 @@
           </button>
         </div>
       </div>
-
       <div class="bg-gray-800 p-6 rounded-xl shadow">
         <h3 class="text-xl font-bold mb-3">Advanced Algo Signals</h3>
         <p class="text-gray-300 mb-4">8-video deep dive + live signal walkthroughs.</p>
@@ -91,7 +84,6 @@
       </div>
     </div>
   </section>
-
   <!-- Video Modal -->
   <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
     <div class="bg-gray-800 w-full max-w-5xl max-h-[90vh] rounded-xl flex flex-col md:flex-row overflow-hidden">
@@ -112,13 +104,11 @@
       </button>
     </div>
   </div>
-
   <!-- Firebase SDKs (CDN - Modular) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
     const firebaseConfig = {
       apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
       authDomain: "azadtradelab-cources.firebaseapp.com",
@@ -127,20 +117,16 @@
       messagingSenderId: "864971831518",
       appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
     const loginSec = document.getElementById('login-section');
     const dash = document.getElementById('dashboard');
     const emailEl = document.getElementById('user-email');
-
     // Helper: validate email
     function isValidEmail(e) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     }
-
     // Check if user is paid
     async function isPaid(uid) {
       try {
@@ -151,7 +137,6 @@
         return false;
       }
     }
-
     // Handle auth state
     async function handleAuth(user) {
       if (!user) {
@@ -159,32 +144,25 @@
         dash.classList.add('hidden');
         return;
       }
-
       const paid = await isPaid(user.uid);
       emailEl.textContent = user.email;
       loginSec.classList.add('hidden');
       dash.classList.remove('hidden');
-
       if (paid) {
         document.getElementById('buy-beginner-btn').style.display = 'none';
       }
     }
-
     onAuthStateChanged(auth, handleAuth);
-
     // === Login with loading state ===
     document.getElementById('login-btn').addEventListener('click', async () => {
       const btn = document.getElementById('login-btn');
       const spinner = document.getElementById('login-spinner');
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
-
       if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
       if (!pass) return alert("Password is required.");
-
       btn.disabled = true;
       spinner.style.display = 'inline-block';
-
       try {
         await signInWithEmailAndPassword(auth, email, pass);
         // Success: handled by onAuthStateChanged
@@ -194,20 +172,16 @@
         spinner.style.display = 'none';
       }
     });
-
     // === Signup with loading state ===
     document.getElementById('signup-btn').addEventListener('click', async () => {
       const btn = document.getElementById('signup-btn');
       const spinner = document.getElementById('signup-spinner');
       const email = document.getElementById('signup-email').value.trim();
       const pass = document.getElementById('signup-pass').value;
-
       if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
       if (!pass || pass.length < 6) return alert("Password must be at least 6 characters.");
-
       btn.disabled = true;
       spinner.style.display = 'inline-block';
-
       try {
         await createUserWithEmailAndPassword(auth, email, pass);
         // Success: handled by onAuthStateChanged
@@ -217,12 +191,10 @@
         spinner.style.display = 'none';
       }
     });
-
     // Logout
     document.getElementById('logout-btn').addEventListener('click', () => {
       signOut(auth).catch(console.error);
     });
-
     // === Course Data ===
     const COURSE = {
       beginner: {
@@ -237,22 +209,17 @@
         ]
       }
     };
-
-    // Free preview
-document.getElementById('preview-btn').addEventListener('click', () => {
-  const user = auth.currentUser;
-  if (!user) return alert("Please log in first.");
-  
-  const first = COURSE.beginner.videos[0];
-  document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
-  document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
-  
-  // ✅ Fixed: Proper string URL (no template literal needed)
-  document.getElementById('course-video').src = "https://www.youtube.com/embed/074yFzqHwVs?autoplay=1";
-  
-  document.getElementById('course-modal').classList.remove('hidden');
-});
-
+    // Free preview — FIXED: use valid video ID as string
+    document.getElementById('preview-btn').addEventListener('click', () => {
+      const user = auth.currentUser;
+      if (!user) return alert("Please log in first.");
+      const first = COURSE.beginner.videos[0];
+      document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
+      document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
+      // ✅ FIXED: Use a working video ID as a plain string
+      document.getElementById('course-video').src = "https://www.youtube.com/embed/UIn0hvgHKc0?autoplay=1";
+      document.getElementById('course-modal').classList.remove('hidden');
+    });
     // Full course (paid only)
     async function showFullCourse() {
       const user = auth.currentUser;
@@ -273,7 +240,6 @@ document.getElementById('preview-btn').addEventListener('click', () => {
       document.getElementById('course-modal').classList.remove('hidden');
     }
     window.showFullCourse = showFullCourse;
-
     // Buy button
     const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
     document.getElementById('buy-beginner-btn').addEventListener('click', () => {
@@ -283,9 +249,6 @@ document.getElementById('preview-btn').addEventListener('click', () => {
       url.searchParams.set("metadata[email]", user.email);
       window.location.href = url.toString();
     });
-
-
-    
     // Close modal
     window.closeModal = () => {
       document.getElementById('course-modal').classList.add('hidden');
