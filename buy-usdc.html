@@ -49,27 +49,54 @@
     </p>
   </header>
 
-  <!-- Main CTA -->
+  <!-- Main CTA: Coinbase for Courses -->
   <section class="p-6 max-w-4xl mx-auto mt-10 text-center">
     <div class="bg-gray-800 rounded-xl p-8 border border-yellow-600 shadow-lg">
-      <h2 class="text-2xl font-bold text-yellow-400 mb-4">Ready to Enroll?</h2>
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4">Enroll in a Course?</h2>
       <p class="text-gray-300 mb-6">
-        Click below to securely buy USDC and enroll in AzadTradeLab courses.
+        Click below to securely pay for your AzadTradeLab course.
         <br><span class="text-yellow-400 font-medium">Powered by Coinbase Commerce</span>
       </p>
-
-      <!-- 🔗 YOUR COINBASE CHECKOUT LINK -->
+      <!-- 🔗 COINBASE CHECKOUT (for course payment) -->
       <a
         href="https://commerce.coinbase.com/checkout/3e558a89-31b6-400f-ba3b-92b0726d8049"
         target="_blank"
         rel="noopener"
         class="inline-block bg-yellow-600 hover:bg-yellow-700 text-gray-900 font-bold py-4 px-10 rounded-full text-lg transition transform hover:scale-105"
       >
-        <i class="fas fa-shopping-cart mr-2"></i> Buy USDC Now
+        <i class="fas fa-shopping-cart mr-2"></i> Pay for Course with Card or Crypto
       </a>
-
       <p class="mt-6 text-sm text-gray-500">
-        After payment, you’ll get immediate access to your course materials.
+        After payment, course access is granted automatically.
+      </p>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="p-6 max-w-4xl mx-auto text-center text-gray-500">
+    <p>— OR —</p>
+    <p class="mt-2">Buy USDC first, then pay manually later</p>
+  </div>
+
+  <!-- ChangeNOW: Fiat to USDC On-Ramp -->
+  <section class="p-6 max-w-4xl mx-auto mt-6">
+    <div class="bg-gray-800 rounded-xl p-6 border border-crypto-blue shadow-lg">
+      <h2 class="text-2xl font-bold text-crypto-blue mb-4">Buy USDC with Fiat (Card/Bank)</h2>
+      <p class="text-gray-300 mb-4 text-center">
+        Use this tool to buy USDC directly with USD. Funds will go to your personal wallet.
+        <br><span class="text-sm text-yellow-400">You’ll need to send USDC to us manually to enroll.</span>
+      </p>
+
+      <!-- ✅ CHANGE-NOW WIDGET (Fiat → USDC) -->
+      <iframe
+        id="iframe-widget"
+        src="https://changenow.io/embeds/exchange-widget/v2/widget.html?isFiat=true&fromFiat=usd&to=usd-coin&amountFiat=100&lang=en-US&primaryColor=00C26F&logo=true&FAQ=true&locales=true"
+        style="height: 420px; width: 100%; border: none; border-radius: 0.75rem;"
+      ></iframe>
+      <script defer type="text/javascript" src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"></script>
+
+      <p class="mt-4 text-sm text-gray-500 text-center">
+        Select your wallet address during checkout. USDC will be sent there.
       </p>
     </div>
   </section>
@@ -82,22 +109,22 @@
         <div class="w-12 h-12 bg-crypto-blue rounded-full flex items-center justify-center mx-auto mb-4">
           <span class="text-white font-bold">1</span>
         </div>
-        <h3 class="font-bold">Click “Buy USDC”</h3>
-        <p class="text-gray-400 text-sm mt-2">You’ll be taken to our secure Coinbase checkout.</p>
+        <h3 class="font-bold">Option A: Pay for Course</h3>
+        <p class="text-gray-400 text-sm mt-2">Use Coinbase to pay directly → instant access.</p>
       </div>
       <div class="bg-gray-800 p-5 rounded-lg text-center">
         <div class="w-12 h-12 bg-crypto-green rounded-full flex items-center justify-center mx-auto mb-4">
           <span class="text-white font-bold">2</span>
         </div>
-        <h3 class="font-bold">Pay with Card or Crypto</h3>
-        <p class="text-gray-400 text-sm mt-2">Use credit/debit card, Apple Pay, Google Pay, or USDC.</p>
+        <h3 class="font-bold">Option B: Buy USDC First</h3>
+        <p class="text-gray-400 text-sm mt-2">Use ChangeNOW → send USDC to us manually.</p>
       </div>
       <div class="bg-gray-800 p-5 rounded-lg text-center">
         <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <span class="text-white font-bold">3</span>
         </div>
-        <h3 class="font-bold">Get Instant Access</h3>
-        <p class="text-gray-400 text-sm mt-2">Course unlocks automatically after payment.</p>
+        <h3 class="font-bold">Get Course Access</h3>
+        <p class="text-gray-400 text-sm mt-2">We’ll verify and unlock your course.</p>
       </div>
     </div>
   </section>
@@ -106,13 +133,15 @@
   <section class="p-6 max-w-4xl mx-auto mt-12 bg-gray-800 rounded-xl">
     <h3 class="text-xl font-semibold text-center mb-4 text-gray-200">Secure & Trusted</h3>
     <p class="text-gray-400 text-center mb-6">
-      All payments are processed by <strong>Coinbase Commerce</strong> — a regulated, industry-leading crypto payment provider.
+      Course payments via <strong>Coinbase Commerce</strong>. Fiat on-ramp via <strong>ChangeNOW</strong>.
     </p>
     <div class="flex flex-wrap justify-center items-center gap-8">
       <a href="https://www.coinbase.com/commerce" target="_blank" rel="noopener">
         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Coinbase_Commerce_logo.svg" alt="Coinbase Commerce" class="partner-logo h-8">
       </a>
-      <div class="text-gray-500 text-sm">Card payments powered by Coinbase</div>
+      <a href="https://changenow.io" target="_blank" rel="noopener">
+        <span class="text-crypto-blue">ChangeNOW</span>
+      </a>
     </div>
   </section>
 
@@ -121,16 +150,19 @@
     <h2 class="text-2xl font-bold mb-4">FAQ</h2>
     <div class="space-y-4">
       <div>
-        <h4 class="font-bold text-yellow-400">Do I need a crypto wallet?</h4>
-        <p class="text-gray-400 text-sm">No! If you pay with card, Coinbase handles everything. You don’t need to install a wallet.</p>
+        <h4 class="font-bold text-yellow-400">Which option should I choose?</h4>
+        <p class="text-gray-400 text-sm">
+          → <strong>Choose Coinbase</strong> if you want instant course access.<br>
+          → <strong>Choose ChangeNOW</strong> only if Coinbase fiat isn’t working for you.
+        </p>
       </div>
       <div>
-        <h4 class="font-bold text-yellow-400">What payment methods are accepted?</h4>
-        <p class="text-gray-400 text-sm">Credit/debit cards, Apple Pay, Google Pay, and crypto (USDC, ETH, BTC, etc.).</p>
+        <h4 class="font-bold text-yellow-400">Do I need a wallet for ChangeNOW?</h4>
+        <p class="text-gray-400 text-sm">Yes — you’ll enter your USDC wallet address during checkout.</p>
       </div>
       <div>
-        <h4 class="font-bold text-yellow-400">Is this available in New York?</h4>
-        <p class="text-gray-400 text-sm">Yes! Coinbase Commerce supports card payments in all 50 US states, including NY.</p>
+        <h4 class="font-bold text-yellow-400">Will I get instant course access with ChangeNOW?</h4>
+        <p class="text-gray-400 text-sm">No — you must email us your transaction ID after sending USDC.</p>
       </div>
     </div>
   </section>
