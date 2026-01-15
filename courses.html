@@ -123,41 +123,45 @@
     const loginSec = document.getElementById('login-section');
     const dash = document.getElementById('dashboard');
     const emailEl = document.getElementById('user-email');
-    // Helper: validate email
+
     function isValidEmail(e) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     }
-    // Check if user is paid
+
+    // ✅ FIXED: Robust isPaid check with debug
     async function isPaid(uid) {
       try {
         const docSnap = await getDoc(doc(db, "users", uid));
-        return docSnap.exists() && docSnap.data().isPaid === true;
+        const data = docSnap.data();
+        console.log("Firestore data for UID:", uid, data);
+        return docSnap.exists() && data?.isPaid === true;
       } catch (e) {
         console.warn("Firestore access issue:", e.message);
         return false;
       }
     }
-    // Handle auth state
-  async function handleAuth(user) {
-  if (!user) {
-    loginSec.classList.remove('hidden');
-    dash.classList.add('hidden');
-    return;
-  }
-  
-  const paid = await isPaid(user.uid);
-  console.log("User UID:", user.uid);
-  console.log("Is paid?", paid);
 
-  emailEl.textContent = user.email;
-  loginSec.classList.add('hidden');
-  dash.classList.remove('hidden');
-  if (paid) {
-    document.getElementById('buy-beginner-btn').style.display = 'none';
-  }
-}
+    async function handleAuth(user) {
+      if (!user) {
+        loginSec.classList.remove('hidden');
+        dash.classList.add('hidden');
+        return;
+      }
+      const paid = await isPaid(user.uid);
+      console.log("User logged in:", user.email, "UID:", user.uid, "Paid?", paid);
+      
+      emailEl.textContent = user.email;
+      loginSec.classList.add('hidden');
+      dash.classList.remove('hidden');
+      
+      if (paid) {
+        document.getElementById('buy-beginner-btn').style.display = 'none';
+      }
+    }
+
     onAuthStateChanged(auth, handleAuth);
-    // === Login with loading state ===
+
+    // === Login ===
     document.getElementById('login-btn').addEventListener('click', async () => {
       const btn = document.getElementById('login-btn');
       const spinner = document.getElementById('login-spinner');
@@ -169,14 +173,14 @@
       spinner.style.display = 'inline-block';
       try {
         await signInWithEmailAndPassword(auth, email, pass);
-        // Success: handled by onAuthStateChanged
       } catch (err) {
         alert("Login failed: " + err.message);
         btn.disabled = false;
         spinner.style.display = 'none';
       }
     });
-    // === Signup with loading state ===
+
+    // === Signup ===
     document.getElementById('signup-btn').addEventListener('click', async () => {
       const btn = document.getElementById('signup-btn');
       const spinner = document.getElementById('signup-spinner');
@@ -188,17 +192,18 @@
       spinner.style.display = 'inline-block';
       try {
         await createUserWithEmailAndPassword(auth, email, pass);
-        // Success: handled by onAuthStateChanged
       } catch (err) {
         alert("Sign up failed: " + err.message);
         btn.disabled = false;
         spinner.style.display = 'none';
       }
     });
+
     // Logout
     document.getElementById('logout-btn').addEventListener('click', () => {
       signOut(auth).catch(console.error);
     });
+
     // === Course Data ===
     const COURSE = {
       beginner: {
@@ -215,17 +220,18 @@
         ]
       }
     };
-    // Free preview — FIXED: use valid video ID as string
+
+    // ✅ FIXED: Correct preview video embed (no syntax error)
     document.getElementById('preview-btn').addEventListener('click', () => {
       const user = auth.currentUser;
       if (!user) return alert("Please log in first.");
       const first = COURSE.beginner.videos[0];
       document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
       document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
-      // ✅ FIXED: Use a working video ID as a plain string
       document.getElementById('course-video').src = "https://www.youtube.com/embed/074yFzqHwVs?autoplay=1";
       document.getElementById('course-modal').classList.remove('hidden');
     });
+
     // Full course (paid only)
     async function showFullCourse() {
       const user = auth.currentUser;
@@ -246,6 +252,7 @@
       document.getElementById('course-modal').classList.remove('hidden');
     }
     window.showFullCourse = showFullCourse;
+
     // Buy button
     const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
     document.getElementById('buy-beginner-btn').addEventListener('click', () => {
@@ -255,6 +262,7 @@
       url.searchParams.set("metadata[email]", user.email);
       window.location.href = url.toString();
     });
+
     // Close modal
     window.closeModal = () => {
       document.getElementById('course-modal').classList.add('hidden');
