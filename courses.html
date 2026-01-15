@@ -30,7 +30,7 @@
   </nav>
   <header class="p-6 text-center bg-gradient-to-r from-indigo-800 to-purple-900">
     <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
-    <p class="mt-2 text-indigo-200">Free preview available • Full access: 69 USDC</p>
+    <p class="mt-2 text-indigo-200">Free preview available • Full access: 199 USDC</p>
   </header>
   <!-- Login / Signup Section -->
   <section id="login-section" class="p-6 max-w-md mx-auto">
@@ -138,20 +138,24 @@
       }
     }
     // Handle auth state
-    async function handleAuth(user) {
-      if (!user) {
-        loginSec.classList.remove('hidden');
-        dash.classList.add('hidden');
-        return;
-      }
-      const paid = await isPaid(user.uid);
-      emailEl.textContent = user.email;
-      loginSec.classList.add('hidden');
-      dash.classList.remove('hidden');
-      if (paid) {
-        document.getElementById('buy-beginner-btn').style.display = 'none';
-      }
-    }
+  async function handleAuth(user) {
+  if (!user) {
+    loginSec.classList.remove('hidden');
+    dash.classList.add('hidden');
+    return;
+  }
+  
+  const paid = await isPaid(user.uid);
+  console.log("User UID:", user.uid);
+  console.log("Is paid?", paid);
+
+  emailEl.textContent = user.email;
+  loginSec.classList.add('hidden');
+  dash.classList.remove('hidden');
+  if (paid) {
+    document.getElementById('buy-beginner-btn').style.display = 'none';
+  }
+}
     onAuthStateChanged(auth, handleAuth);
     // === Login with loading state ===
     document.getElementById('login-btn').addEventListener('click', async () => {
