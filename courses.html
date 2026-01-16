@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,11 +149,9 @@
       }
       const paid = await isPaid(user.uid);
       console.log("User logged in:", user.email, "UID:", user.uid, "Paid?", paid);
-      
       emailEl.textContent = user.email;
       loginSec.classList.add('hidden');
       dash.classList.remove('hidden');
-      
       if (paid) {
         document.getElementById('buy-beginner-btn').style.display = 'none';
       }
