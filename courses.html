@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,15 +129,15 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     }
 
-    // ✅ FIXED: Robust paid check with debug logging
+    // ✅ FIXED: Robust isPaid check with debug
     async function isPaid(uid) {
       try {
         const docSnap = await getDoc(doc(db, "users", uid));
         const data = docSnap.data();
-        console.log("Firestore data:", data);
+        console.log("Firestore data for UID:", uid, data);
         return docSnap.exists() && data?.isPaid === true;
       } catch (e) {
-        console.warn("Firestore error:", e.message);
+        console.warn("Firestore access issue:", e.message);
         return false;
       }
     }
@@ -148,27 +149,27 @@
         return;
       }
       const paid = await isPaid(user.uid);
-      console.log("User:", user.email, "Paid?", paid);
+      console.log("User logged in:", user.email, "UID:", user.uid, "Paid?", paid);
+      
       emailEl.textContent = user.email;
       loginSec.classList.add('hidden');
       dash.classList.remove('hidden');
+      
       if (paid) {
         document.getElementById('buy-beginner-btn').style.display = 'none';
-        // Optional: auto-show full course
-        // window.showFullCourse();
       }
     }
 
     onAuthStateChanged(auth, handleAuth);
 
-    // === Auth Handlers ===
+    // === Login ===
     document.getElementById('login-btn').addEventListener('click', async () => {
       const btn = document.getElementById('login-btn');
       const spinner = document.getElementById('login-spinner');
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
-      if (!email || !isValidEmail(email)) return alert("Valid email required.");
-      if (!pass) return alert("Password required.");
+      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
+      if (!pass) return alert("Password is required.");
       btn.disabled = true;
       spinner.style.display = 'inline-block';
       try {
@@ -180,24 +181,26 @@
       }
     });
 
+    // === Signup ===
     document.getElementById('signup-btn').addEventListener('click', async () => {
       const btn = document.getElementById('signup-btn');
       const spinner = document.getElementById('signup-spinner');
       const email = document.getElementById('signup-email').value.trim();
       const pass = document.getElementById('signup-pass').value;
-      if (!email || !isValidEmail(email)) return alert("Valid email required.");
-      if (!pass || pass.length < 6) return alert("Password ≥6 chars.");
+      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
+      if (!pass || pass.length < 6) return alert("Password must be at least 6 characters.");
       btn.disabled = true;
       spinner.style.display = 'inline-block';
       try {
         await createUserWithEmailAndPassword(auth, email, pass);
       } catch (err) {
-        alert("Signup failed: " + err.message);
+        alert("Sign up failed: " + err.message);
         btn.disabled = false;
         spinner.style.display = 'none';
       }
     });
 
+    // Logout
     document.getElementById('logout-btn').addEventListener('click', () => {
       signOut(auth).catch(console.error);
     });
@@ -207,26 +210,26 @@
       beginner: {
         title: "Beginner Crypto Trading",
         videos: [
-          { id: "UIn0hvgHKc0", title: "1. Mindset & Goal" }, // ✅ Working video
-          { id: "cABEowBTfLA", title: "2. Reading Charts Like a Pro" },
-          { id: "cABEowBTfLb", title: "3. Identify Zoning" },
-          { id: "h5qjXKdMxxE", title: "4. Risk Management Rules" },
-          { id: "wVTACrztLOA", title: "5. Live Trade Example" },
-          { id: "ooqM1JNhGiw", title: "6. Q&A and Next Steps" },
-          { id: "qtFFTQ27SAY", title: "7. Bonus: Advanced Tips" },
-          { id: "gAB0kkCOWcU", title: "8. Final Checklist" }
+          { id: "074yFzqHwVs", title: "1. Introduction to Crypto" },
+          { id: "qtFFTQ27SAY", title: "2. Mindset & Goal" },
+          { id: "ZNu9uDSC17Y", title: "3. Reading Charts Like a Pro" },
+          { id: "t7VYfzHWZCo", title: "4. Identify Zoning & Technical analysis" },
+          { id: "i-LPW8KbTNE", title: "5. Risk Management Rules" },
+          { id: "mALEt0Loc1c", title: "6. Choose Cryptos wisely" },
+          { id: "PYGE4FkRIGM", title: "7. How to Create an account" },
+          { id: "gAB0kkCOWcU", title: "8. Live Trade Example" }
         ]
       }
     };
 
-    // ✅ FIXED: Valid preview video
+    // ✅ FIXED: Correct preview video embed (no syntax error)
     document.getElementById('preview-btn').addEventListener('click', () => {
       const user = auth.currentUser;
       if (!user) return alert("Please log in first.");
       const first = COURSE.beginner.videos[0];
       document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
       document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
-      document.getElementById('course-video').src = `https://www.youtube.com/embed/${first.id}?autoplay=1`;
+      document.getElementById('course-video').src = "https://www.youtube.com/embed/074yFzqHwVs?autoplay=1";
       document.getElementById('course-modal').classList.remove('hidden');
     });
 
@@ -234,7 +237,7 @@
     async function showFullCourse() {
       const user = auth.currentUser;
       if (!user) return;
-      if (!(await isPaid(user.uid))) return alert("Purchase required.");
+      if (!(await isPaid(user.uid))) return alert("Please purchase the course to unlock all lessons.");
       const c = COURSE.beginner;
       document.getElementById('modal-title').textContent = c.title;
       const list = document.getElementById('video-playlist');
@@ -261,6 +264,7 @@
       window.location.href = url.toString();
     });
 
+    // Close modal
     window.closeModal = () => {
       document.getElementById('course-modal').classList.add('hidden');
       document.getElementById('course-video').src = '';
