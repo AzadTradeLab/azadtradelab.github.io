@@ -162,6 +162,34 @@
 
     onAuthStateChanged(auth, handleAuth);
 
+
+    // Add this inside the handleAuth function, after checking paid status
+async function handleAuth(user) {
+  if (!user) {
+    loginSec.classList.remove('hidden');
+    dash.classList.add('hidden');
+    return;
+  }
+
+  // DEBUG: Log user and payment status
+  console.log("✅ Logged in as:", user.email);
+  console.log("🔍 Checking Firestore for UID:", user.uid);
+
+  const paid = await isPaid(user.uid);
+  console.log("💰 isPaid result:", paid);
+
+  emailEl.textContent = user.email;
+  loginSec.classList.add('hidden');
+  dash.classList.remove('hidden');
+
+  if (paid) {
+    console.log("🔓 Full course access GRANTED");
+    document.getElementById('buy-beginner-btn').style.display = 'none';
+  } else {
+    console.log("🔒 Full course access DENIED");
+  }
+}
+
     // === Login ===
     document.getElementById('login-btn').addEventListener('click', async () => {
       const btn = document.getElementById('login-btn');
