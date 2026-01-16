@@ -160,10 +160,8 @@
       }
     }
 
-    onAuthStateChanged(auth, handleAuth);
-
-
-    // Add this inside the handleAuth function, after checking paid status
+    
+// Add this inside the handleAuth function, after checking paid status
 async function handleAuth(user) {
   if (!user) {
     loginSec.classList.remove('hidden');
@@ -189,6 +187,10 @@ async function handleAuth(user) {
     console.log("🔒 Full course access DENIED");
   }
 }
+
+    
+    onAuthStateChanged(auth, handleAuth);
+
 
     // === Login ===
     document.getElementById('login-btn').addEventListener('click', async () => {
