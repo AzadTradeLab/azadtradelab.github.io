@@ -240,7 +240,13 @@
     async function showFullCourse() {
       const user = auth.currentUser;
       if (!user) return;
-      if (!(await isPaid(user.uid))) return alert("Please purchase the course to unlock all lessons.");
+
+// TEMPORARY: Grant access to your email
+if (user.email !== "ahussein1@binghamton.edu" && !(await isPaid(user.uid))) {
+  return alert("Please purchase the course...");
+}
+      
+  
       const c = COURSE.beginner;
       document.getElementById('modal-title').textContent = c.title;
       const list = document.getElementById('video-playlist');
