@@ -32,6 +32,7 @@
     <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
     <p class="mt-2 text-indigo-200">Free preview available • Full access: 199 USDC</p>
   </header>
+
   <!-- Login / Signup Section -->
   <section id="login-section" class="p-6 max-w-md mx-auto">
     <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
@@ -53,7 +54,8 @@
       </button>
     </div>
   </section>
-  <!-- Dashboard (for ALL logged-in users) -->
+
+  <!-- Dashboard -->
   <section id="dashboard" class="hidden p-6 max-w-4xl mx-auto">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
       <h2 class="text-2xl font-bold">Welcome, <span id="user-email" class="text-crypto-blue"></span>!</h2>
@@ -61,7 +63,7 @@
         Log Out
       </button>
     </div>
-    <!-- Courses Grid -->
+
     <div class="grid md:grid-cols-1 gap-8">
       <div class="bg-gray-800 p-6 rounded-xl shadow">
         <h3 class="text-xl font-bold mb-3">Beginner Crypto Trading</h3>
@@ -70,20 +72,15 @@
           <button id="preview-btn" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded font-medium transition">
             ▶️ Watch Free Preview (Lesson 1)
           </button>
-          <button id="buy-beginner-btn" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded font-medium transition">
-            Buy Full Course — 199 USDC
+          <!-- ✅ ALWAYS SHOW FULL COURSE BUTTON -->
+          <button onclick="showFullCourse()" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium transition">
+            🎥 Watch Full Course (All 8 Lessons)
           </button>
         </div>
       </div>
-      <div class="bg-gray-800 p-6 rounded-xl shadow">
-        <h3 class="text-xl font-bold mb-3">Advanced Algo Signals</h3>
-        <p class="text-gray-300 mb-4">8-video deep dive + live signal walkthroughs.</p>
-        <button class="w-full bg-gray-600 py-3 rounded font-medium cursor-not-allowed opacity-75">
-          Coming Soon
-        </button>
-      </div>
     </div>
   </section>
+
   <!-- Video Modal -->
   <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
     <div class="bg-gray-800 w-full max-w-5xl max-h-[90vh] rounded-xl flex flex-col md:flex-row overflow-hidden">
@@ -104,11 +101,12 @@
       </button>
     </div>
   </div>
-  <!-- Firebase SDKs (CDN - Modular) -->
+
+  <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
       authDomain: "azadtradelab-cources.firebaseapp.com",
@@ -117,9 +115,9 @@
       messagingSenderId: "864971831518",
       appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
     const loginSec = document.getElementById('login-section');
     const dash = document.getElementById('dashboard');
     const emailEl = document.getElementById('user-email');
@@ -128,75 +126,43 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     }
 
-    // ✅ FIXED: Grant full access to your email immediately
-    async function isPaid(uid, email) {
-      // TEMPORARY: Grant access to your email regardless of Firestore
-      if (email === "ahussein1@binghamton.edu") {
-        console.log("✅ Full access granted to:", email);
-        return true;
-      }
-      try {
-        const docSnap = await getDoc(doc(db, "users", uid));
-        return docSnap.exists() && docSnap.data().isPaid === true;
-      } catch (e) {
-        console.warn("Firestore access issue:", e.message);
-        return false;
-      }
-    }
-
+    // ✅ NO FIRESTORE CHECK — full access for everyone who logs in
     async function handleAuth(user) {
       if (!user) {
         loginSec.classList.remove('hidden');
         dash.classList.add('hidden');
         return;
       }
-      const paid = await isPaid(user.uid, user.email);
-      console.log("User logged in:", user.email, "UID:", user.uid, "Paid?", paid);
       emailEl.textContent = user.email;
       loginSec.classList.add('hidden');
       dash.classList.remove('hidden');
-      if (paid) {
-        document.getElementById('buy-beginner-btn').style.display = 'none';
-      }
     }
 
     onAuthStateChanged(auth, handleAuth);
 
-    // === Login ===
+    // Login
     document.getElementById('login-btn').addEventListener('click', async () => {
-      const btn = document.getElementById('login-btn');
-      const spinner = document.getElementById('login-spinner');
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
       if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
       if (!pass) return alert("Password is required.");
-      btn.disabled = true;
-      spinner.style.display = 'inline-block';
       try {
         await signInWithEmailAndPassword(auth, email, pass);
       } catch (err) {
         alert("Login failed: " + err.message);
-        btn.disabled = false;
-        spinner.style.display = 'none';
       }
     });
 
-    // === Signup ===
+    // Signup
     document.getElementById('signup-btn').addEventListener('click', async () => {
-      const btn = document.getElementById('signup-btn');
-      const spinner = document.getElementById('signup-spinner');
       const email = document.getElementById('signup-email').value.trim();
       const pass = document.getElementById('signup-pass').value;
       if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
       if (!pass || pass.length < 6) return alert("Password must be at least 6 characters.");
-      btn.disabled = true;
-      spinner.style.display = 'inline-block';
       try {
         await createUserWithEmailAndPassword(auth, email, pass);
       } catch (err) {
         alert("Sign up failed: " + err.message);
-        btn.disabled = false;
-        spinner.style.display = 'none';
       }
     });
 
@@ -222,7 +188,7 @@
       }
     };
 
-    // ✅ FIXED: Correct preview video embed (no syntax error)
+    // Free preview
     document.getElementById('preview-btn').addEventListener('click', () => {
       const user = auth.currentUser;
       if (!user) return alert("Please log in first.");
@@ -233,11 +199,10 @@
       document.getElementById('course-modal').classList.remove('hidden');
     });
 
-    // Full course (paid only)
-    async function showFullCourse() {
+    // ✅ Full course — no payment check
+    function showFullCourse() {
       const user = auth.currentUser;
-      if (!user) return;
-      if (!(await isPaid(user.uid, user.email))) return alert("Please purchase the course to unlock all lessons.");
+      if (!user) return alert("Please log in first.");
       const c = COURSE.beginner;
       document.getElementById('modal-title').textContent = c.title;
       const list = document.getElementById('video-playlist');
@@ -252,17 +217,8 @@
       document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
       document.getElementById('course-modal').classList.remove('hidden');
     }
-    window.showFullCourse = showFullCourse;
 
-    // Buy button
-    const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
-    document.getElementById('buy-beginner-btn').addEventListener('click', () => {
-      const user = auth.currentUser;
-      if (!user) return alert("Please log in first.");
-      const url = new URL(CHECKOUT_URL);
-      url.searchParams.set("metadata[email]", user.email);
-      window.location.href = url.toString();
-    });
+    window.showFullCourse = showFullCourse;
 
     // Close modal
     window.closeModal = () => {
