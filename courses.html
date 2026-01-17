@@ -108,7 +108,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
       authDomain: "azadtradelab-cources.firebaseapp.com",
@@ -128,13 +128,16 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     }
 
-    // ✅ FIXED: Robust isPaid check with debug
-    async function isPaid(uid) {
+    // ✅ FIXED: Grant full access to your email immediately
+    async function isPaid(uid, email) {
+      // TEMPORARY: Grant access to your email regardless of Firestore
+      if (email === "ahussein1@binghamton.edu") {
+        console.log("✅ Full access granted to:", email);
+        return true;
+      }
       try {
         const docSnap = await getDoc(doc(db, "users", uid));
-        const data = docSnap.data();
-        console.log("Firestore data for UID:", uid, data);
-        return docSnap.exists() && data?.isPaid === true;
+        return docSnap.exists() && docSnap.data().isPaid === true;
       } catch (e) {
         console.warn("Firestore access issue:", e.message);
         return false;
@@ -147,13 +150,11 @@
         dash.classList.add('hidden');
         return;
       }
-      const paid = await isPaid(user.uid);
+      const paid = await isPaid(user.uid, user.email);
       console.log("User logged in:", user.email, "UID:", user.uid, "Paid?", paid);
-      
       emailEl.textContent = user.email;
       loginSec.classList.add('hidden');
       dash.classList.remove('hidden');
-      
       if (paid) {
         document.getElementById('buy-beginner-btn').style.display = 'none';
       }
@@ -191,9 +192,7 @@
       btn.disabled = true;
       spinner.style.display = 'inline-block';
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-        const user = userCredential.user;
-        await setDoc(doc(db, "users", user.uid), { isPaid: false });
+        await createUserWithEmailAndPassword(auth, email, pass);
       } catch (err) {
         alert("Sign up failed: " + err.message);
         btn.disabled = false;
@@ -238,7 +237,7 @@
     async function showFullCourse() {
       const user = auth.currentUser;
       if (!user) return;
-      if (!(await isPaid(user.uid))) return alert("Please purchase the course to unlock all lessons.");
+      if (!(await isPaid(user.uid, user.email))) return alert("Please purchase the course to unlock all lessons.");
       const c = COURSE.beginner;
       document.getElementById('modal-title').textContent = c.title;
       const list = document.getElementById('video-playlist');
@@ -257,22 +256,12 @@
 
     // Buy button
     const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
-    document.getElementById('buy-beginner-btn').addEventListener('click', async () => {
+    document.getElementById('buy-beginner-btn').addEventListener('click', () => {
       const user = auth.currentUser;
       if (!user) return alert("Please log in first.");
       const url = new URL(CHECKOUT_URL);
       url.searchParams.set("metadata[email]", user.email);
       window.location.href = url.toString();
-
-      // Simulate payment success and update Firestore
-      try {
-        await setDoc(doc(db, "users", user.uid), { isPaid: true }, { merge: true });
-        alert("Payment successful! You now have access to the full course.");
-        document.getElementById('buy-beginner-btn').style.display = 'none';
-      } catch (err) {
-        console.error("Failed to update payment status:", err);
-        alert("Payment processing failed. Please try again.");
-      }
     });
 
     // Close modal
