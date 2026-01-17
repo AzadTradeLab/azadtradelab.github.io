@@ -72,9 +72,8 @@
           <button id="preview-btn" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded font-medium transition">
             ▶️ Watch Free Preview (Lesson 1)
           </button>
-          <!-- ✅ ALWAYS SHOW FULL COURSE BUTTON -->
-          <button onclick="showFullCourse()" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium transition">
-            🎥 Watch Full Course (All 8 Lessons)
+          <button id="buy-beginner-btn" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded font-medium transition">
+            Buy Full Course — 199 USDC
           </button>
         </div>
       </div>
@@ -102,7 +101,7 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase Auth Only (No Firestore) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -126,8 +125,8 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     }
 
-    // ✅ NO FIRESTORE CHECK — full access for everyone who logs in
-    async function handleAuth(user) {
+    // Handle login state
+    onAuthStateChanged(auth, (user) => {
       if (!user) {
         loginSec.classList.remove('hidden');
         dash.classList.add('hidden');
@@ -136,9 +135,7 @@
       emailEl.textContent = user.email;
       loginSec.classList.add('hidden');
       dash.classList.remove('hidden');
-    }
-
-    onAuthStateChanged(auth, handleAuth);
+    });
 
     // Login
     document.getElementById('login-btn').addEventListener('click', async () => {
@@ -199,10 +196,17 @@
       document.getElementById('course-modal').classList.remove('hidden');
     });
 
-    // ✅ Full course — no payment check
-    function showFullCourse() {
+    // ✅ FULL COURSE ACCESS: Check localStorage for paid email
+    window.showFullCourse = () => {
       const user = auth.currentUser;
       if (!user) return alert("Please log in first.");
+
+      // Check if this user paid (via localStorage set by thanks.html)
+      const paidEmail = localStorage.getItem('azad_paid_email');
+      if (paidEmail !== user.email) {
+        return alert("Please purchase the course to unlock all lessons.");
+      }
+
       const c = COURSE.beginner;
       document.getElementById('modal-title').textContent = c.title;
       const list = document.getElementById('video-playlist');
@@ -216,9 +220,15 @@
       });
       document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
       document.getElementById('course-modal').classList.remove('hidden');
-    }
+    };
 
-    window.showFullCourse = showFullCourse;
+    // Buy button → redirect to Coinbase
+    document.getElementById('buy-beginner-btn').addEventListener('click', () => {
+      const user = auth.currentUser;
+      if (!user) return alert("Please log in first.");
+      // Redirect to Coinbase (Success URL will grant access)
+      window.location.href = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
+    });
 
     // Close modal
     window.closeModal = () => {
