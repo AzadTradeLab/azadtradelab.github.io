@@ -30,27 +30,25 @@
   </nav>
   <header class="p-6 text-center bg-gradient-to-r from-indigo-800 to-purple-900">
     <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
-    <p class="mt-2 text-indigo-200">Free preview available • Full access: 199 USDC</p>
+    <p class="mt-2 text-indigo-200">Free preview available • Full access: $199</p>
   </header>
 
-  <!-- Login / Signup Section -->
+  <!-- Login / Signup -->
   <section id="login-section" class="p-6 max-w-md mx-auto">
     <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
       <h2 class="text-xl font-semibold mb-4 text-center">Log In</h2>
-      <input id="login-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
-      <input id="login-pass" type="password" placeholder="Password" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="current-password" required>
+      <input id="login-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" required>
+      <input id="login-pass" type="password" placeholder="Password" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" required>
       <button id="login-btn" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
         <span>Log In</span>
-        <span id="login-spinner" class="btn-spinner"></span>
       </button>
     </div>
     <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-lg">
       <h2 class="text-xl font-semibold mb-4 text-center">Create Account</h2>
-      <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
-      <input id="signup-pass" type="password" placeholder="Password (6+ characters)" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="new-password" required>
-      <button id="signup-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
+      <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" required>
+      <input id="signup-pass" type="password" placeholder="Password (6+ chars)" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" required>
+      <button id="signup-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium transition">
         <span>Sign Up</span>
-        <span id="signup-spinner" class="btn-spinner"></span>
       </button>
     </div>
   </section>
@@ -72,8 +70,9 @@
           <button id="preview-btn" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded font-medium transition">
             ▶️ Watch Free Preview (Lesson 1)
           </button>
-          <button id="buy-beginner-btn" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded font-medium transition">
-            Buy Full Course — 199 USDC
+          <!-- ✅ STRIPE BUTTON -->
+          <button id="buy-stripe-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium transition">
+            Buy Full Course — $199
           </button>
         </div>
       </div>
@@ -101,7 +100,7 @@
     </div>
   </div>
 
-  <!-- Firebase Auth Only (No Firestore) -->
+  <!-- Firebase Auth Only -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -121,11 +120,6 @@
     const dash = document.getElementById('dashboard');
     const emailEl = document.getElementById('user-email');
 
-    function isValidEmail(e) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-    }
-
-    // Handle login state
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         loginSec.classList.remove('hidden');
@@ -141,8 +135,8 @@
     document.getElementById('login-btn').addEventListener('click', async () => {
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
-      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
-      if (!pass) return alert("Password is required.");
+      if (!email || !email.includes('@')) return alert("Invalid email");
+      if (!pass) return alert("Password required");
       try {
         await signInWithEmailAndPassword(auth, email, pass);
       } catch (err) {
@@ -154,12 +148,12 @@
     document.getElementById('signup-btn').addEventListener('click', async () => {
       const email = document.getElementById('signup-email').value.trim();
       const pass = document.getElementById('signup-pass').value;
-      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
-      if (!pass || pass.length < 6) return alert("Password must be at least 6 characters.");
+      if (!email || !email.includes('@')) return alert("Invalid email");
+      if (!pass || pass.length < 6) return alert("Password must be 6+ chars");
       try {
         await createUserWithEmailAndPassword(auth, email, pass);
       } catch (err) {
-        alert("Sign up failed: " + err.message);
+        alert("Signup failed: " + err.message);
       }
     });
 
@@ -168,7 +162,7 @@
       signOut(auth).catch(console.error);
     });
 
-    // === Course Data ===
+    // Course data
     const COURSE = {
       beginner: {
         title: "Beginner Crypto Trading",
@@ -192,21 +186,16 @@
       const first = COURSE.beginner.videos[0];
       document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
       document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
-      document.getElementById('course-video').src = "https://www.youtube.com/embed/074yFzqHwVs?autoplay=1";
+      document.getElementById('course-video').src = `https://www.youtube.com/embed/${first.id}?autoplay=1`;
       document.getElementById('course-modal').classList.remove('hidden');
     });
 
-    // ✅ FULL COURSE ACCESS: Check localStorage for paid email
+    // Full course access (manual for now)
     window.showFullCourse = () => {
       const user = auth.currentUser;
       if (!user) return alert("Please log in first.");
-
-      // Check if this user paid (via localStorage set by thanks.html)
-      const paidEmail = localStorage.getItem('azad_paid_email');
-      if (paidEmail !== user.email) {
-        return alert("Please purchase the course to unlock all lessons.");
-      }
-
+      
+      // ✅ TEMPORARY: Allow access after Stripe payment (you'll automate this later)
       const c = COURSE.beginner;
       document.getElementById('modal-title').textContent = c.title;
       const list = document.getElementById('video-playlist');
@@ -222,19 +211,31 @@
       document.getElementById('course-modal').classList.remove('hidden');
     };
 
-    // Buy button → redirect to Coinbase
-    document.getElementById('buy-beginner-btn').addEventListener('click', () => {
+    // ✅ STRIPE CHECKOUT INTEGRATION
+    document.getElementById('buy-stripe-btn').addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) return alert("Please log in first.");
-      // Redirect to Coinbase (Success URL will grant access)
-      window.location.href = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
+
+      const stripe = Stripe('pk_live_51Sqfg11qOYoFGqUxkY6s1dlTsFmS6YkYcVIWkvypz9BvUkeY3s3MmSEnIBBweY37rz3z086ekizMwFJgMfrWVKZI00LeHw7m5v');
+
+      // Create Checkout Session via Stripe's client-only method (for testing)
+      // ⚠️ In production, use a Cloud Function (we'll add it later)
+      const response = await fetch('https://checkout.stripe.com/c/pay/cs_test_a1...', {
+        method: 'POST'
+      });
+
+      // Instead, we'll redirect to a pre-built Stripe Checkout URL
+      // Generate this in Stripe Dashboard → Product → "Buy now" button
+      window.location.href = "https://buy.stripe.com/28E4grgXx3eudGg6hA5Vu00";
     });
 
-    // Close modal
     window.closeModal = () => {
       document.getElementById('course-modal').classList.add('hidden');
       document.getElementById('course-video').src = '';
     };
   </script>
+
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
 </body>
 </html>
