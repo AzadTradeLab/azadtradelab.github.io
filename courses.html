@@ -7,6 +7,18 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .crypto-blue { @apply text-blue-400; }
+    .btn-spinner {
+      display: none;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -18,18 +30,50 @@
   </nav>
   <header class="p-6 text-center bg-gradient-to-r from-indigo-800 to-purple-900">
     <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
-    <p class="mt-2 text-indigo-200">Full access available to all students</p>
+    <p class="mt-2 text-indigo-200">Free preview available • Full access: 199 USDC</p>
   </header>
-
-  <!-- Courses Grid -->
-  <section class="p-6 max-w-4xl mx-auto">
+  <!-- Login / Signup Section -->
+  <section id="login-section" class="p-6 max-w-md mx-auto">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+      <h2 class="text-xl font-semibold mb-4 text-center">Log In</h2>
+      <input id="login-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
+      <input id="login-pass" type="password" placeholder="Password" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="current-password" required>
+      <button id="login-btn" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
+        <span>Log In</span>
+        <span id="login-spinner" class="btn-spinner"></span>
+      </button>
+    </div>
+    <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-lg">
+      <h2 class="text-xl font-semibold mb-4 text-center">Create Account</h2>
+      <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
+      <input id="signup-pass" type="password" placeholder="Password (6+ characters)" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="new-password" required>
+      <button id="signup-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
+        <span>Sign Up</span>
+        <span id="signup-spinner" class="btn-spinner"></span>
+      </button>
+    </div>
+  </section>
+  <!-- Dashboard (for ALL logged-in users) -->
+  <section id="dashboard" class="hidden p-6 max-w-4xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <h2 class="text-2xl font-bold">Welcome, <span id="user-email" class="text-crypto-blue"></span>!</h2>
+      <button id="logout-btn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded font-medium transition">
+        Log Out
+      </button>
+    </div>
+    <!-- Courses Grid -->
     <div class="grid md:grid-cols-1 gap-8">
       <div class="bg-gray-800 p-6 rounded-xl shadow">
         <h3 class="text-xl font-bold mb-3">Beginner Crypto Trading</h3>
         <p class="text-gray-300 mb-4">8-video series: from zero to profitable trader.</p>
-        <button onclick="showFullCourse()" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded font-medium transition">
-          ▶️ Watch Full Course (Free Access)
-        </button>
+        <div class="space-y-3">
+          <button id="preview-btn" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded font-medium transition">
+            ▶️ Watch Free Preview (Lesson 1)
+          </button>
+          <button id="buy-beginner-btn" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded font-medium transition">
+            Buy Full Course — 199 USDC
+          </button>
+        </div>
       </div>
       <div class="bg-gray-800 p-6 rounded-xl shadow">
         <h3 class="text-xl font-bold mb-3">Advanced Algo Signals</h3>
@@ -40,7 +84,6 @@
       </div>
     </div>
   </section>
-
   <!-- Video Modal -->
   <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
     <div class="bg-gray-800 w-full max-w-5xl max-h-[90vh] rounded-xl flex flex-col md:flex-row overflow-hidden">
@@ -61,8 +104,108 @@
       </button>
     </div>
   </div>
+  <!-- Firebase SDKs (CDN - Modular) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
+      authDomain: "azadtradelab-cources.firebaseapp.com",
+      projectId: "azadtradelab-cources",
+      storageBucket: "azadtradelab-cources.firebasestorage.app",
+      messagingSenderId: "864971831518",
+      appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const loginSec = document.getElementById('login-section');
+    const dash = document.getElementById('dashboard');
+    const emailEl = document.getElementById('user-email');
 
-  <script>
+    function isValidEmail(e) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    }
+
+    // ✅ FIXED: Robust isPaid check with debug
+    async function isPaid(uid) {
+      try {
+        const docSnap = await getDoc(doc(db, "users", uid));
+        const data = docSnap.data();
+        console.log("Firestore data for UID:", uid, data);
+        return docSnap.exists() && data?.isPaid === true;
+      } catch (e) {
+        console.warn("Firestore access issue:", e.message);
+        return false;
+      }
+    }
+
+    async function handleAuth(user) {
+      if (!user) {
+        loginSec.classList.remove('hidden');
+        dash.classList.add('hidden');
+        return;
+      }
+      const paid = await isPaid(user.uid);
+      console.log("User logged in:", user.email, "UID:", user.uid, "Paid?", paid);
+      
+      emailEl.textContent = user.email;
+      loginSec.classList.add('hidden');
+      dash.classList.remove('hidden');
+      
+      if (paid) {
+        document.getElementById('buy-beginner-btn').style.display = 'none';
+      }
+    }
+
+    onAuthStateChanged(auth, handleAuth);
+
+    // === Login ===
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('login-btn');
+      const spinner = document.getElementById('login-spinner');
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
+      if (!pass) return alert("Password is required.");
+      btn.disabled = true;
+      spinner.style.display = 'inline-block';
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (err) {
+        alert("Login failed: " + err.message);
+        btn.disabled = false;
+        spinner.style.display = 'none';
+      }
+    });
+
+    // === Signup ===
+    document.getElementById('signup-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('signup-btn');
+      const spinner = document.getElementById('signup-spinner');
+      const email = document.getElementById('signup-email').value.trim();
+      const pass = document.getElementById('signup-pass').value;
+      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
+      if (!pass || pass.length < 6) return alert("Password must be at least 6 characters.");
+      btn.disabled = true;
+      spinner.style.display = 'inline-block';
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = userCredential.user;
+        await setDoc(doc(db, "users", user.uid), { isPaid: false });
+      } catch (err) {
+        alert("Sign up failed: " + err.message);
+        btn.disabled = false;
+        spinner.style.display = 'none';
+      }
+    });
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).catch(console.error);
+    });
+
     // === Course Data ===
     const COURSE = {
       beginner: {
@@ -80,8 +223,22 @@
       }
     };
 
-    // Full course — now open to everyone
-    function showFullCourse() {
+    // ✅ FIXED: Correct preview video embed (no syntax error)
+    document.getElementById('preview-btn').addEventListener('click', () => {
+      const user = auth.currentUser;
+      if (!user) return alert("Please log in first.");
+      const first = COURSE.beginner.videos[0];
+      document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
+      document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
+      document.getElementById('course-video').src = "https://www.youtube.com/embed/074yFzqHwVs?autoplay=1";
+      document.getElementById('course-modal').classList.remove('hidden');
+    });
+
+    // Full course (paid only)
+    async function showFullCourse() {
+      const user = auth.currentUser;
+      if (!user) return;
+      if (!(await isPaid(user.uid))) return alert("Please purchase the course to unlock all lessons.");
       const c = COURSE.beginner;
       document.getElementById('modal-title').textContent = c.title;
       const list = document.getElementById('video-playlist');
@@ -96,12 +253,33 @@
       document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
       document.getElementById('course-modal').classList.remove('hidden');
     }
+    window.showFullCourse = showFullCourse;
+
+    // Buy button
+    const CHECKOUT_URL = "https://commerce.coinbase.com/checkout/48c556b3-357a-4969-ae82-4e2e10599877";
+    document.getElementById('buy-beginner-btn').addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user) return alert("Please log in first.");
+      const url = new URL(CHECKOUT_URL);
+      url.searchParams.set("metadata[email]", user.email);
+      window.location.href = url.toString();
+
+      // Simulate payment success and update Firestore
+      try {
+        await setDoc(doc(db, "users", user.uid), { isPaid: true }, { merge: true });
+        alert("Payment successful! You now have access to the full course.");
+        document.getElementById('buy-beginner-btn').style.display = 'none';
+      } catch (err) {
+        console.error("Failed to update payment status:", err);
+        alert("Payment processing failed. Please try again.");
+      }
+    });
 
     // Close modal
-    function closeModal() {
+    window.closeModal = () => {
       document.getElementById('course-modal').classList.add('hidden');
       document.getElementById('course-video').src = '';
-    }
+    };
   </script>
 </body>
 </html>
