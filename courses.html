@@ -1,237 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Courses | AzadTradeLab</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .crypto-blue { @apply text-blue-400; }
-    .btn-spinner {
-      display: none;
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid currentColor;
-      border-right-color: transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Courses | AzadTradeLab</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.crypto-blue { @apply text-blue-400; }
+.btn-spinner {
+display: none;
+width: 1rem;
+height: 1rem;
+border: 2px solid currentColor;
+border-right-color: transparent;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+}
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+</style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
-  <!-- Navigation -->
-  <nav class="bg-gray-800 p-4 text-center shadow-lg">
-    <a href="index.html" class="text-white font-bold mx-4 hover:underline">Home</a>
-    <a href="courses.html" class="crypto-blue mx-4 hover:underline">Courses</a>
-    <a href="contact.html" class="text-crypto-green">Need help?</a>
-  </nav>
-  <header class="p-6 text-center bg-gradient-to-r from-indigo-800 to-purple-900">
-    <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
-    <p class="mt-2 text-indigo-200">Free preview available • Full access: $199</p>
-  </header>
+<!-- Navigation -->
+<nav class="bg-gray-800 p-4 text-center shadow-lg">
+<a href="index.html" class="text-white font-bold mx-4 hover:underline">Home</a>
+<a href="courses.html" class="crypto-blue mx-4 hover:underline">Courses</a>
+<a href="contact.html" class="text-crypto-green">Need help?</a>
+</nav>
+<header class="p-6 text-center bg-gradient-to-r from-indigo-800 to-purple-900">
+<h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
+<p class="mt-2 text-indigo-200">Free preview available • Full access: $199</p>
+</header>
+<!-- Login / Signup Section -->
+<section id="login-section" class="p-6 max-w-md mx-auto">
+<div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+<h2 class="text-xl font-semibold mb-4 text-center">Log In</h2>
+<input id="login-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
+<input id="login-pass" type="password" placeholder="Password" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="current-password" required>
+<button id="login-btn" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
+<span>Log In</span>
+<span id="login-spinner" class="btn-spinner"></span>
+</button>
+</div>
+<div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-lg">
+<h2 class="text-xl font-semibold mb-4 text-center">Create Account</h2>
+<input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
+<input id="signup-pass" type="password" placeholder="Password (6+ characters)" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="new-password" required>
+<button id="signup-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
+<span>Sign Up</span>
+<span id="signup-spinner" class="btn-spinner"></span>
+</button>
+</div>
+</section>
+<!-- Dashboard -->
+<section id="dashboard" class="hidden p-6 max-w-4xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<h2 class="text-2xl font-bold">Welcome, <span id="user-email" class="text-crypto-blue"></span>!</h2>
+<button id="logout-btn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded font-medium transition">
+Log Out
+</button>
+</div>
+<div class="grid md:grid-cols-1 gap-8">
+<div class="bg-gray-800 p-6 rounded-xl shadow">
+<h3 class="text-xl font-bold mb-3">Beginner Crypto Trading</h3>
+<p class="text-gray-300 mb-4">8-video series: from zero to profitable trader.</p>
+<div class="space-y-3">
+<button id="preview-btn" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded font-medium transition">
+▶️ Watch Free Preview (Lesson 1)
+</button>
+<!-- Conditional Buttons -->
+<button id="buy-stripe-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium transition">
+Buy Full Course — $199
+</button>
+<button id="access-full-btn" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium transition hidden">
+✅ Access Full Course
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Video Modal -->
+<div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+<div class="bg-gray-800 w-full max-w-5xl max-h-[90vh] rounded-xl flex flex-col md:flex-row overflow-hidden">
+<div class="w-full md:w-3/4">
+<div class="p-4 border-b border-gray-700">
+<h3 id="modal-title" class="text-xl font-bold"></h3>
+</div>
+<div class="aspect-video bg-black">
+<iframe id="course-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="w-full md:w-1/4 p-4 overflow-y-auto max-h-[70vh] bg-gray-900">
+<h4 class="font-bold mb-3 text-blue-400">Lessons</h4>
+<ul id="video-playlist" class="space-y-2"></ul>
+</div>
+<button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white bg-gray-900 w-8 h-8 rounded-full flex items-center justify-center">
+✕
+</button>
+</div>
+</div>
+<!-- Firebase + Firestore -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <!-- Login / Signup Section -->
-  <section id="login-section" class="p-6 max-w-md mx-auto">
-    <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
-      <h2 class="text-xl font-semibold mb-4 text-center">Log In</h2>
-      <input id="login-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
-      <input id="login-pass" type="password" placeholder="Password" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="current-password" required>
-      <button id="login-btn" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
-        <span>Log In</span>
-        <span id="login-spinner" class="btn-spinner"></span>
-      </button>
-    </div>
-    <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-lg">
-      <h2 class="text-xl font-semibold mb-4 text-center">Create Account</h2>
-      <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="email" required>
-      <input id="signup-pass" type="password" placeholder="Password (6+ characters)" class="w-full p-3 mb-4 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-crypto-blue" autocomplete="new-password" required>
-      <button id="signup-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium flex items-center justify-center gap-2 transition">
-        <span>Sign Up</span>
-        <span id="signup-spinner" class="btn-spinner"></span>
-      </button>
-    </div>
-  </section>
+const firebaseConfig = {
+apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
+authDomain: "azadtradelab-cources.firebaseapp.com",
+projectId: "azadtradelab-cources",
+storageBucket: "azadtradelab-cources.firebasestorage.app",
+messagingSenderId: "864971831518",
+appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
+};
 
-  <!-- Dashboard -->
-  <section id="dashboard" class="hidden p-6 max-w-4xl mx-auto">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-      <h2 class="text-2xl font-bold">Welcome, <span id="user-email" class="text-crypto-blue"></span>!</h2>
-      <button id="logout-btn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded font-medium transition">
-        Log Out
-      </button>
-    </div>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    <div class="grid md:grid-cols-1 gap-8">
-      <div class="bg-gray-800 p-6 rounded-xl shadow">
-        <h3 class="text-xl font-bold mb-3">Beginner Crypto Trading</h3>
-        <p class="text-gray-300 mb-4">8-video series: from zero to profitable trader.</p>
-        <div class="space-y-3">
-          <button id="preview-btn" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded font-medium transition">
-            ▶️ Watch Free Preview (Lesson 1)
-          </button>
-          <!-- ✅ STRIPE BUTTON -->
-          <button id="buy-stripe-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium transition">
-            Buy Full Course — $199
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
+const loginSec = document.getElementById('login-section');
+const dash = document.getElementById('dashboard');
+const emailEl = document.getElementById('user-email');
+const buyBtn = document.getElementById('buy-stripe-btn');
+const accessBtn = document.getElementById('access-full-btn');
 
-  <!-- Video Modal -->
-  <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-    <div class="bg-gray-800 w-full max-w-5xl max-h-[90vh] rounded-xl flex flex-col md:flex-row overflow-hidden">
-      <div class="w-full md:w-3/4">
-        <div class="p-4 border-b border-gray-700">
-          <h3 id="modal-title" class="text-xl font-bold"></h3>
-        </div>
-        <div class="aspect-video bg-black">
-          <iframe id="course-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
-        </div>
-      </div>
-      <div class="w-full md:w-1/4 p-4 overflow-y-auto max-h-[70vh] bg-gray-900">
-        <h4 class="font-bold mb-3 text-blue-400">Lessons</h4>
-        <ul id="video-playlist" class="space-y-2"></ul>
-      </div>
-      <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white bg-gray-900 w-8 h-8 rounded-full flex items-center justify-center">
-        ✕
-      </button>
-    </div>
-  </div>
+function isValidEmail(e) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+}
 
-  <!-- Firebase Auth Only (No Firestore needed for now) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+// Handle auth + Firestore check
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    loginSec.classList.remove('hidden');
+    dash.classList.add('hidden');
+    return;
+  }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
-      authDomain: "azadtradelab-cources.firebaseapp.com",
-      projectId: "azadtradelab-cources",
-      storageBucket: "azadtradelab-cources.firebasestorage.app",
-      messagingSenderId: "864971831518",
-      appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
-    };
+  // User is logged in → check Firestore for payment status
+  try {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    const userData = userDoc.exists() ? userDoc.data() : {};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const loginSec = document.getElementById('login-section');
-    const dash = document.getElementById('dashboard');
-    const emailEl = document.getElementById('user-email');
+    emailEl.textContent = user.email;
+    loginSec.classList.add('hidden');
+    dash.classList.remove('hidden');
 
-    function isValidEmail(e) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    // Toggle buttons based on isPaid
+    if (userData.isPaid === true) {
+      buyBtn.classList.add('hidden');
+      accessBtn.classList.remove('hidden');
+    } else {
+      buyBtn.classList.remove('hidden');
+      accessBtn.classList.add('hidden');
     }
+  } catch (err) {
+    console.error("Error fetching user data:", err);
+    alert("Failed to load course access status. Please refresh.");
+  }
+});
 
-    // Handle auth state
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        loginSec.classList.remove('hidden');
-        dash.classList.add('hidden');
-        return;
-      }
-      emailEl.textContent = user.email;
-      loginSec.classList.add('hidden');
-      dash.classList.remove('hidden');
-    });
+// Login
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
+  if (!pass) return alert("Password is required.");
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (err) {
+    alert("Login failed: " + err.message);
+  }
+});
 
-    // Login
-    document.getElementById('login-btn').addEventListener('click', async () => {
-      const email = document.getElementById('login-email').value.trim();
-      const pass = document.getElementById('login-pass').value;
-      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
-      if (!pass) return alert("Password is required.");
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-      } catch (err) {
-        alert("Login failed: " + err.message);
-      }
-    });
+// Signup
+document.getElementById('signup-btn').addEventListener('click', async () => {
+  const email = document.getElementById('signup-email').value.trim();
+  const pass = document.getElementById('signup-pass').value;
+  if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
+  if (!pass || pass.length < 6) return alert("Password must be at least 6 characters.");
+  try {
+    await createUserWithEmailAndPassword(auth, email, pass);
+  } catch (err) {
+    alert("Sign up failed: " + err.message);
+  }
+});
 
-    // Signup
-    document.getElementById('signup-btn').addEventListener('click', async () => {
-      const email = document.getElementById('signup-email').value.trim();
-      const pass = document.getElementById('signup-pass').value;
-      if (!email || !isValidEmail(email)) return alert("Please enter a valid email.");
-      if (!pass || pass.length < 6) return alert("Password must be at least 6 characters.");
-      try {
-        await createUserWithEmailAndPassword(auth, email, pass);
-      } catch (err) {
-        alert("Sign up failed: " + err.message);
-      }
-    });
+// Logout
+document.getElementById('logout-btn').addEventListener('click', () => {
+  signOut(auth).catch(console.error);
+});
 
-    // Logout
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      signOut(auth).catch(console.error);
-    });
+// === Course Data ===
+const COURSE = {
+  beginner: {
+    title: "Beginner Crypto Trading",
+    videos: [
+      { id: "074yFzqHwVs", title: "1. Introduction to Crypto" },
+      { id: "qtFFTQ27SAY", title: "2. Mindset & Goal" },
+      { id: "ZNu9uDSC17Y", title: "3. Reading Charts Like a Pro" },
+      { id: "t7VYfzHWZCo", title: "4. Identify Zoning & Technical analysis" },
+      { id: "i-LPW8KbTNE", title: "5. Risk Management Rules" },
+      { id: "mALEt0Loc1c", title: "6. Choose Cryptos wisely" },
+      { id: "PYGE4FkRIGM", title: "7. How to Create an account" },
+      { id: "gAB0kkCOWcU", title: "8. Live Trade Example" }
+    ]
+  }
+};
 
-    // === Course Data ===
-    const COURSE = {
-      beginner: {
-        title: "Beginner Crypto Trading",
-        videos: [
-          { id: "074yFzqHwVs", title: "1. Introduction to Crypto" }, // ✅ Working Unlisted video
-           { id: "qtFFTQ27SAY", title: "2. Mindset & Goal" },
-          { id: "ZNu9uDSC17Y", title: "3. Reading Charts Like a Pro" },
-          { id: "t7VYfzHWZCo", title: "4. Identify Zoning & Technical analysis" },
-          { id: "i-LPW8KbTNE", title: "5. Risk Management Rules" },
-          { id: "mALEt0Loc1c", title: "6. Choose Cryptos wisely" },
-          { id: "PYGE4FkRIGM", title: "7. How to Create an account" },
-          { id: "gAB0kkCOWcU", title: "8. Live Trade Example" }
-        ]
-      }
-    };
+// Free Preview
+document.getElementById('preview-btn').addEventListener('click', () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in first.");
+  const first = COURSE.beginner.videos[0];
+  document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
+  document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
+  document.getElementById('course-video').src = `https://www.youtube.com/embed/${first.id}?autoplay=1`;
+  document.getElementById('course-modal').classList.remove('hidden');
+});
 
-    // ✅ FREE PREVIEW (NO SYNTAX ERROR)
-    document.getElementById('preview-btn').addEventListener('click', () => {
-      const user = auth.currentUser;
-      if (!user) return alert("Please log in first.");
-      const first = COURSE.beginner.videos[0];
-      document.getElementById('modal-title').textContent = "Free Preview: " + first.title;
-      document.getElementById('video-playlist').innerHTML = `<li class="text-gray-400 py-1">${first.title} (Preview)</li>`;
-      document.getElementById('course-video').src = `https://www.youtube.com/embed/${first.id}?autoplay=1`;
-      document.getElementById('course-modal').classList.remove('hidden');
-    });
+// Full Course Access (only shown if isPaid === true)
+accessBtn.addEventListener('click', () => {
+  window.showFullCourse();
+});
 
-    // ✅ FULL COURSE ACCESS (Manual for now)
-    window.showFullCourse = () => {
-      const user = auth.currentUser;
-      if (!user) return alert("Please log in first.");
-      
-      // For now, assume they paid (you'll automate this later)
-      const c = COURSE.beginner;
-      document.getElementById('modal-title').textContent = c.title;
-      const list = document.getElementById('video-playlist');
-      list.innerHTML = '';
-      c.videos.forEach(v => {
-        const li = document.createElement('li');
-        li.className = "cursor-pointer hover:text-yellow-400 py-2";
-        li.textContent = v.title;
-        li.onclick = () => document.getElementById('course-video').src = `https://www.youtube.com/embed/${v.id}?autoplay=1`;
-        list.appendChild(li);
-      });
-      document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
-      document.getElementById('course-modal').classList.remove('hidden');
-    };
+// Buy Button (redirects to Stripe)
+buyBtn.addEventListener('click', () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in first.");
+  window.location.href = "https://buy.stripe.com/28E4grgXx3eudGg6hA5Vu00";
+});
 
-    // ✅ STRIPE PAYMENT BUTTON
-    document.getElementById('buy-stripe-btn').addEventListener('click', () => {
-      const user = auth.currentUser;
-      if (!user) return alert("Please log in first.");
-      
-      // ✅ YOUR REAL STRIPE PAYMENT LINK
-      window.location.href = "https://buy.stripe.com/28E4grgXx3eudGg6hA5Vu00";
-    });
+// Full course modal logic (unchanged)
+window.showFullCourse = () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in first.");
+  const c = COURSE.beginner;
+  document.getElementById('modal-title').textContent = c.title;
+  const list = document.getElementById('video-playlist');
+  list.innerHTML = '';
+  c.videos.forEach(v => {
+    const li = document.createElement('li');
+    li.className = "cursor-pointer hover:text-yellow-400 py-2";
+    li.textContent = v.title;
+    li.onclick = () => document.getElementById('course-video').src = `https://www.youtube.com/embed/${v.id}?autoplay=1`;
+    list.appendChild(li);
+  });
+  document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
+  document.getElementById('course-modal').classList.remove('hidden');
+};
 
-    // Close modal
-    window.closeModal = () => {
-      document.getElementById('course-modal').classList.add('hidden');
-      document.getElementById('course-video').src = '';
-    };
-  </script>
+// Close modal
+window.closeModal = () => {
+  document.getElementById('course-modal').classList.add('hidden');
+  document.getElementById('course-video').src = '';
+};
+</script>
 </body>
 </html>
