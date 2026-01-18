@@ -8,16 +8,16 @@
 <style>
 .crypto-blue { @apply text-blue-400; }
 .btn-spinner {
-display: none;
-width: 1rem;
-height: 1rem;
-border: 2px solid currentColor;
-border-right-color: transparent;
-border-radius: 50%;
-animation: spin 1s linear infinite;
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 @keyframes spin {
-to { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
 </style>
 </head>
@@ -32,6 +32,7 @@ to { transform: rotate(360deg); }
 <h1 class="text-3xl font-bold">🎓 My Trading Courses</h1>
 <p class="mt-2 text-indigo-200">Free preview available • Full access: $199</p>
 </header>
+
 <!-- Login / Signup Section -->
 <section id="login-section" class="p-6 max-w-md mx-auto">
 <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
@@ -53,6 +54,7 @@ to { transform: rotate(360deg); }
 </button>
 </div>
 </section>
+
 <!-- Dashboard -->
 <section id="dashboard" class="hidden p-6 max-w-4xl mx-auto">
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -69,17 +71,19 @@ Log Out
 <button id="preview-btn" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded font-medium transition">
 ▶️ Watch Free Preview (Lesson 1)
 </button>
-<!-- Conditional Buttons -->
+<!-- Buy Button (Hidden if paid) -->
 <button id="buy-stripe-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium transition">
 Buy Full Course — $199
 </button>
-<button id="access-full-btn" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium transition hidden">
+<!-- Access Button (Shown if paid) -->
+<button id="access-full-btn" class="hidden w-full bg-green-600 hover:bg-green-700 py-3 rounded font-medium transition">
 ✅ Access Full Course
 </button>
 </div>
 </div>
 </div>
 </section>
+
 <!-- Video Modal -->
 <div id="course-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
 <div class="bg-gray-800 w-full max-w-5xl max-h-[90vh] rounded-xl flex flex-col md:flex-row overflow-hidden">
@@ -100,19 +104,30 @@ Buy Full Course — $199
 </button>
 </div>
 </div>
+
 <!-- Firebase + Firestore -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
-authDomain: "azadtradelab-cources.firebaseapp.com",
-projectId: "azadtradelab-cources",
-storageBucket: "azadtradelab-cources.firebasestorage.app",
-messagingSenderId: "864971831518",
-appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
+  apiKey: "AIzaSyCh-QvEQOJ1FbiTgGMzSBoLOotpdoRQhxM",
+  authDomain: "azadtradelab-cources.firebaseapp.com",
+  projectId: "azadtradelab-cources",
+  storageBucket: "azadtradelab-cources.firebasestorage.app",
+  messagingSenderId: "864971831518",
+  appId: "1:864971831518:web:3bd2bc19af62406029aa4f"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -129,7 +144,7 @@ function isValidEmail(e) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
 
-// Handle auth + Firestore check
+// Handle auth + Firestore access check
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     loginSec.classList.remove('hidden');
@@ -137,26 +152,28 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // User is logged in → check Firestore for payment status
+  // Show dashboard
+  emailEl.textContent = user.email;
+  loginSec.classList.add('hidden');
+  dash.classList.remove('hidden');
+
+  // 🔑 Check Firestore for isPaid
   try {
     const userDoc = await getDoc(doc(db, "users", user.uid));
-    const userData = userDoc.exists() ? userDoc.data() : {};
-
-    emailEl.textContent = user.email;
-    loginSec.classList.add('hidden');
-    dash.classList.remove('hidden');
-
-    // Toggle buttons based on isPaid
-    if (userData.isPaid === true) {
+    if (userDoc.exists() && userDoc.data().isPaid === true) {
+      // ✅ PAID: Hide buy button, show access button
       buyBtn.classList.add('hidden');
       accessBtn.classList.remove('hidden');
     } else {
+      // ❌ NOT PAID: Show buy button
       buyBtn.classList.remove('hidden');
       accessBtn.classList.add('hidden');
     }
   } catch (err) {
-    console.error("Error fetching user data:", err);
-    alert("Failed to load course access status. Please refresh.");
+    console.error("Failed to fetch user data:", err);
+    // Default to unpaid if error
+    buyBtn.classList.remove('hidden');
+    accessBtn.classList.add('hidden');
   }
 });
 
@@ -219,22 +236,15 @@ document.getElementById('preview-btn').addEventListener('click', () => {
   document.getElementById('course-modal').classList.remove('hidden');
 });
 
-// Full Course Access (only shown if isPaid === true)
-accessBtn.addEventListener('click', () => {
+// Full Course Access (only if paid)
+document.getElementById('access-full-btn').addEventListener('click', () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in first.");
   window.showFullCourse();
 });
 
-// Buy Button (redirects to Stripe)
-buyBtn.addEventListener('click', () => {
-  const user = auth.currentUser;
-  if (!user) return alert("Please log in first.");
-  window.location.href = "https://buy.stripe.com/28E4grgXx3eudGg6hA5Vu00";
-});
-
-// Full course modal logic (unchanged)
+// Keep your existing showFullCourse function
 window.showFullCourse = () => {
-  const user = auth.currentUser;
-  if (!user) return alert("Please log in first.");
   const c = COURSE.beginner;
   document.getElementById('modal-title').textContent = c.title;
   const list = document.getElementById('video-playlist');
@@ -249,6 +259,13 @@ window.showFullCourse = () => {
   document.getElementById('course-video').src = `https://www.youtube.com/embed/${c.videos[0].id}`;
   document.getElementById('course-modal').classList.remove('hidden');
 };
+
+// Stripe Buy Button
+document.getElementById('buy-stripe-btn').addEventListener('click', () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in first.");
+  window.location.href = "https://buy.stripe.com/28E4grgXx3eudGg6hA5Vu00";
+});
 
 // Close modal
 window.closeModal = () => {
