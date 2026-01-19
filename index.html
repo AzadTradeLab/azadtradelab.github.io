@@ -184,16 +184,15 @@
       <!-- Playlist 1: Crypto Trading Signals -->
       <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
         <div class="aspect-video bg-black">
-          <a href="https://www.youtube.com/watch?v=ZFLeGvFJl5c&list=PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64" target="_blank" rel="noopener">
-            <iframe
-              class="w-full h-full"
-              src="https://www.youtube.com/embed/ZFLeGvFJl5c"
-              title="Latest: Crypto Trading Signal"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
-          </a>
+          <iframe
+            id="signals-latest"
+            class="w-full h-full"
+            src=""
+            title="Latest: Crypto Trading Signal"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
         </div>
         <div class="p-5">
           <h3 class="text-xl font-bold text-white">Crypto Trading Signals</h3>
@@ -201,7 +200,7 @@
             Real-time alerts, entry/exit guidance, and market analysis.
           </p>
           <a
-            href="https://www.youtube.com/watch?v=ZFLeGvFJl5c&list=PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64"
+            href="https://www.youtube.com/playlist?list=PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64"
             target="_blank"
             rel="noopener"
             class="mt-4 inline-block text-crypto-blue font-medium hover:underline"
@@ -214,16 +213,15 @@
       <!-- Playlist 2: Strategy Deep Dives -->
       <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
         <div class="aspect-video bg-black">
-          <a href="https://www.youtube.com/playlist?list=PLZrH70IBTqA7agwpUT7dUhPJ17bAnIDVc" target="_blank" rel="noopener">
-            <iframe
-              class="w-full h-full"
-              src="https://www.youtube.com/embed/avw4WNR2H_o"
-              title="Latest: Strategy Deep Dive"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
-          </a>
+          <iframe
+            id="strategy-latest"
+            class="w-full h-full"
+            src=""
+            title="Latest: Strategy Deep Dive"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
         </div>
         <div class="p-5">
           <h3 class="text-xl font-bold text-white">Strategy Deep Dives</h3>
@@ -243,8 +241,6 @@
     </div>
   </div>
 </section>
-
-  
 
   <!-- Footer with Social Media -->
   <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
@@ -413,6 +409,49 @@
       loadAllData();
       setInterval(fetchPrices, 60000);
     });
+
+    // ✅ Auto-load latest video from YouTube playlists
+async function getLatestVideoFromPlaylist(playlistId) {
+  try {
+    // Use YouTube's public RSS feed
+    const rssUrl = `https://www.youtube.com/feeds/videos.xml?playlist_id=${playlistId}`;
+    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+    const response = await fetch(proxyUrl);
+    const data = await response.json();
+
+    if (data.status === 'ok' && data.items && data.items.length > 0) {
+      // Get the first (latest) video
+      const video = data.items[0];
+      const url = new URL(video.link);
+      const videoId = url.searchParams.get('v');
+      return videoId;
+    }
+  } catch (e) {
+    console.error("Failed to fetch latest video for playlist:", playlistId, e);
+  }
+  return null;
+}
+
+async function loadLatestVideos() {
+  const signalsId = "PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64";
+  const strategyId = "PLZrH70IBTqA7agwpUT7dUhPJ17bAnIDVc";
+
+  const [signalsVideo, strategyVideo] = await Promise.all([
+    getLatestVideoFromPlaylist(signalsId),
+    getLatestVideoFromPlaylist(strategyId)
+  ]);
+
+  if (signalsVideo) {
+    document.getElementById('signals-latest').src = `https://www.youtube.com/embed/${signalsVideo}?autoplay=0`;
+  }
+  if (strategyVideo) {
+    document.getElementById('strategy-latest').src = `https://www.youtube.com/embed/${strategyVideo}?autoplay=0`;
+  }
+}
+
+// Load latest videos when page loads
+loadLatestVideos();
   </script>
 </body>
 </html>
