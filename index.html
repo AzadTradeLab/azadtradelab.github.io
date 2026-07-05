@@ -144,7 +144,6 @@
       box-shadow: 0 0 8px rgba(16,185,129,0.6);
     }
 
-    /* Video Modal */
     .video-modal-overlay {
       position: fixed; inset:0; z-index:100;
       background: rgba(0,0,0,0.85);
@@ -167,7 +166,6 @@
       transform: scale(1) translateY(0);
     }
 
-    /* Play button ripple */
     .play-btn { position: relative; }
     .play-btn::before, .play-btn::after {
       content:''; position:absolute; inset:0; border-radius:50%;
@@ -179,7 +177,6 @@
     .faq-item { transition: background 0.2s; }
     .faq-item:hover { background: rgba(16,185,129,0.03); }
 
-    /* Force TradingView ticker to scroll */
     .tradingview-widget-container { overflow: hidden; }
   </style>
 </head>
@@ -240,34 +237,7 @@
 
   <div class="h-16"></div>
 
-  <!-- Live Price Ticker -->
-  <div class="relative z-10 bg-surface-800/80 border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between text-sm">
-      <div class="flex items-center gap-6 overflow-x-auto no-scrollbar">
-        <div class="flex items-center gap-2 whitespace-nowrap">
-          <span class="live-dot"></span>
-          <span class="text-gray-500 text-xs font-medium uppercase tracking-wider">Live</span>
-        </div>
-        <span id="btc-price" class="font-mono text-gray-300 whitespace-nowrap">
-          <i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: Loading...
-        </span>
-        <span class="text-gray-700">|</span>
-        <span id="eth-price" class="font-mono text-gray-300 whitespace-nowrap">
-          <i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: Loading...
-        </span>
-        <span class="text-gray-700 hidden sm:inline">|</span>
-        <span class="hidden sm:flex items-center gap-1.5 text-gray-400 whitespace-nowrap">
-          <i class="fas fa-shield-halved text-brand-500 text-xs"></i>
-          <span class="text-xs">Payments in USDC</span>
-        </span>
-      </div>
-      <div class="hidden sm:flex items-center gap-4 text-xs text-gray-500">
-        <span><i class="far fa-clock mr-1"></i> <span id="live-time"></span></span>
-      </div>
-    </div>
-  </div>
-
-  <!-- TradingView Ticker Tape — scroll mode -->
+  <!-- TradingView Ticker Tape -->
   <div class="relative z-10 bg-surface-950/50 border-b border-white/5">
     <div class="tradingview-widget-container" style="height:46px;overflow:hidden;">
       <div class="tradingview-widget-container__widget" style="height:46px;"></div>
@@ -319,7 +289,6 @@
         </a>
       </div>
 
-      <!-- Play Video Button in Hero -->
       <div class="animate-slide-up stagger-4 mt-14">
         <button onclick="openVideoModal()" class="group inline-flex flex-col items-center gap-3 text-gray-500 hover:text-brand-400 transition-colors duration-300" aria-label="Watch introduction video">
           <div class="play-btn w-20 h-20 rounded-full bg-brand-500/10 border border-brand-500/30 flex items-center justify-center group-hover:bg-brand-500/20 group-hover:border-brand-500/50 transition-all duration-300">
@@ -651,8 +620,8 @@
           <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Ready to Trade Smarter?</h2>
           <p class="mt-4 text-gray-400 text-lg max-w-xl mx-auto">Join hundreds of traders who trust AzadTradeLab for verified signals and real education.</p>
           <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="contact.html" class="btn-primary text-white font-bold py-4 px-10 rounded-2xl text-lg inline-flex items-center gap-2">
-              <i class="fas fa-rocket text-sm"></i> Get Started Now
+            <a href="https://web.telegram.org/a/#-1003553154584" target="_blank" rel="noopener" class="btn-primary text-white font-bold py-4 px-10 rounded-2xl text-lg inline-flex items-center gap-2">
+              <i class="fab fa-telegram text-sm"></i> Get Started Now
             </a>
             <a href="https://www.youtube.com/channel/UChYPfMCpdAfqQ0V7BJ8LATQ" target="_blank" rel="noopener" class="btn-outline text-gray-300 font-medium py-4 px-8 rounded-2xl inline-flex items-center gap-2">
               <i class="fab fa-youtube text-red-500 text-sm"></i> Watch on YouTube
@@ -701,14 +670,15 @@
           </ul>
         </div>
         <div>
-          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Accepted Payment</h4>
-          <div class="flex items-center gap-3 mb-4">
-            <div class="bg-white/5 rounded-xl px-3 py-2 flex items-center gap-2">
-              <i class="fab fa-ethereum text-crypto-blue"></i>
-              <span class="text-gray-300 text-sm font-medium">USDC</span>
+          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Join Us</h4>
+          <a href="https://web.telegram.org/a/#-1003553154584" target="_blank" rel="noopener" class="flex items-center gap-3 bg-[#0088cc]/10 border border-[#0088cc]/20 rounded-xl px-4 py-3 hover:bg-[#0088cc]/20 transition group">
+            <i class="fab fa-telegram text-[#0088cc] text-xl group-hover:scale-110 transition-transform"></i>
+            <div>
+              <div class="text-white text-sm font-semibold">Telegram Group</div>
+              <div class="text-gray-500 text-xs">Join our community</div>
             </div>
-          </div>
-          <p class="text-gray-500 text-xs leading-relaxed">ERC-20, Polygon, and Base networks supported. Contact us for wallet details.</p>
+          </a>
+          <p class="text-gray-500 text-xs leading-relaxed mt-4">Get instant signal alerts and connect with fellow traders.</p>
         </div>
       </div>
       <div class="border-t border-white/5 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-600">
@@ -885,22 +855,6 @@
       }
     }
 
-    async function fetchPrices() {
-      try {
-        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
-        const { bitcoin: btc, ethereum: eth } = await res.json();
-        const fmt = (v) => `$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: v < 1000 ? 2 : 0 })}`;
-        const chg = (p) => `(${p >= 0 ? '+' : ''}${p.toFixed(2)}%)`;
-        const cls = (p) => p >= 0 ? 'text-brand-400' : 'text-red-400';
-        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: <span class="text-white font-medium">${fmt(btc.usd)}</span> <span class="${cls(btc.usd_24h_change)} text-xs font-mono">${chg(btc.usd_24h_change)}</span>`;
-        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: <span class="text-white font-medium">${fmt(eth.usd)}</span> <span class="${cls(eth.usd_24h_change)} text-xs font-mono">${chg(eth.usd_24h_change)}</span>`;
-      } catch (e) {
-        console.warn("Price fetch failed");
-        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: <span class="text-gray-500">Unavailable</span>`;
-        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: <span class="text-gray-500">Unavailable</span>`;
-      }
-    }
-
     async function loadAllData() {
       await fetchStats();
       await delay(700);
@@ -909,7 +863,6 @@
       await fetchTrades();
     }
 
-    // Video Modal
     function openVideoModal() {
       const modal = document.getElementById('video-modal');
       const iframe = document.getElementById('video-iframe');
@@ -929,15 +882,6 @@
       if (e.key === 'Escape') closeVideoModal();
     });
 
-    // Live clock
-    function updateClock() {
-      const now = new Date();
-      const timeStr = now.toUTCString().slice(-12, -4);
-      const el = document.getElementById('live-time');
-      if (el) el.textContent = timeStr + ' UTC';
-    }
-
-    // FAQ toggle
     function toggleFaq(btn) {
       const answer = btn.nextElementSibling;
       const icon = btn.querySelector('i');
@@ -950,7 +894,6 @@
       }
     }
 
-    // Mobile menu
     document.getElementById('mobile-toggle').addEventListener('click', function() {
       const menu = document.getElementById('mobile-menu');
       const isOpen = menu.classList.contains('open');
@@ -985,12 +928,10 @@
       });
     });
 
-    // Scroll to top
     window.addEventListener('scroll', () => {
       document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 600);
     });
 
-    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
@@ -1003,13 +944,8 @@
       });
     });
 
-    // Init
     document.addEventListener('DOMContentLoaded', () => {
-      fetchPrices();
       loadAllData();
-      setInterval(fetchPrices, 60000);
-      updateClock();
-      setInterval(updateClock, 1000);
     });
   </script>
 </body>
