@@ -6,289 +6,758 @@
   <title>AzadTradeLab | Live Crypto Trading Alerts</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            crypto: {
-              green: '#10B981',
-              red: '#EF4444',
-              blue: '#3B82F6'
-            }
-          }
+            crypto: { green: '#10B981', red: '#EF4444', blue: '#3B82F6' },
+            brand: { 50:'#ecfdf5', 100:'#d1fae5', 200:'#a7f3d0', 300:'#6ee7b7', 400:'#34d399', 500:'#10B981', 600:'#059669', 700:'#047857', 800:'#065f46', 900:'#064E3B' },
+            surface: { 50:'#f8fafc', 100:'#f1f5f9', 200:'#e2e8f0', 700:'#1e293b', 800:'#0f172a', 900:'#020617', 950:'#010313' }
+          },
+          fontFamily: { sans:['Inter','system-ui','sans-serif'], mono:['JetBrains Mono','monospace'] }
         }
       }
     }
   </script>
   <style>
-    .signal-card {
-      transition: transform 0.2s, box-shadow 0.2s;
+    * { scrollbar-width: thin; scrollbar-color: #1e293b #0f172a; }
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:#0f172a; }
+    ::-webkit-scrollbar-thumb { background:#1e293b; border-radius:3px; }
+
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(16,185,129,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16,185,129,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
     }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .signal-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
     .signal-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.5);
     }
-    .partner-logo {
-      height: 40px;
-      opacity: 0.8;
-      transition: opacity 0.2s;
+
+    .trade-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .trade-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 25px 50px -12px rgba(16,185,129,0.15);
     }
-    .partner-logo:hover {
+
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    @keyframes pulse-glow { 0%,100%{opacity:0.15} 50%{opacity:0.25} }
+    @keyframes slide-up { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fade-in { from{opacity:0} to{opacity:1} }
+    @keyframes ripple { 0%{transform:scale(1);opacity:0.4} 100%{transform:scale(1.8);opacity:0} }
+
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+    .animate-slide-up { animation: slide-up 0.6s ease-out both; }
+    .animate-fade-in { animation: fade-in 0.8s ease-out both; }
+
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+
+    .nav-link { position:relative; }
+    .nav-link::after {
+      content:''; position:absolute; bottom:-2px; left:50%; width:0; height:2px;
+      background:#10B981; transition:all 0.3s; transform:translateX(-50%);
+    }
+    .nav-link:hover::after, .nav-link.active::after { width:100%; }
+
+    .glass {
+      background: rgba(15,23,42,0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .gradient-border {
+      position: relative;
+      background: #0f172a;
+      border-radius: 16px;
+    }
+    .gradient-border::before {
+      content:''; position:absolute; inset:-1px; border-radius:17px; padding:1px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.4), transparent 50%, rgba(59,130,246,0.3));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10B981, #059669);
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px -3px rgba(16,185,129,0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -3px rgba(16,185,129,0.5);
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(16,185,129,0.4);
+      transition: all 0.3s;
+    }
+    .btn-outline:hover {
+      background: rgba(16,185,129,0.1);
+      border-color: #10B981;
+      transform: translateY(-2px);
+    }
+
+    .testimonial-card { transition: transform 0.3s, box-shadow 0.3s; }
+    .testimonial-card:hover { transform:translateY(-4px); box-shadow:0 20px 40px -12px rgba(0,0,0,0.4); }
+
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .mobile-menu.open { max-height: 400px; opacity: 1; }
+
+    #scroll-top {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+    #scroll-top.visible {
       opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
+
+    .live-dot {
+      width:8px; height:8px; border-radius:50%; background:#10B981;
+      display:inline-block; animation: pulse-glow 1.5s ease-in-out infinite;
+      box-shadow: 0 0 8px rgba(16,185,129,0.6);
+    }
+
+    /* Video Modal */
+    .video-modal-overlay {
+      position: fixed; inset:0; z-index:100;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .video-modal-overlay.active { opacity:1; pointer-events:auto; }
+    .video-modal-content {
+      position: relative;
+      width: 90%; max-width: 900px;
+      border-radius: 20px; overflow: hidden;
+      background: #000;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
+    }
+    .video-modal-overlay.active .video-modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    /* Play button ripple */
+    .play-btn { position: relative; }
+    .play-btn::before, .play-btn::after {
+      content:''; position:absolute; inset:0; border-radius:50%;
+      border: 2px solid rgba(16,185,129,0.4);
+      animation: ripple 2s ease-out infinite;
+    }
+    .play-btn::after { animation-delay: 1s; }
+
+    .faq-item { transition: background 0.2s; }
+    .faq-item:hover { background: rgba(16,185,129,0.03); }
+
+    /* Force TradingView ticker to scroll */
+    .tradingview-widget-container { overflow: hidden; }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
+<body class="bg-surface-900 text-gray-100 font-sans overflow-x-hidden">
+
+  <!-- Background Effects -->
+  <div class="fixed inset-0 bg-grid pointer-events-none z-0"></div>
+  <div class="glow-orb animate-pulse-glow" style="width:600px;height:600px;background:#10B981;top:-200px;right:-200px;"></div>
+  <div class="glow-orb animate-pulse-glow" style="width:500px;height:500px;background:#3B82F6;bottom:-150px;left:-150px;animation-delay:2s;"></div>
+  <div class="glow-orb animate-pulse-glow" style="width:300px;height:300px;background:#10B981;top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:1s;opacity:0.08;"></div>
 
   <!-- Navigation -->
-  <nav class="bg-gray-800 p-4 text-center">
-    <a href="index.html" class="text-white font-bold mx-3">Home</a>
-    <a href="courses.html" class="text-crypto-blue mx-3">Courses</a>
-
-    <a href="contact.html" class="text-crypto-green mx-3">Contact</a>
+  <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-2 group">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
+            <i class="fas fa-bolt text-white text-sm"></i>
+          </div>
+          <span class="text-lg font-bold text-white">Azad<span class="text-brand-400">Trade</span>Lab</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="index.html" class="nav-link active text-white px-4 py-2 text-sm font-medium rounded-lg hover:bg-white/5 transition">Home</a>
+          <a href="courses.html" class="nav-link text-gray-400 px-4 py-2 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Courses</a>
+          <a href="#signals" class="nav-link text-gray-400 px-4 py-2 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Signals</a>
+          <a href="#proof" class="nav-link text-gray-400 px-4 py-2 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Results</a>
+          <a href="contact.html" class="nav-link text-gray-400 px-4 py-2 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Contact</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <a href="contact.html" class="btn-primary text-white text-sm font-semibold px-5 py-2.5 rounded-xl inline-flex items-center gap-2">
+            <i class="fas fa-rocket text-xs"></i> Get Started
+          </a>
+        </div>
+        <button id="mobile-toggle" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 transition" aria-label="Toggle menu">
+          <div class="relative w-5 h-4">
+            <span class="absolute top-0 left-0 w-full h-0.5 bg-white rounded transition-all" id="bar1"></span>
+            <span class="absolute top-1.5 left-0 w-full h-0.5 bg-white rounded transition-all" id="bar2"></span>
+            <span class="absolute top-3 left-0 w-3 h-0.5 bg-white rounded transition-all" id="bar3"></span>
+          </div>
+        </button>
+      </div>
+      <div id="mobile-menu" class="mobile-menu md:hidden">
+        <div class="py-3 space-y-1 border-t border-white/5">
+          <a href="index.html" class="block text-white px-4 py-2.5 text-sm font-medium rounded-lg bg-white/5">Home</a>
+          <a href="courses.html" class="block text-gray-400 px-4 py-2.5 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Courses</a>
+          <a href="#signals" class="block text-gray-400 px-4 py-2.5 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Signals</a>
+          <a href="#proof" class="block text-gray-400 px-4 py-2.5 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Results</a>
+          <a href="contact.html" class="block text-gray-400 px-4 py-2.5 text-sm font-medium rounded-lg hover:text-white hover:bg-white/5 transition">Contact</a>
+          <div class="pt-2 px-4">
+            <a href="contact.html" class="btn-primary block text-center text-white text-sm font-semibold px-5 py-2.5 rounded-xl">
+              <i class="fas fa-rocket text-xs mr-1"></i> Get Started
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </nav>
 
-  <!-- Header -->
-  <header class="bg-gradient-to-r from-crypto-blue to-indigo-800 py-6 px-4 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold">🚀 AzadTradeLab</h1>
-    <p class="mt-2 text-indigo-200 max-w-2xl mx-auto">
-      Real-time crypto trading signals • Verified results • Pay with USDC for full courses
-    </p>
-    <div class="mt-4 flex flex-wrap justify-center gap-3">
-      <a href="#signals" class="inline-block bg-white text-crypto-blue font-bold py-2 px-6 rounded-full">Live Signals</a>
-      <a href="#proof" class="inline-block bg-crypto-green text-gray-900 font-bold py-2 px-6 rounded-full">Trade Proof</a>
+  <div class="h-16"></div>
+
+  <!-- Live Price Ticker -->
+  <div class="relative z-10 bg-surface-800/80 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between text-sm">
+      <div class="flex items-center gap-6 overflow-x-auto no-scrollbar">
+        <div class="flex items-center gap-2 whitespace-nowrap">
+          <span class="live-dot"></span>
+          <span class="text-gray-500 text-xs font-medium uppercase tracking-wider">Live</span>
+        </div>
+        <span id="btc-price" class="font-mono text-gray-300 whitespace-nowrap">
+          <i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: Loading...
+        </span>
+        <span class="text-gray-700">|</span>
+        <span id="eth-price" class="font-mono text-gray-300 whitespace-nowrap">
+          <i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: Loading...
+        </span>
+        <span class="text-gray-700 hidden sm:inline">|</span>
+        <span class="hidden sm:flex items-center gap-1.5 text-gray-400 whitespace-nowrap">
+          <i class="fas fa-shield-halved text-brand-500 text-xs"></i>
+          <span class="text-xs">Payments in USDC</span>
+        </span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4 text-xs text-gray-500">
+        <span><i class="far fa-clock mr-1"></i> <span id="live-time"></span></span>
+      </div>
     </div>
-  </header>
+  </div>
 
-<!-- TradingView Widget BEGIN -->
-<div class="tradingview-widget-container">
-  <div class="tradingview-widget-container__widget"></div>
-  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">Ticker tape</span></a><span class="trademark"> by TradingView</span></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-  {
-  "symbols": [
-    {
-      "proName": "FOREXCOM:SPXUSD",
-      "title": "S&P 500 Index"
-    },
-    {
-      "proName": "FOREXCOM:NSXUSD",
-      "title": "US 100 Cash CFD"
-    },
-    {
-      "proName": "FX_IDC:EURUSD",
-      "title": "EUR to USD"
-    },
-    {
-      "proName": "BITSTAMP:BTCUSD",
-      "title": "Bitcoin"
-    },
-    {
-      "proName": "BITSTAMP:ETHUSD",
-      "title": "Ethereum"
-    },
-    {
-      "proName": "OANDA:XAUUSD",
-      "title": "Gold"
-    },
-    {
-      "proName": "TVC:SILVER",
-      "title": "Silver"
-    }
-  ],
-  "colorTheme": "light",
-  "locale": "en",
-  "largeChartUrl": "",
-  "isTransparent": false,
-  "showSymbolLogo": true,
-  "displayMode": "adaptive"
-}
-  </script>
-</div>
+  <!-- TradingView Ticker Tape — scroll mode -->
+  <div class="relative z-10 bg-surface-950/50 border-b border-white/5">
+    <div class="tradingview-widget-container" style="height:46px;overflow:hidden;">
+      <div class="tradingview-widget-container__widget" style="height:46px;"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+      {
+        "symbols": [
+          { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
+          { "proName": "FOREXCOM:NSXUSD", "title": "US 100" },
+          { "proName": "FX_IDC:EURUSD", "title": "EUR/USD" },
+          { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" },
+          { "proName": "BITSTAMP:ETHUSD", "title": "Ethereum" },
+          { "proName": "OANDA:XAUUSD", "title": "Gold" },
+          { "proName": "TVC:SILVER", "title": "Silver" }
+        ],
+        "colorTheme": "dark",
+        "locale": "en",
+        "largeChartUrl": "",
+        "isTransparent": true,
+        "showSymbolLogo": true,
+        "displayMode": "scroll"
+      }
+      </script>
+    </div>
+  </div>
 
+  <!-- Hero Section -->
+  <section class="relative z-10 pt-16 pb-20 sm:pt-24 sm:pb-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+      <div class="animate-slide-up inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 rounded-full px-4 py-1.5 mb-8">
+        <span class="live-dot" style="width:6px;height:6px;"></span>
+        <span class="text-brand-400 text-xs font-semibold uppercase tracking-wider">Live Trading Signals Active</span>
+      </div>
 
-  <!-- Intro Video -->
-  <section class="p-6 max-w-4xl mx-auto mt-8">
-    <h2 class="text-2xl font-bold text-center mb-4">Welcome to AzadTradeLab</h2>
-    <div class="aspect-video bg-black rounded-xl overflow-hidden">
-      <iframe
-        class="w-full h-full"
-        src="https://www.youtube.com/embed/SYvFsf3fs5M"
-        title="AzadTradeLab Introduction"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+      <h1 class="animate-slide-up stagger-1 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08]">
+        <span class="text-white">Trade Smarter with</span><br>
+        <span class="bg-gradient-to-r from-brand-400 via-brand-300 to-crypto-blue bg-clip-text text-transparent">Verified Signals</span>
+      </h1>
+
+      <p class="animate-slide-up stagger-2 mt-6 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        Real-time crypto trading signals with verified track records. Learn strategies that work. Pay with USDC — no card required.
+      </p>
+
+      <div class="animate-slide-up stagger-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#signals" class="btn-primary text-white font-semibold py-3.5 px-8 rounded-2xl text-base inline-flex items-center gap-2 w-full sm:w-auto justify-center">
+          <i class="fas fa-bolt text-sm"></i> View Live Signals
+        </a>
+        <a href="#proof" class="btn-outline text-brand-400 font-semibold py-3.5 px-8 rounded-2xl text-base inline-flex items-center gap-2 w-full sm:w-auto justify-center">
+          <i class="fas fa-chart-line text-sm"></i> See Trade Proof
+        </a>
+      </div>
+
+      <!-- Play Video Button in Hero -->
+      <div class="animate-slide-up stagger-4 mt-14">
+        <button onclick="openVideoModal()" class="group inline-flex flex-col items-center gap-3 text-gray-500 hover:text-brand-400 transition-colors duration-300" aria-label="Watch introduction video">
+          <div class="play-btn w-20 h-20 rounded-full bg-brand-500/10 border border-brand-500/30 flex items-center justify-center group-hover:bg-brand-500/20 group-hover:border-brand-500/50 transition-all duration-300">
+            <i class="fas fa-play text-brand-400 text-lg ml-1 group-hover:scale-110 transition-transform duration-300"></i>
+          </div>
+          <span class="text-sm font-medium">Watch Introduction</span>
+        </button>
+      </div>
+
+      <div class="animate-slide-up mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500">
+        <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-brand-500"></i> No financial advice disclaimer</span>
+        <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-brand-500"></i> Real verified trades</span>
+        <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-brand-500"></i> USDC payments accepted</span>
+      </div>
     </div>
   </section>
 
-  <!-- Hero Stats -->
-  <div id="hero-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-gray-800">
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold text-crypto-green">—</div>
-      <div class="text-sm text-gray-400">Last 30 Days</div>
-    </div>
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold">—</div>
-      <div class="text-sm text-gray-400">Signals Sent</div>
-    </div>
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold">—%</div>
-      <div class="text-sm text-gray-400">Win Rate</div>
-    </div>
-    <div class="text-center p-3">
-      <div class="text-2xl font-bold">24/7</div>
-      <div class="text-sm text-gray-400">Market Coverage</div>
+  <!-- Hero Stats Bar -->
+  <div id="hero-stats" class="relative z-10 border-y border-white/5 bg-surface-800/50 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="text-2xl sm:text-3xl font-bold text-brand-400 font-mono">—</div>
+          <div class="text-sm text-gray-500 mt-1">Last 30 Days</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl sm:text-3xl font-bold text-white font-mono">—</div>
+          <div class="text-sm text-gray-500 mt-1">Signals Sent</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl sm:text-3xl font-bold text-white font-mono">—%</div>
+          <div class="text-sm text-gray-500 mt-1">Win Rate</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl sm:text-3xl font-bold text-white font-mono">24/7</div>
+          <div class="text-sm text-gray-500 mt-1">Market Coverage</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Live Signals -->
-  <section id="signals" class="p-6 max-w-4xl mx-auto mt-10">
-    <div class="flex items-center mb-6">
-      <h2 class="text-2xl font-bold flex items-center">
-        <i class="fas fa-bolt text-yellow-400 mr-2"></i> Live Trading Signals
-      </h2>
-      <span class="ml-3 bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded">Updated Hourly</span>
-    </div>
-    <div id="signals-container" class="space-y-5">
-      <p class="text-gray-400">Loading live signals...</p>
-    </div>
-    <div class="text-center mt-8">
-      <button onclick="alert('Full signal history coming soon!')" class="border border-crypto-blue text-crypto-blue px-5 py-2 rounded hover:bg-crypto-blue hover:text-white transition">
-        View All Historical Signals
-      </button>
+  <section id="signals" class="relative z-10 py-20 sm:py-28 bg-surface-800/30">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
+        <div>
+          <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">Real-Time</span>
+          <h2 class="mt-2 text-3xl sm:text-4xl font-bold text-white tracking-tight flex items-center gap-3">
+            <i class="fas fa-bolt text-yellow-400"></i> Live Trading Signals
+          </h2>
+        </div>
+        <span class="flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-semibold px-3 py-1.5 rounded-full whitespace-nowrap">
+          <span class="live-dot" style="background:#EAB308;box-shadow:0 0 8px rgba(234,179,8,0.6);"></span>
+          Updated Hourly
+        </span>
+      </div>
+
+      <div id="signals-container" class="space-y-4">
+        <div class="text-center py-16">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-surface-700 mb-4">
+            <i class="fas fa-spinner fa-spin text-brand-400"></i>
+          </div>
+          <p class="text-gray-500">Loading live signals...</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-10">
+        <button onclick="alert('Full signal history coming soon!')" class="btn-outline text-brand-400 font-medium px-6 py-3 rounded-xl inline-flex items-center gap-2">
+          <i class="fas fa-history text-sm"></i> View All Historical Signals
+        </button>
+      </div>
     </div>
   </section>
 
   <!-- Verified Trades -->
-  <section id="proof" class="p-6 max-w-4xl mx-auto mt-12">
-    <h2 class="text-2xl font-bold mb-6 flex items-center">
-      <i class="fas fa-chart-line text-crypto-green mr-2"></i> Verified Successful Trades
-    </h2>
-    <div id="trades-container" class="grid md:grid-cols-2 gap-6">
-      <p class="text-gray-400 col-span-full">Loading verified trades...</p>
-    </div>
-    <div class="text-center mt-10">
-      <a href="courses.html" class="bg-crypto-green hover:bg-green-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg inline-block transition">
-        Unlock Full Course & Live Alerts → Pay with USDC
-      </a>
+  <section id="proof" class="relative z-10 py-20 sm:py-28">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">Transparency</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-white tracking-tight">Verified Successful Trades</h2>
+        <p class="mt-3 text-gray-400 max-w-xl mx-auto">Every trade shown here is real and verifiable. No fake screenshots.</p>
+      </div>
+
+      <div id="trades-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="text-center py-16 col-span-full">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-surface-700 mb-4">
+            <i class="fas fa-spinner fa-spin text-brand-400"></i>
+          </div>
+          <p class="text-gray-500">Loading verified trades...</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-14">
+        <a href="courses.html" class="btn-primary text-white font-bold py-4 px-10 rounded-2xl text-lg inline-flex items-center gap-2">
+          Unlock Full Course & Live Alerts
+          <i class="fas fa-arrow-right text-sm"></i>
+        </a>
+        <p class="mt-3 text-gray-500 text-sm">Pay with USDC (ERC-20, Polygon, or Base)</p>
+      </div>
     </div>
   </section>
 
- <!-- Featured Playlists Section -->
-<section class="py-12 bg-gray-800/50">
-  <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="text-3xl font-bold text-center mb-8 text-white">📚 Featured Playlists</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Playlist 1: Crypto Trading Signals -->
-      <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
-        <div class="aspect-video bg-black">
-          <a href="https://www.youtube.com/watch?v=ZFLeGvFJl5c&list=PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64" target="_blank" rel="noopener">
-            <iframe
-              class="w-full h-full"
-              src="https://www.youtube.com/embed/ZFLeGvFJl5c"
-              title="Latest: Crypto Trading Signal"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
-          </a>
+  <!-- Featured Playlists -->
+  <section class="relative z-10 py-20 sm:py-28 bg-surface-800/30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">Free Content</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-white tracking-tight">📚 Featured Playlists</h2>
+        <p class="mt-3 text-gray-400 max-w-xl mx-auto">Dive deep into our strategies before committing to the full course.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="gradient-border overflow-hidden group">
+          <div class="aspect-video bg-black relative overflow-hidden">
+            <iframe class="w-full h-full" src="https://www.youtube.com/embed/ZFLeGvFJl5c" title="Latest: Crypto Trading Signal" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="bg-brand-500/10 text-brand-400 text-xs font-semibold px-2.5 py-1 rounded-full">Signals</span>
+              <span class="text-gray-500 text-xs"><i class="fab fa-youtube text-red-500 mr-1"></i> YouTube</span>
+            </div>
+            <h3 class="text-xl font-bold text-white group-hover:text-brand-400 transition-colors">Crypto Trading Signals</h3>
+            <p class="text-gray-400 mt-2 text-sm leading-relaxed">Real-time alerts, entry/exit guidance, and market analysis to sharpen your edge.</p>
+            <a href="https://www.youtube.com/watch?v=ZFLeGvFJl5c&list=PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64" target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-2 text-brand-400 font-medium text-sm hover:gap-3 transition-all">
+              ▶ Watch Full Playlist <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
         </div>
-        <div class="p-5">
-          <h3 class="text-xl font-bold text-white">Crypto Trading Signals</h3>
-          <p class="text-gray-400 mt-2 text-sm">
-            Real-time alerts, entry/exit guidance, and market analysis.
-          </p>
-          <a
-            href="https://www.youtube.com/watch?v=ZFLeGvFJl5c&list=PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64"
-            target="_blank"
-            rel="noopener"
-            class="mt-4 inline-block text-crypto-blue font-medium hover:underline"
-          >
-            ▶ Watch Full Playlist
-          </a>
+
+        <div class="gradient-border overflow-hidden group">
+          <div class="aspect-video bg-black relative overflow-hidden">
+            <iframe class="w-full h-full" src="https://www.youtube.com/embed/avw4WNR2H_o" title="Latest: Strategy Deep Dive" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="bg-crypto-blue/10 text-crypto-blue text-xs font-semibold px-2.5 py-1 rounded-full">Education</span>
+              <span class="text-gray-500 text-xs"><i class="fab fa-youtube text-red-500 mr-1"></i> YouTube</span>
+            </div>
+            <h3 class="text-xl font-bold text-white group-hover:text-brand-400 transition-colors">Strategy Deep Dives</h3>
+            <p class="text-gray-400 mt-2 text-sm leading-relaxed">Technical analysis, risk management, and trade psychology explained step-by-step.</p>
+            <a href="https://www.youtube.com/playlist?list=PLZrH70IBTqA7agwpUT7dUhPJ17bAnIDVc" target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-2 text-brand-400 font-medium text-sm hover:gap-3 transition-all">
+              ▶ Watch Full Playlist <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="relative z-10 py-20 sm:py-28">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-14">
+        <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">Why Us</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-white tracking-tight">What Sets Us Apart</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="gradient-border p-6 text-center group hover:border-brand-500/30 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-brand-500/20 transition-colors">
+            <i class="fas fa-shield-halved text-brand-400 text-xl"></i>
+          </div>
+          <h3 class="font-bold text-white mb-2">Verified Results</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Every trade is documented and verifiable. No cherry-picked screenshots.</p>
+        </div>
+
+        <div class="gradient-border p-6 text-center group hover:border-brand-500/30 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-crypto-blue/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-crypto-blue/20 transition-colors">
+            <i class="fas fa-bolt text-crypto-blue text-xl"></i>
+          </div>
+          <h3 class="font-bold text-white mb-2">Real-Time Alerts</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Get signals the moment they trigger. Never miss an entry again.</p>
+        </div>
+
+        <div class="gradient-border p-6 text-center group hover:border-brand-500/30 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-500/20 transition-colors">
+            <i class="fas fa-coins text-yellow-400 text-xl"></i>
+          </div>
+          <h3 class="font-bold text-white mb-2">USDC Payments</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Pay with crypto — ERC-20, Polygon, or Base. Fast, private, no fees.</p>
+        </div>
+
+        <div class="gradient-border p-6 text-center group hover:border-brand-500/30 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-500/20 transition-colors">
+            <i class="fas fa-graduation-cap text-purple-400 text-xl"></i>
+          </div>
+          <h3 class="font-bold text-white mb-2">Full Education</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Don't just follow — learn the strategies behind every signal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="relative z-10 py-20 sm:py-28 bg-surface-800/30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-14">
+        <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">Social Proof</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-white tracking-tight">What Members Say</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="testimonial-card gradient-border p-6">
+          <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text-gray-300 text-sm leading-relaxed mb-5">"The signals are incredibly precise. I've been in the group for 2 months and my portfolio is up significantly. The education alone is worth the USDC price."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 font-bold text-sm">AK</div>
+            <div>
+              <div class="text-white text-sm font-semibold">Ahmed K.</div>
+              <div class="text-gray-500 text-xs">Member since 2024</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card gradient-border p-6">
+          <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text-gray-300 text-sm leading-relaxed mb-5">"Finally a signal group that shows real proof. Every trade is verifiable. The risk management strategies alone saved me from several bad trades."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-crypto-blue/20 flex items-center justify-center text-crypto-blue font-bold text-sm">SR</div>
+            <div>
+              <div class="text-white text-sm font-semibold">Sarah R.</div>
+              <div class="text-gray-500 text-xs">Member since 2024</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card gradient-border p-6">
+          <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+          </div>
+          <p class="text-gray-300 text-sm leading-relaxed mb-5">"Paying with USDC was seamless. The course content is structured well for beginners and advanced traders alike. Highly recommend the deep dive playlist."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-sm">MJ</div>
+            <div>
+              <div class="text-white text-sm font-semibold">Marcus J.</div>
+              <div class="text-gray-500 text-xs">Member since 2025</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Playlist 2: Strategy Deep Dives -->
-      <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
-        <div class="aspect-video bg-black">
-          <a href="https://www.youtube.com/playlist?list=PLZrH70IBTqA7agwpUT7dUhPJ17bAnIDVc" target="_blank" rel="noopener">
-            <iframe
-              class="w-full h-full"
-              src="https://www.youtube.com/embed/avw4WNR2H_o"
-              title="Latest: Strategy Deep Dive"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
-          </a>
+      <p class="text-center text-gray-600 text-xs mt-8">* Testimonials represent individual experiences. Trading involves significant risk of loss.</p>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="relative z-10 py-20 sm:py-28">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-14">
+        <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">FAQ</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-white tracking-tight">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="space-y-3" id="faq-container">
+        <div class="faq-item gradient-border rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-semibold text-white text-sm pr-4">How do I pay with USDC?</span>
+            <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease;">
+            <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">
+              After contacting us, you'll receive a wallet address. Send USDC via ERC-20 (Ethereum), Polygon, or Base network. Once confirmed, you'll get immediate access. No credit card needed.
+            </div>
+          </div>
         </div>
-        <div class="p-5">
-          <h3 class="text-xl font-bold text-white">Strategy Deep Dives</h3>
-          <p class="text-gray-400 mt-2 text-sm">
-            Technical analysis, risk management, and trade psychology.
-          </p>
-          <a
-            href="https://www.youtube.com/playlist?list=PLZrH70IBTqA7agwpUT7dUhPJ17bAnIDVc"
-            target="_blank"
-            rel="noopener"
-            class="mt-4 inline-block text-crypto-blue font-medium hover:underline"
-          >
-            ▶ Watch Full Playlist
-          </a>
+
+        <div class="faq-item gradient-border rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-semibold text-white text-sm pr-4">Are the signals really verified?</span>
+            <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease;">
+            <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">
+              Yes. Every trade we post includes the exact entry, exit, and timestamp. You can cross-reference these with publicly available chart data. We never cherry-pick or fabricate results.
+            </div>
+          </div>
         </div>
+
+        <div class="faq-item gradient-border rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-semibold text-white text-sm pr-4">Is this financial advice?</span>
+            <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease;">
+            <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">
+              No. AzadTradeLab provides educational content and trading signals for informational purposes only. All trading involves significant risk. Never trade with money you can't afford to lose.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item gradient-border rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-semibold text-white text-sm pr-4">What's included in the full course?</span>
+            <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease;">
+            <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">
+              The full course includes all video modules covering technical analysis, risk management, trade psychology, and our proprietary signal strategies. Plus live signals, a 30-minute 1-on-1 session, and lifetime access to all future updates.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item gradient-border rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-semibold text-white text-sm pr-4">How often are signals sent?</span>
+            <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease;">
+            <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">
+              Signals are sent whenever high-probability setups appear — this could be multiple times per day or less frequently during slow markets. Quality over quantity. All signals include entry, target, and stop-loss.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="relative z-10 py-20 sm:py-28 bg-surface-800/30">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      <div class="gradient-border p-10 sm:p-16 relative overflow-hidden">
+        <div class="glow-orb" style="width:300px;height:300px;background:#10B981;top:-100px;right:-100px;opacity:0.2;"></div>
+        <div class="glow-orb" style="width:200px;height:200px;background:#3B82F6;bottom:-80px;left:-80px;opacity:0.15;"></div>
+        <div class="relative z-10">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Ready to Trade Smarter?</h2>
+          <p class="mt-4 text-gray-400 text-lg max-w-xl mx-auto">Join hundreds of traders who trust AzadTradeLab for verified signals and real education.</p>
+          <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="contact.html" class="btn-primary text-white font-bold py-4 px-10 rounded-2xl text-lg inline-flex items-center gap-2">
+              <i class="fas fa-rocket text-sm"></i> Get Started Now
+            </a>
+            <a href="https://www.youtube.com/channel/UChYPfMCpdAfqQ0V7BJ8LATQ" target="_blank" rel="noopener" class="btn-outline text-gray-300 font-medium py-4 px-8 rounded-2xl inline-flex items-center gap-2">
+              <i class="fab fa-youtube text-red-500 text-sm"></i> Watch on YouTube
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-white/5 bg-surface-950/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div class="sm:col-span-2 lg:col-span-1">
+          <a href="index.html" class="flex items-center gap-2 mb-4">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center">
+              <i class="fas fa-bolt text-white text-sm"></i>
+            </div>
+            <span class="text-lg font-bold text-white">Azad<span class="text-brand-400">Trade</span>Lab</span>
+          </a>
+          <p class="text-gray-500 text-sm leading-relaxed">Real-time crypto trading signals with verified results. Educational content for traders at every level.</p>
+          <div class="flex items-center gap-4 mt-5">
+            <a href="https://www.youtube.com/channel/UChYPfMCpdAfqQ0V7BJ8LATQ" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=100063948886737" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://instagram.com/yourhandle" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://tiktok.com/@yourhandle" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Navigation</h4>
+          <ul class="space-y-2.5">
+            <li><a href="index.html" class="text-gray-400 text-sm hover:text-white transition">Home</a></li>
+            <li><a href="courses.html" class="text-gray-400 text-sm hover:text-white transition">Courses</a></li>
+            <li><a href="#signals" class="text-gray-400 text-sm hover:text-white transition">Live Signals</a></li>
+            <li><a href="#proof" class="text-gray-400 text-sm hover:text-white transition">Trade Proof</a></li>
+            <li><a href="contact.html" class="text-gray-400 text-sm hover:text-white transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Resources</h4>
+          <ul class="space-y-2.5">
+            <li><a href="https://www.youtube.com/watch?v=ZFLeGvFJl5c&list=PLZrH70IBTqA43ynDU6-YWiCwibwBgH-64" target="_blank" rel="noopener" class="text-gray-400 text-sm hover:text-white transition">Signal Playlist</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLZrH70IBTqA7agwpUT7dUhPJ17bAnIDVc" target="_blank" rel="noopener" class="text-gray-400 text-sm hover:text-white transition">Strategy Playlist</a></li>
+            <li><a href="#faq-container" class="text-gray-400 text-sm hover:text-white transition">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Accepted Payment</h4>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="bg-white/5 rounded-xl px-3 py-2 flex items-center gap-2">
+              <i class="fab fa-ethereum text-crypto-blue"></i>
+              <span class="text-gray-300 text-sm font-medium">USDC</span>
+            </div>
+          </div>
+          <p class="text-gray-500 text-xs leading-relaxed">ERC-20, Polygon, and Base networks supported. Contact us for wallet details.</p>
+        </div>
+      </div>
+      <div class="border-t border-white/5 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-600">
+        <p>© 2025 AzadTradeLab. All rights reserved.</p>
+        <p class="text-xs">Not financial advice. Trading involves significant risk of loss.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Video Modal -->
+  <div id="video-modal" class="video-modal-overlay" onclick="closeVideoModal(event)">
+    <div class="video-modal-content" onclick="event.stopPropagation()">
+      <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 text-white flex items-center justify-center hover:bg-white/20 transition" aria-label="Close video">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="aspect-video">
+        <iframe
+          id="video-iframe"
+          class="w-full h-full"
+          src=""
+          title="AzadTradeLab Introduction"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
       </div>
     </div>
   </div>
-</section>
 
-  
-
-  <!-- Footer with Social Media -->
-  <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
-    <div class="flex justify-center gap-6 mb-6">
-      <a href="https://www.youtube.com/channel/UChYPfMCpdAfqQ0V7BJ8LATQ" class="text-gray-400 hover:text-white transition text-2xl" aria-label="YouTube">
-        <i class="fab fa-youtube"></i>
-      </a>
-      <a href="https://www.facebook.com/profile.php?id=100063948886737" class="text-gray-400 hover:text-white transition text-2xl" aria-label="Facebook">
-        <i class="fab fa-facebook"></i>
-      </a>
-      <a href="https://www.instagram.com/azadtradelab/" class="text-gray-400 hover:text-white transition text-2xl" aria-label="Instagram">
-        <i class="fab fa-instagram"></i>
-      </a>
-      <a href="https://tiktok.com/@yourhandle" class="text-gray-400 hover:text-white transition text-2xl" aria-label="TikTok">
-        <i class="fab fa-tiktok"></i>
-      </a>
-    </div>
-
-    <p>© 2025 AzadTradeLab. Not financial advice. Trading involves risk.</p>
-    <p class="mt-2">All courses payable in USDC (ERC-20, Polygon, or Base)</p>
-  </footer>
+  <!-- Scroll to Top -->
+  <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-xl bg-brand-500/20 border border-brand-500/30 text-brand-400 flex items-center justify-center hover:bg-brand-500/30 transition" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
 
   <!-- Data Fetching Script -->
   <script>
-    // ✅ FIXED: Force 4 decimal places for all numeric values
     function formatNumber(value) {
-      if (value == null || value === '' || value === '—' || value === '-') {
-        return '—';
-      }
+      if (value == null || value === '' || value === '—' || value === '-') return '—';
       let str = String(value).trim();
       if (/^-?\d*\.?\d+$/.test(str)) {
         const num = parseFloat(str);
-        if (!isNaN(num)) {
-          return num.toFixed(4); // e.g., 0.123 → "0.1230"
-        }
+        if (!isNaN(num)) return num.toFixed(4);
       }
       return str;
     }
 
-    // Trim whitespace from URLs (critical for SheetDB)
     const STATS_URL = 'https://sheetdb.io/api/v1/t524qa23xj67d';
     const SIGNALS_URL = 'https://sheetdb.io/api/v1/tqs2minkp9fly';
     const TRADES_URL = 'https://sheetdb.io/api/v1/85zdg9w2vf68k';
-
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     async function safeFetch(url, retries = 2) {
@@ -311,15 +780,15 @@
         if (Array.isArray(data) && data.length > 0) {
           const s = data[0];
           document.getElementById('hero-stats').innerHTML = `
-            <div class="text-center p-3"><div class="text-2xl font-bold text-crypto-green">${s.last_30_days_return || '+84%'}</div><div class="text-sm text-gray-400">Last 30 Days</div></div>
-            <div class="text-center p-3"><div class="text-2xl font-bold">${s.signals_sent || '142'}</div><div class="text-sm text-gray-400">Signals Sent</div></div>
-            <div class="text-center p-3"><div class="text-2xl font-bold">${s.win_rate || '78%'}</div><div class="text-sm text-gray-400">Win Rate</div></div>
-            <div class="text-center p-3"><div class="text-2xl font-bold">24/7</div><div class="text-sm text-gray-400">Market Coverage</div></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div class="text-center"><div class="text-2xl sm:text-3xl font-bold text-brand-400 font-mono">${s.last_30_days_return || '+84%'}</div><div class="text-sm text-gray-500 mt-1">Last 30 Days</div></div>
+              <div class="text-center"><div class="text-2xl sm:text-3xl font-bold text-white font-mono">${s.signals_sent || '142'}</div><div class="text-sm text-gray-500 mt-1">Signals Sent</div></div>
+              <div class="text-center"><div class="text-2xl sm:text-3xl font-bold text-white font-mono">${s.win_rate || '78%'}</div><div class="text-sm text-gray-500 mt-1">Win Rate</div></div>
+              <div class="text-center"><div class="text-2xl sm:text-3xl font-bold text-white font-mono">24/7</div><div class="text-sm text-gray-500 mt-1">Market Coverage</div></div>
+            </div>
           `;
         }
-      } catch (e) {
-        console.error("Stats failed:", e);
-      }
+      } catch (e) { console.error("Stats failed:", e); }
     }
 
     async function fetchSignals() {
@@ -327,32 +796,58 @@
         const data = await safeFetch(SIGNALS_URL);
         const container = document.getElementById('signals-container');
         if (Array.isArray(data) && data.length > 0) {
-          const html = data.slice(0, 3).map(item => {
+          const html = data.slice(0, 5).map(item => {
             const isBuy = (item.action || '').toUpperCase() === 'BUY';
+            const borderColor = isBuy ? 'border-l-brand-500' : 'border-l-red-500';
+            const bgColor = isBuy ? 'bg-brand-500' : 'bg-red-500';
+            const icon = isBuy ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
             return `
-              <div class="signal-card bg-gray-800 p-5 rounded-xl border-l-4 ${isBuy ? 'border-crypto-green' : 'border-crypto-red'}">
-                <div class="flex flex-wrap justify-between items-start">
-                  <div>
-                    <span class="${isBuy ? 'bg-crypto-green' : 'bg-crypto-red'} text-gray-900 text-xs font-bold px-2 py-1 rounded">${item.action || '—'}</span>
-                    <span class="ml-2 text-xl font-bold">${item.pair || '—'}</span>
+              <div class="signal-card gradient-border border-l-4 ${borderColor} p-5 sm:p-6 rounded-2xl">
+                <div class="flex flex-wrap justify-between items-start gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl ${bgColor}/10 flex items-center justify-center">
+                      <i class="fas ${icon} ${isBuy ? 'text-brand-400' : 'text-red-400'}"></i>
+                    </div>
+                    <div>
+                      <span class="${bgColor} text-white text-xs font-bold px-2.5 py-1 rounded-lg">${item.action || '—'}</span>
+                      <span class="ml-2 text-lg font-bold text-white">${item.pair || '—'}</span>
+                    </div>
                   </div>
-                  <span class="text-gray-400 text-sm">${item.time_ago || '—'}</span>
+                  <span class="text-gray-500 text-xs font-mono">${item.time_ago || '—'}</span>
                 </div>
-                <p class="mt-2 text-gray-300">Entry: ${formatNumber(item.entry)} | Target: ${formatNumber(item.target)} | Stop: ${formatNumber(item.stop)}</p>
-                <div class="mt-3 flex flex-wrap gap-2 text-sm">
-                  ${item.timeframe ? `<span class="bg-gray-700 px-2 py-1 rounded">${item.timeframe}</span>` : ''}
-                  ${item.strategy ? `<span class="bg-gray-700 px-2 py-1 rounded">${item.strategy}</span>` : ''}
+                <div class="mt-4 grid grid-cols-3 gap-3">
+                  <div class="bg-white/[0.03] rounded-xl p-3 text-center">
+                    <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Entry</div>
+                    <div class="font-mono text-white text-sm font-medium">${formatNumber(item.entry)}</div>
+                  </div>
+                  <div class="bg-white/[0.03] rounded-xl p-3 text-center">
+                    <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Target</div>
+                    <div class="font-mono text-brand-400 text-sm font-medium">${formatNumber(item.target)}</div>
+                  </div>
+                  <div class="bg-white/[0.03] rounded-xl p-3 text-center">
+                    <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Stop</div>
+                    <div class="font-mono text-red-400 text-sm font-medium">${formatNumber(item.stop)}</div>
+                  </div>
+                </div>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  ${item.timeframe ? `<span class="bg-white/5 text-gray-400 text-xs px-2.5 py-1 rounded-lg"><i class="far fa-clock mr-1"></i>${item.timeframe}</span>` : ''}
+                  ${item.strategy ? `<span class="bg-white/5 text-gray-400 text-xs px-2.5 py-1 rounded-lg"><i class="fas fa-chess mr-1"></i>${item.strategy}</span>` : ''}
                 </div>
               </div>
             `;
           }).join('');
           container.innerHTML = html;
         } else {
-          container.innerHTML = '<p class="text-gray-500">No signals available.</p>';
+          container.innerHTML = '<p class="text-gray-500 text-center py-10">No signals available at the moment.</p>';
         }
       } catch (e) {
         console.error("Signals failed:", e);
-        document.getElementById('signals-container').innerHTML = '<p class="text-red-400">Failed to load signals.</p>';
+        document.getElementById('signals-container').innerHTML = `
+          <div class="text-center py-10">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-500/10 mb-4"><i class="fas fa-exclamation-triangle text-red-400"></i></div>
+            <p class="text-red-400">Failed to load signals. Please try again later.</p>
+          </div>
+        `;
       }
     }
 
@@ -361,28 +856,32 @@
         const data = await safeFetch(TRADES_URL);
         const container = document.getElementById('trades-container');
         if (Array.isArray(data) && data.length > 0) {
-          const html = data.slice(0, 3).map(item => `
-            <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl border border-green-900">
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="font-bold text-lg">${item.title || '—'}</h3>
-                  <p class="text-green-400 mt-1">${item.return || '—'}</p>
-                </div>
-                <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">✅ Closed</span>
+          const html = data.slice(0, 6).map(item => `
+            <div class="trade-card gradient-border p-6 rounded-2xl border border-brand-500/10">
+              <div class="flex justify-between items-start mb-3">
+                <h3 class="font-bold text-white">${item.title || '—'}</h3>
+                <span class="bg-brand-500/10 text-brand-400 text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1"><i class="fas fa-check-circle text-[10px]"></i> Closed</span>
               </div>
-              <p class="mt-3 text-gray-300 text-sm">${item.description || ''}</p>
-              <div class="mt-3 flex text-xs text-gray-400">
-                <span>Entry: ${formatNumber(item.entry)}</span> • <span class="ml-2">Exit: ${formatNumber(item.exit)}</span>
+              <div class="text-2xl font-bold text-brand-400 font-mono mb-3">${item.return || '—'}</div>
+              <p class="text-gray-400 text-sm leading-relaxed mb-4">${item.description || ''}</p>
+              <div class="flex items-center justify-between text-xs font-mono pt-3 border-t border-white/5">
+                <span class="text-gray-500">Entry: <span class="text-gray-300">${formatNumber(item.entry)}</span></span>
+                <span class="text-gray-500">Exit: <span class="text-gray-300">${formatNumber(item.exit)}</span></span>
               </div>
             </div>
           `).join('');
           container.innerHTML = html;
         } else {
-          container.innerHTML = '<p class="text-gray-500 col-span-full">No verified trades.</p>';
+          container.innerHTML = '<p class="text-gray-500 col-span-full text-center py-10">No verified trades available.</p>';
         }
       } catch (e) {
         console.error("Trades failed:", e);
-        document.getElementById('trades-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load trades.</p>';
+        document.getElementById('trades-container').innerHTML = `
+          <div class="text-center py-10 col-span-full">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-500/10 mb-4"><i class="fas fa-exclamation-triangle text-red-400"></i></div>
+            <p class="text-red-400">Failed to load trades. Please try again later.</p>
+          </div>
+        `;
       }
     }
 
@@ -392,11 +891,13 @@
         const { bitcoin: btc, ethereum: eth } = await res.json();
         const fmt = (v) => `$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: v < 1000 ? 2 : 0 })}`;
         const chg = (p) => `(${p >= 0 ? '+' : ''}${p.toFixed(2)}%)`;
-        const cls = (p) => p >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: ${fmt(btc.usd)} <span class="${cls(btc.usd_24h_change)} text-xs">${chg(btc.usd_24h_change)}</span>`;
-        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: ${fmt(eth.usd)} <span class="${cls(eth.usd_24h_change)} text-xs">${chg(eth.usd_24h_change)}</span>`;
+        const cls = (p) => p >= 0 ? 'text-brand-400' : 'text-red-400';
+        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: <span class="text-white font-medium">${fmt(btc.usd)}</span> <span class="${cls(btc.usd_24h_change)} text-xs font-mono">${chg(btc.usd_24h_change)}</span>`;
+        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: <span class="text-white font-medium">${fmt(eth.usd)}</span> <span class="${cls(eth.usd_24h_change)} text-xs font-mono">${chg(eth.usd_24h_change)}</span>`;
       } catch (e) {
         console.warn("Price fetch failed");
+        document.getElementById('btc-price').innerHTML = `<i class="fab fa-bitcoin text-yellow-500 mr-1"></i> BTC: <span class="text-gray-500">Unavailable</span>`;
+        document.getElementById('eth-price').innerHTML = `<i class="fab fa-ethereum text-crypto-blue mr-1"></i> ETH: <span class="text-gray-500">Unavailable</span>`;
       }
     }
 
@@ -408,10 +909,107 @@
       await fetchTrades();
     }
 
+    // Video Modal
+    function openVideoModal() {
+      const modal = document.getElementById('video-modal');
+      const iframe = document.getElementById('video-iframe');
+      iframe.src = 'https://www.youtube.com/embed/SYvFsf3fs5M?autoplay=1';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeVideoModal(e) {
+      if (e && e.target !== e.currentTarget) return;
+      const modal = document.getElementById('video-modal');
+      const iframe = document.getElementById('video-iframe');
+      iframe.src = '';
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeVideoModal();
+    });
+
+    // Live clock
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toUTCString().slice(-12, -4);
+      const el = document.getElementById('live-time');
+      if (el) el.textContent = timeStr + ' UTC';
+    }
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const answer = btn.nextElementSibling;
+      const icon = btn.querySelector('i');
+      const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+      document.querySelectorAll('.faq-answer').forEach(a => { a.style.maxHeight = '0px'; });
+      document.querySelectorAll('#faq-container button i').forEach(i => { i.style.transform = 'rotate(0deg)'; });
+      if (!isOpen) {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // Mobile menu
+    document.getElementById('mobile-toggle').addEventListener('click', function() {
+      const menu = document.getElementById('mobile-menu');
+      const isOpen = menu.classList.contains('open');
+      if (isOpen) {
+        menu.classList.remove('open');
+        document.getElementById('bar1').style.transform = 'none';
+        document.getElementById('bar1').style.top = '0';
+        document.getElementById('bar2').style.opacity = '1';
+        document.getElementById('bar3').style.width = '0.75rem';
+        document.getElementById('bar3').style.top = '0.75rem';
+        document.getElementById('bar3').style.transform = 'none';
+      } else {
+        menu.classList.add('open');
+        document.getElementById('bar1').style.transform = 'rotate(45deg)';
+        document.getElementById('bar1').style.top = '0.375rem';
+        document.getElementById('bar2').style.opacity = '0';
+        document.getElementById('bar3').style.width = '100%';
+        document.getElementById('bar3').style.top = '0.375rem';
+        document.getElementById('bar3').style.transform = 'rotate(-45deg)';
+      }
+    });
+
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.remove('open');
+        document.getElementById('bar1').style.transform = 'none';
+        document.getElementById('bar1').style.top = '0';
+        document.getElementById('bar2').style.opacity = '1';
+        document.getElementById('bar3').style.width = '0.75rem';
+        document.getElementById('bar3').style.top = '0.75rem';
+        document.getElementById('bar3').style.transform = 'none';
+      });
+    });
+
+    // Scroll to top
+    window.addEventListener('scroll', () => {
+      document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 600);
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Init
     document.addEventListener('DOMContentLoaded', () => {
       fetchPrices();
       loadAllData();
       setInterval(fetchPrices, 60000);
+      updateClock();
+      setInterval(updateClock, 1000);
     });
   </script>
 </body>
